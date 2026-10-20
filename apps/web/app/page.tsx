@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ApiStatus } from "@/components/system/api-status";
 
 export default function Home() {
@@ -8,9 +9,9 @@ export default function Home() {
     <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
       <section className="rounded-lg border border-border bg-card p-6 shadow-sm" aria-labelledby="foundation-title">
         <p className="eyebrow">Project foundation</p><h2 id="foundation-title">A workspace built around evidence</h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">The application foundation is ready for the hospital data layer. Patient records and investigations will become available as those services are implemented.</p>
-        <div className="mt-6 border-t border-border pt-5"><p className="text-sm font-medium">No clinical records connected</p>
-          <p className="mt-1 text-sm text-muted-foreground">This foundation screen checks the API connection only.</p></div>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Browse imported synthetic clinical records in the hospital chart. Investigation workflows belong to the next development milestone.</p>
+        <div className="mt-6 border-t border-border pt-5"><p className="text-sm font-medium">Hospital record browser available</p>
+          <p className="mt-1 text-sm text-muted-foreground">This overview checks API connectivity. The patient directory shows actual imported records.</p><Link href="/patients" className="mt-3 inline-block text-sm text-teal underline">Browse patient records</Link></div>
       </section>
       <ApiStatus />
     </div>

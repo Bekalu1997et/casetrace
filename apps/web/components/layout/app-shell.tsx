@@ -9,8 +9,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <span><strong className="text-sm tracking-wider">CASETRACE</strong><span className="block text-[10px] tracking-widest text-slate-400">CLINICAL INVESTIGATION</span></span>
       </Link>
       <nav aria-label="Main navigation"><p className="mb-3 text-xs uppercase tracking-widest text-slate-400">Workspace</p>
-        <Link href="/" aria-current="page" className="block rounded-md bg-white/10 px-3 py-2.5 text-sm">Overview</Link>
-      </nav>
+        <Link href="/" className="block rounded-md bg-white/10 px-3 py-2.5 text-sm">Overview</Link>
+        <Link href="/patients" className="mt-2 block rounded-md px-3 py-2.5 text-sm hover:bg-white/10">Patient records</Link></nav>
       <p className="mt-auto hidden border-t border-white/15 pt-5 text-xs leading-relaxed text-slate-400 md:block">Synthetic records.<br />Evidence-backed investigation.</p>
     </aside>
     <div className="min-w-0">

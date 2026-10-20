@@ -16,7 +16,7 @@ describe("foundation", () => {
     render(<AppShell><Home /></AppShell>);
     expect(screen.getByRole("heading", { name: "Clinical investigation workspace" })).toBeVisible();
     expect(screen.getByText("SYNTHETIC DEMO — NOT FOR CLINICAL USE")).toBeVisible();
-    expect(screen.getByText("No clinical records connected")).toBeVisible();
+    expect(screen.getByText("Hospital record browser available")).toBeVisible();
     expect(await screen.findByText("API connected")).toBeVisible();
     expect(fetchMock.mock.calls[0][0]).toBe("http://localhost:8000/api/health");
   });

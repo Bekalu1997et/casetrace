@@ -35,7 +35,7 @@ export async function request<T>(path: string, parse: (value: unknown) => T,
   catch { throw new ApiRequestError("The API returned invalid JSON.", "INVALID_RESPONSE", response.status); }
   if (!response.ok) {
     if (isErrorResponse(body)) throw new ApiRequestError(
-      body.error.message, body.error.code, response.status, body.error.request_id,
+      body.error.message, body.error.code, response.status, body.error.request_id ?? ("meta" in body && body.meta && typeof body.meta === "object" && "request_id" in body.meta && typeof body.meta.request_id === "string" ? body.meta.request_id : undefined),
     );
     throw new ApiRequestError("The API request failed.", "HTTP_ERROR", response.status);
   }
