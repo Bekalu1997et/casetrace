@@ -170,7 +170,7 @@ def test_alembic_upgrade_downgrade_and_cwd(settings: Settings) -> None:
         )
         assert result.returncode == 0, result.stdout + result.stderr
         if command == ["current"]:
-            assert "0001_foundation" in result.stdout
+            assert "0003_clinical_reports" in result.stdout
 
 
 def test_failed_database_health(settings: Settings) -> None:

@@ -1,1 +1,3 @@
-"""Domain models will follow the contract audit in Phase 2."""
+"""Import domain metadata for Alembic discovery."""
+
+from app.models import hospital as hospital

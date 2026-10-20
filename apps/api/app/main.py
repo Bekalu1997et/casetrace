@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.health import router
+from app.api.routes.hospital import router as hospital_router
 from app.core.config import Settings, load_settings
 from app.core.database import Database
 from app.core.errors import install_error_handlers, internal_error_response
@@ -38,6 +39,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     application.state.settings = config
     install_error_handlers(application)
     application.include_router(router)
+    application.include_router(hospital_router)
 
     @application.middleware("http")
     async def request_context(

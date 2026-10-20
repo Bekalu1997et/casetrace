@@ -5,12 +5,22 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
 
+from app.hospital.schemas import HospitalErrorDetail, HospitalErrorResponse, Meta
+from app.hospital.service import HospitalError
 from app.schemas.errors import ErrorDetail, ErrorResponse
 
 logger = logging.getLogger("casetrace.errors")
 
 
 def error_response(request: Request, status: int, code: str, message: str) -> JSONResponse:
+    if request.url.path.startswith("/api/hospital/v1"):
+        hospital_body = HospitalErrorResponse(
+            error=HospitalErrorDetail(
+                code="RESOURCE_NOT_FOUND" if code == "NOT_FOUND" else code, message=message
+            ),
+            meta=Meta(request_id=request.state.request_id),
+        )
+        return JSONResponse(status_code=status, content=hospital_body.model_dump())
     body = ErrorResponse(
         error=ErrorDetail(
             code=code,
@@ -34,6 +44,17 @@ def internal_error_response(request: Request, exc: Exception) -> JSONResponse:
 
 
 def install_error_handlers(app: FastAPI) -> None:
+    @app.exception_handler(HospitalError)
+    async def hospital_error(request: Request, exc: HospitalError) -> JSONResponse:
+        return error_response(
+            request,
+            exc.status,
+            exc.code,
+            "The clinical resource or asset is unavailable."
+            if exc.status == 404
+            else "The clinical request could not be completed.",
+        )
+
     @app.exception_handler(HTTPException)
     async def http_error(request: Request, exc: HTTPException) -> JSONResponse:
         response = error_response(
