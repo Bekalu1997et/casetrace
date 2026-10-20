@@ -37,3 +37,15 @@ docker-up:
 
 docker-down:
 	docker compose down
+
+# Phase 2 maintenance commands, from repository root; CASE may be overridden.
+CASE ?= CASE-001
+.PHONY: validate-case seed-case hospital-smoke
+validate-case:
+	cd apps/api && uv run --locked python -m app.hospital.cli validate $(CASE)
+
+seed-case:
+	cd apps/api && uv run --locked python -m app.hospital.cli import $(CASE)
+
+hospital-smoke:
+	bash scripts/hospital-smoke.sh

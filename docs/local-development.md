@@ -108,3 +108,11 @@ ID/resource mapping, timestamp, enum and evidence-contract questions to resolve.
 Do not autogenerate domain tables until those decisions are recorded. The next
 dependency-ready task is that contract audit, then Phase 2a CASE-001 chronology and
 evaluator isolation, followed by P2-01 domain migrations.
+
+## Phase 2 continuation
+
+Hospital models, clinical import commands and patient chart are now implemented;
+see [Phase 2 development](phase-2-development.md) and
+[contract decisions](CONTRACT_DECISIONS.md). The earlier domain-table gate above
+is historical Phase 1 context. CASE-001 acceptance and Phase 3 investigation
+contracts remain separate open gates.
