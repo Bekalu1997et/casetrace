@@ -1,10 +1,12 @@
 # CASETRACE — Multi-Agent Architecture
 
+SQLite is the MVP persistent store. Follow [development stack](development-stack.md) for independent short-lived sessions, single-writer coordination, atomic state/event commits, compare-and-swap versions and idempotent result persistence. Parallel specialist inference remains supported; agents never retain a database transaction during inference or tool waits.
+
 **File:** `docs/multi-agent-architecture.md`  
 **Status:** Canonical — v1  
 **System:** CASETRACE Clinical Investigation Engine  
 **Architecture:** Controlled multi-agent orchestration with evidence-based verification  
-**Backend:** Python 3.12+ · FastAPI · Pydantic v2 · PostgreSQL · asyncio · SSE  
+**Backend:** Python 3.12+ · FastAPI · Pydantic v2 · SQLite · asyncio · SSE
 **Related documents:** `AGENTS.md`, `backend-architecture.md`, `case-schema.md`, `hospital-api.md`, `agent-tools.md`, `frontend-backend-contract.md`
 
 ---
@@ -150,7 +152,7 @@ ClinicalRecordService
 Simulated Hospital
   |
   v
-PostgreSQL + Assets
+SQLite + Assets
 ```
 
 No agent may bypass this boundary.
@@ -1138,7 +1140,7 @@ class InvestigationState(BaseModel):
 
 This state is a logical representation.
 
-PostgreSQL remains the authoritative persistent store.
+SQLite remains the authoritative persistent store.
 
 The in-memory state must be reconstructable from persisted investigation records.
 

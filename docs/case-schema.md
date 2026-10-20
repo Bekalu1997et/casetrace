@@ -1,5 +1,7 @@
 # CASETRACE Case Schema
 
+Storage alignment: canonical CASE-001 through CASE-010 source data stays under `data/cases/`; generated assets remain in documented asset directories. Imported source records and runtime investigations live in SQLite, with evaluator-only ground truth excluded from runtime import and mounts. Runtime investigations never overwrite canonical cases. See [development stack](development-stack.md) and [demo reset](demo-runbook.md).
+
 **Status:** Canonical  
 **Purpose:** Define the structure, semantics, validation rules, and ground-truth representation for synthetic CASETRACE investigations.
 

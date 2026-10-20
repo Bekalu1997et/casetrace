@@ -1,4 +1,6 @@
 # CASETRACE — Architecture & Implementation Specification
+
+Finalized MVP stack: Next.js App Router + TypeScript + pnpm; FastAPI + Python + uv; SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Existing Tailwind CSS/shadcn/ui and investigation behavior remain. See [development stack](development-stack.md) for operational requirements and planned commands.
 **Version:** 1.0  
 **Project:** Healthcare AI Investigation System  
 **Target:** Hackathon prototype  
@@ -60,7 +62,7 @@ The agents independently retrieve relevant evidence, discover a contradiction in
                    |
           +--------+---------+
           |                  |
-    PostgreSQL         Synthetic Files
+    SQLite         Synthetic Files
     Clinical data      PDFs, images,
     Metadata, events   notes, reports
 ```
@@ -101,7 +103,7 @@ The case ground truth is available to the case-generation and evaluation compone
 | UI | Tailwind CSS, shadcn/ui |
 | Backend | Python, FastAPI |
 | Data validation | Pydantic |
-| Database | PostgreSQL |
+| Database | SQLite |
 | Document storage | Local filesystem for hackathon; storage adapter for future object storage |
 | Agent orchestration | Explicit Python workflow with typed states and controlled transitions |
 | LLM integration | Provider-independent model adapter |

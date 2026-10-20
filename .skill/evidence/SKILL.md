@@ -12,7 +12,7 @@ Implement a reproducible, clinically cautious **evidence layer** between hospita
 Use whenever implementing evidence ingestion, investigation findings, timeline contradiction detection, source viewers, citation APIs, report composition, or case validation. Load the relevant companion file for specialized tasks.
 
 ## Authoritative project contracts
-Read `AGENT.md`, `case-schema.md`, `agent-tools.md`, `hospital-api.md`, `backend-architecture.md`, and `frontend-backend-contract.md` where present. They override illustrative fields below. Never invent an endpoint or schema field when a contract already defines it; propose an explicit contract change instead.
+Read `AGENTS.md`, `case-schema.md`, `agent-tools.md`, `hospital-api.md`, `backend-architecture.md`, and `frontend-backend-contract.md` where present. They override illustrative fields below. Never invent an endpoint or schema field when a contract already defines it; propose an explicit contract change instead.
 
 ## Inputs
 - Hospital retrieval-tool responses scoped to a patient/investigation and an authenticated actor.
@@ -96,3 +96,7 @@ An evaluator can open each report claim, inspect the exact supporting and confli
 
 ## Companion skills
 `provenance.md`, `citation-linking.md`, `evidence-ranking.md`, `conflicting-evidence.md`, `confidence-calculation.md`.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

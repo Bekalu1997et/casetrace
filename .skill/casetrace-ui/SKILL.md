@@ -45,3 +45,7 @@ Inspect design prototypes and contracts → identify types/endpoints → build t
 - Component has typed inputs, meaningful states, responsive layout, and accessible interaction.
 - Actions are connected to contract-backed handlers; no inert demo buttons or hardcoded claims.
 - Unit/component tests cover state transitions and empty/error paths; at least one integration test checks evidence deep-linking and patient isolation.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

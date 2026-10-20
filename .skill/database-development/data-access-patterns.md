@@ -29,3 +29,7 @@ Prefer explicit operations such as `get_patient`, `list_encounters`, `list_lab_r
 
 ## Tests
 Cross-patient isolation, encounter integrity, same-time ordering, duplicate seed behavior, missing foreign keys, unresolved media, pagination consistency, and evidence reference resolution.
+
+## Stack alignment
+
+Use [SQLite operations](../../docs/development-stack.md) for absolute paths, every-connection foreign keys and busy timeout, file WAL, portable UUID/JSON/enum/UTC types, Alembic batch migrations and isolated test files. Use a session per operation, explicit short transactions and version-guarded writes; no row locks. Test stale writes, duplicate retry results, FK enforcement and UTC restoration.

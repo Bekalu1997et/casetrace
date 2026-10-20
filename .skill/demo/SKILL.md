@@ -12,7 +12,7 @@ Deliver a reproducible, high-impact, evidence-verifiable demo of CASETRACE inves
 Use while preparing or running a hackathon demo, testing the end-to-end scenario, or resetting a demonstration environment. Read the specific subskill for each step.
 
 ## Authoritative references
-Follow `AGENT.md`, `case-schema.md`, `agent-tools.md`, `hospital-api.md`, `frontend-backend-contract.md` and implemented endpoints. If a document is missing or disagrees, inspect the actual implementation and reconcile explicitly; never invent an API contract.
+Follow `AGENTS.md`, `case-schema.md`, `agent-tools.md`, `hospital-api.md`, `frontend-backend-contract.md` and implemented endpoints. If a document is missing or disagrees, inspect the actual implementation and reconcile explicitly; never invent an API contract.
 
 ## Demo promise
 CASE-001 is the primary timeline-contradiction case. The audience should see: a plausible patient chart; genuine, observable retrieval tool calls; an assembled chronology; an important contradiction; both original records; an evidence-linked report with uncertainty. No hidden answer-key access by investigation agents.
@@ -53,3 +53,7 @@ Hard-coded tool output disguised as live; scripted contradictory findings unrela
 
 ## Validation / definition of done
 Two consecutive clean runs from a known seed produce the same core finding and citations; original records open at the cited spans; a failed network/model dependency has a clear documented contingency; reset does not destroy source-case assets.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

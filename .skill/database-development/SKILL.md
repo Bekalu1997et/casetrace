@@ -12,7 +12,7 @@ Maintain reliable storage and retrieval for the synthetic hospital data and CASE
 Schema, migrations, seeding, repository queries, indexes, source references, fixtures, and database transactions.
 
 ## Context
-Read `case-schema.md`, `hospital-api.md`, backend architecture, and `data-access-patterns.md`. Preserve whichever database engine and ORM are already selected in the repository; do not replace them without an explicit architectural decision.
+Read `case-schema.md`, `hospital-api.md`, backend architecture, and `data-access-patterns.md`. Use the approved SQLite + aiosqlite + SQLAlchemy 2.x asyncio + Alembic stack. Follow the shared stack policy for paths, portable types, PRAGMAs and sessions.
 
 ## Data boundaries
 - **Source:** patients, encounters, clinical notes, lab observations, medication orders/reconciliations, radiology reports, documents, media metadata.
@@ -29,3 +29,7 @@ Read `case-schema.md`, `hospital-api.md`, backend architecture, and `data-access
 
 ## Done when
 Migration and rollback (if supported) tested, seed validated, cross-document references resolve, query tests pass, and CASE-001 remains replayable.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

@@ -74,3 +74,7 @@ cases/CASE-001/
 
 ## Definition of done
 A deterministic generation command recreates the artifact, all validations pass, and the case is investigative without being solved by a single obvious note.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

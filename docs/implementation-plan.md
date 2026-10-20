@@ -1,6 +1,6 @@
 # CASETRACE — Implementation Plan
 
-**Document:** `docs/IMPLEMENTATION_PLAN.md`  
+**Document:** `docs/implementation-plan.md`
 **Status:** Implementation baseline / revise against repository contracts  
 **Version:** 1.0  
 **Primary release:** CASE-001 evidence-backed vertical slice  
@@ -33,7 +33,7 @@ Before editing, the implementing agent must inspect the actual filenames and con
 
 | Source | Owns |
 |---|---|
-| `AGENT.md` or `AGENTS.md` | Repository-specific coding-agent instructions |
+| `AGENTS.md` | Repository-specific coding-agent instructions |
 | `docs/backend-architecture.md` | Backend layer boundaries, services, execution architecture |
 | `docs/frontend-architecture.md` | Next.js structure, client/server boundaries, UI integration |
 | `docs/frontend-backend-contract.md` | Browser-facing API paths, DTOs, and events |
@@ -41,7 +41,7 @@ Before editing, the implementing agent must inspect the actual filenames and con
 | `docs/agent-tools.md` | Tool names, parameters, output and permissions |
 | `docs/hospital-api.md` | Simulated hospital retrieval behavior |
 | `ui-design/` | Approved interface and visual design direction |
-| `skills/` | Task-specific coding-agent procedures and guardrails |
+| `.skill/` | Task-specific coding-agent procedures and guardrails |
 
 **Priority rule:** The user's current task and explicit contracts override examples in skill files. If contracts conflict with one another, stop that *specific interface implementation* long enough to record and resolve the conflict; continue unrelated tasks. Do not guess an ID mapping or quietly implement two incompatible payloads.
 
@@ -64,7 +64,7 @@ Resolve the following with a short decision record, a canonical example fixture,
 ### 4.1 MVP / must-have
 
 - CASE-001 fully populated with validated synthetic records and at least two independent sources supporting the targeted investigation.
-- PostgreSQL schema and repeatable seed for patient, encounters, labs, medications, notes, documents, imaging metadata, and investigation state as required by the case.
+- SQLite schema and repeatable seed for patient, encounters, labs, medications, notes, documents, imaging metadata, and investigation state as required by the case.
 - FastAPI hospital endpoints and agent-facing retrieval tools for CASE-001's actual evidence types.
 - Investigation creation, run persistence, real tool execution, timeline construction, conflict detection, source verification, and report retrieval.
 - Next.js patient chart, investigation workspace, agent activity, timeline, evidence inspector, contradiction comparison, report view.
@@ -103,7 +103,7 @@ CASETRACE/
 │   ├── api/                            # FastAPI app, models, migrations, tests
 │   └── web/                            # Next.js, TypeScript, routes, components
 ├── docs/
-│   ├── IMPLEMENTATION_PLAN.md
+│   ├── implementation-plan.md
 │   ├── frontend-architecture.md
 │   ├── backend-architecture.md
 │   ├── frontend-backend-contract.md
@@ -112,7 +112,7 @@ CASETRACE/
 │   ├── agent-tools.md
 │   └── ...
 ├── ui-design/                          # HTML design references
-├── skills/                             # agent operating instructions
+├── .skill/                             # agent operating instructions
 ├── data/
 │   └── cases/
 │       └── CASE-001/
@@ -155,21 +155,23 @@ flowchart TD
 
 Some frontend layout work can proceed alongside backend tasks once types and example responses are locked. Do not connect fake final findings while backend implementation remains incomplete.
 
-## 7. Phase 0 — Repository readiness and contracts
+## 7. Phase 1 — Project foundation
 
 **Goal:** Start implementation with compatible boundaries, repeatable local development, and testable interfaces.
+
+Read [development stack](development-stack.md) for planned toolchain versions, uv environment management, pnpm scripts, lockfile/CI installation, SQLite connection lifecycle and isolated test foundations. Existing task IDs P0 through P6 and gate IDs G0 through G6 are retained for traceability; phase headings group them into the five finalized delivery phases without changing dependencies. P0-02 remains the contract audit prerequisite to affected interface implementation.
 
 | ID | Task | Deliverable | Acceptance |
 |---|---|---|---|
 | P0-01 | Inventory repo, architecture docs, skills, and HTML prototypes | `docs/IMPLEMENTATION_INVENTORY.md` or a section in a work log | Every referenced component/file is located or marked missing |
 | P0-02 | Run contract conflict audit | `docs/CONTRACT_DECISIONS.md` / ADRs | IDs, resource mappings, status enums and SSE envelope agreed |
 | P0-03 | Define dev configuration and secrets policy | `.env.example`, `.gitignore`, README instructions | No secrets committed; commands documented |
-| P0-04 | Bootstrap FastAPI, Next.js, Postgres and migrations | Working local stack | Frontend and API start; DB connection and basic health check work |
+| P0-04 | Bootstrap Next.js App Router + pnpm, FastAPI + uv, SQLite + aiosqlite + SQLAlchemy + Alembic | Manifests, committed lockfiles, central settings and initial migrations | Both apps start; root/API commands resolve the same DB; WAL/FK/busy timeout and shutdown verified |
 | P0-05 | Establish format/type/test commands | package scripts, Python tooling, CI draft | Basic lint, type-check and smoke test pass |
 
 **Exit gate G0:** A fresh checkout can run the empty application stack with a known configuration, and a contract example can be serialized and validated consistently.
 
-## 8. Phase 1 — Complete and freeze CASE-001
+## 8. Phase 2a — Hospital data foundation: freeze CASE-001
 
 **Goal:** Build an actual testable longitudinal mystery, not a disconnected set of screenshots and sample JSON.
 
@@ -192,13 +194,13 @@ Some frontend layout work can proceed alongside backend tasks once types and exa
 
 **Exit gate G1:** Case validation passes, all artifacts open, key source records exist independently, and an evaluator can test the expected outcome without exposing it to agents.
 
-## 9. Phase 2 — Database and simulated hospital
+## 9. Phase 2b — Hospital data foundation: database and simulated hospital
 
 **Goal:** Make CASE-001 retrievable through a realistic, typed, audited hospital system.
 
 | ID | Task | Deliverable | Acceptance |
 |---|---|---|---|
-| P2-01 | Implement relational models and migrations | Postgres schema + Alembic history | Foreign keys, nullability, uniqueness and timestamps tested |
+| P2-01 | Implement relational models and migrations | SQLite schema + Alembic history | Foreign keys, nullability, uniqueness and timestamps tested |
 | P2-02 | Build idempotent case loader | `scripts/seed_case.py` or equivalent | Re-running does not duplicate records; source IDs remain stable |
 | P2-03 | Implement repository/service layer | Typed hospital queries | Scoped patient/encounter/resource lookup and deterministic sorting |
 | P2-04 | Implement required hospital API routes | Patient/encounter/lab/medication/document/imaging endpoints | Paths and payloads match authoritative contract |
@@ -216,7 +218,7 @@ Some frontend layout work can proceed alongside backend tasks once types and exa
 
 **Exit gate G2:** The planned mystery is recoverable using only documented hospital tools. A direct answer-key path is inaccessible, and a wrong-patient request cannot return CASE-001 evidence.
 
-## 10. Phase 3 — Evidence engine and timeline
+## 10. Phase 3a — Investigation engine: evidence and timeline
 
 **Goal:** Normalize retrieved information into traceable, testable investigative evidence without modifying source facts.
 
@@ -244,13 +246,13 @@ retrieved source records
 
 **Exit gate G3:** A deterministic test detects CASE-001's contradiction and rejects fabricated citations, while the negative control produces no falsely verified contradiction.
 
-## 11. Phase 4 — Investigation orchestration and observable events
+## 11. Phase 3b — Investigation engine: orchestration and events
 
 **Goal:** Turn isolated tools into an actual, inspectable investigation workflow.
 
 ### 11.1 Minimum orchestration
 
-Begin with one orchestrated execution pipeline and only the specialist roles required to achieve the end-to-end result. Do not introduce elaborate autonomous multi-agent coordination until the simplest reliable pipeline works.
+Use the existing controlled Retrieval → Timeline/Laboratory/Medication → Contradiction Investigator → deterministic Verification → Synthesis pipeline. Preserve the documented roles and permissions; do not defer required specialists or introduce an unrestricted swarm.
 
 | ID | Task | Deliverable | Acceptance |
 |---|---|---|---|
@@ -262,7 +264,7 @@ Begin with one orchestrated execution pipeline and only the specialist roles req
 | P4-06 | Persist activity and expose stream | SSE or agreed event transport | UI can reconnect and replay/reconcile events |
 | P4-07 | Add controlled failure behavior | Partial/failed status, timeouts and bounded retries | No infinite spinner or fabricated completion |
 
-**Suggested roles when the vertical slice is stable:** Retrieval Agent; Timeline Agent; Laboratory Agent; Medication Agent; Contradiction Investigator; Synthesis Agent. Keep the actual agent names/tool permissions aligned with `agent-tools.md` and your agent architecture. Lab and medication work may run in parallel only when dependencies and event ordering are correctly handled.
+**Required roles for the CASE-001 vertical slice (per multi-agent architecture):** Retrieval Agent; Timeline Agent; Laboratory Agent; Medication Agent; Contradiction Investigator; Synthesis Agent. Keep the actual agent names/tool permissions aligned with `agent-tools.md` and your agent architecture. Lab and medication work may run in parallel only when dependencies and event ordering are correctly handled.
 
 ### 11.2 Runtime boundaries
 
@@ -274,7 +276,7 @@ Begin with one orchestrated execution pipeline and only the specialist roles req
 
 **Exit gate G4:** A fresh API call can start, observe, and retrieve a completed or explicitly partial investigation; tool logs and evidence links explain how the result was obtained.
 
-## 12. Phase 5 — Next.js application and live integration
+## 12. Phase 4 — Frontend integration
 
 **Goal:** Replace HTML-only prototypes with real typed screens powered by the backend.
 
@@ -291,7 +293,7 @@ Begin with one orchestrated execution pipeline and only the specialist roles req
 
 **Exit gate G5:** A judge can operate the full CASE-001 path in the browser without manual database inspection or separate API tooling.
 
-## 13. Phase 6 — Evaluation, hardening, and demo readiness
+## 13. Phase 5 — Validation and demo
 
 **Goal:** Prove credibility and recoverability under realistic failures.
 
@@ -339,7 +341,7 @@ Begin with one orchestrated execution pipeline and only the specialist roles req
 | Layer | Must test | Suggested mechanism |
 |---|---|---|
 | Synthetic case | schema validity, unique IDs, clinical chronology, artifact/checksum consistency | Python validation scripts + fixture tests |
-| Database | FK relationships, seed idempotency, transaction integrity, patient isolation | Pytest + test Postgres |
+| Database | FK relationships, seed idempotency, transaction integrity, patient isolation | uv run pytest + isolated temporary file-backed SQLite |
 | Hospital API | patient/encounter/lab/medication/document retrieval, malformed ID, pagination | FastAPI client contract tests |
 | Agent tools | authorized access, typed arguments/results, auditable calls, no ground-truth access | mocked + integration tool tests |
 | Evidence | source dereference, version, time semantics, missing refs, contradiction verifier | deterministic unit/integration tests |
@@ -435,7 +437,7 @@ A **phase** is complete only when its exit gate is demonstrably satisfied with c
 
 ## 20. Recommended immediate next action
 
-**Run Phase 0 first.** Do not start coding against unresolved resource ID, timestamp or event payload discrepancies. Once contracts are consistent, freeze the exact CASE-001 chronology and build its reproducible structured seed. The next executable milestone is **CASE-001 retrieved through the simulated hospital API**, followed by a tool-backed contradiction test.
+**Run Phase 1 foundation first (existing P0 task IDs).** Do not implement unresolved resource ID, timestamp or event payload contracts. First coding slice: P0-04 foundation bootstrap with Next.js App Router/pnpm manifests and FastAPI/uv manifests, shared absolute-path settings, SQLite connection lifecycle and initial Alembic wiring; verify path independence, per-connection PRAGMAs and shutdown against isolated files. Complete P0-02 decisions before creating affected domain schemas. Then freeze CASE-001 and build its reproducible validated seed. The next clinical milestone is **CASE-001 retrieved through the simulated hospital API**, followed by a tool-backed contradiction test.
 
 ---
 

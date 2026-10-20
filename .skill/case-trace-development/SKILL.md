@@ -12,7 +12,7 @@ Coordinate development of CASETRACE: a synthetic-hospital, evidence-grounded AI 
 Use for feature planning, cross-layer changes, migrations, debugging, code review, integration, and agent handoffs. Load the relevant frontend, backend, and database skills before modifying those layers.
 
 ## Source-of-truth order
-1. Repository `AGENT.md` and the user's current request.
+1. Repository `AGENTS.md` and the user's current request.
 2. `frontend-backend-contract.md`, `case-schema.md`, `agent-tools.md`, and `hospital-api.md` for their respective interfaces.
 3. Backend/frontend architecture specifications and `ui-design/` references.
 4. Existing tests and implementation for details not specified elsewhere.
@@ -44,3 +44,7 @@ If sources disagree, identify the conflict, prefer explicit contract definitions
 
 ## Definition of done
 Feature follows the applicable contract, handles empty/loading/error states, passes relevant tests, preserves citation provenance, remains reproducible with synthetic fixtures, and has a concise integration note.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

@@ -1,8 +1,8 @@
-# CASETRACE — PostgreSQL Database Schema
+# CASETRACE — SQLite Database Schema
 
-**Document:** `docs/DATABASE_SCHEMA.md`  
+**Document:** `docs/database-schema.md`
 **Status:** Proposed canonical logical schema; confirm existing IDs/API DTOs before migration  
-**Version:** 1.0 · **Stack:** PostgreSQL, SQLAlchemy 2.x, Alembic, FastAPI
+**Version:** 1.1 · **Stack:** SQLite, SQLAlchemy 2.x, Alembic, FastAPI
 
 ## 1. Purpose
 
@@ -10,20 +10,22 @@ Define durable storage for CASETRACE's **synthetic hospital source records** and
 
 ## 2. Architecture principles
 
-- **Three trust zones:** (A) immutable simulated hospital records, (B) derived agent investigation outputs, (C) offline evaluation answer key. Zone C must not be readable by hospital or investigation runtime roles.
+- **Three trust zones:** (A) immutable simulated hospital records, (B) derived agent investigation outputs, (C) offline evaluation answer key. Zone C must be physically unavailable to the hospital and investigation runtime process.
 - The API's public `patient_id`/`encounter_id` is an opaque, stable string; internal DB primary keys may be UUIDs. A fixed mapping must be decided in ADR before seeding (`PAT-001` vs `SYN-001` must not be guessed).
 - Every clinical record has stable resource ID, patient, source lineage, timestamps with original timezone/precision where needed, and an optional document/encounter relationship.
 - Preserve original records/versions. Corrections create new version or append-only amendments; never silently overwrite content used in evidence.
-- Store document and image blobs in controlled asset storage, PostgreSQL metadata references in DB, and SHA-256 hashes for integrity.
-- Use `TIMESTAMPTZ` for known instants, plus original literal/offset/timezone and precision fields for ambiguous/date-only clinical source times.
-- Patient-scoped access checks must be enforced by services/repositories; consider row-level security only after tenant model is concrete.
+- Store document and image blobs in controlled asset storage, SQLite metadata references in DB, and SHA-256 hashes for integrity.
+- Use a shared UTC-normalizing SQLAlchemy type adapter for known instants, restoring timezone-aware UTC on load; retain original literal/offset/timezone and precision fields for ambiguous/date-only clinical source times. SQLite does not preserve offsets through `DateTime(timezone=True)` alone.
+- Patient-scoped access checks must be enforced by services/repositories; SQLite has no row-level security or per-table grants; use explicit service checks and OS/container file permissions.
 - Pseudorandom synthetic fixtures use deterministic external IDs and idempotent seed scripts. Never use copied real patient data.
 
 ## 3. Namespaces, conventions and ID policy
 
-Use two PostgreSQL schemas if useful: `hospital` and `investigation`; keep evaluation answer keys in **separate offline database/files not mounted to application containers**. Naming below omits schema qualifiers for readability. Example external IDs are conceptual and must be adapted to `case-schema.md` and `frontend-backend-contract.md`.
+Read [development stack and SQLite operations](development-stack.md) for portable UUID/JSON/enum/UTC types, settings and absolute path resolution, connection PRAGMAs, session lifecycle, migrations, backups and isolated tests. These are mandatory implementation requirements. Public IDs, status values and evidence contracts are unchanged by the stack migration.
 
-**Columns common to source records:** `id UUID PK`, `external_id TEXT UNIQUE` (scoped by dataset/tenant if necessary), `patient_id UUID FK`, `encounter_id UUID FK NULL`, `source_version INTEGER`, `source_system TEXT`, `created_at TIMESTAMPTZ`, `updated_at TIMESTAMPTZ`; clinical times are resource-specific. Raw input payload JSONB optional, not a substitute for typed searchable columns.
+Use logical `hospital` and `investigation` modules/repositories in one SQLite database, without database schema qualifiers; keep evaluation answer keys in **separate offline database/files not mounted to application containers**. Naming below omits schema qualifiers for readability. Example external IDs are conceptual and must be adapted to `case-schema.md` and `frontend-backend-contract.md`.
+
+**Columns common to source records:** `id Uuid PK`, `external_id TEXT UNIQUE` (scoped by dataset/tenant if necessary), `patient_id Uuid FK`, `encounter_id Uuid FK NULL`, `source_version INTEGER`, `source_system TEXT`, `created_at UTC datetime`, `updated_at UTC datetime`; clinical times are resource-specific. Raw input payload SQLAlchemy `JSON` optional, not a substitute for typed searchable columns.
 
 ## 4. Entity relationships
 
@@ -82,28 +84,29 @@ erDiagram
 | `findings` | `id`, `investigation_id`, `version`, `finding_type`, `claim_text`, `status`, `support_level?`, `alternatives`, `limitations`, `created_at` | Candidate/verified/refuted/inconclusive; never ground-truth label |
 | `finding_evidence_links` | `finding_id`, `evidence_ref_id`, `relationship`, `validation_status`, `reason?` | Composite PK `(finding_id,evidence_ref_id,relationship)`; supports/refutes/context |
 | `reports` | `id`, `investigation_id`, `version`, `status`, `body_json`, `generated_at?`, `supersedes_report_id?` | Versioned outputs; only validated material citations |
-| `run_leases` (optional) | `investigation_id`, `worker_id`, `lease_expires_at`, `heartbeat_at` | Avoid concurrent run workers; alternatively lock run row |
+| `run_leases` (optional) | `investigation_id`, `worker_id`, `lease_expires_at`, `heartbeat_at` | Avoid concurrent run workers; claim with a version/status-guarded update; no row locks |
 
-## 7. Minimal PostgreSQL DDL reference
+## 7. Minimal SQLite DDL reference
 
 This is an **illustrative migration skeleton**, not a full schema dump. Build canonical Alembic migrations for every table and adjust external-ID namespaces after contract audit.
 
 ```sql
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+-- Illustrative only: application supplies UUID hex IDs and normalized UTC times.
+-- Configure connections and file WAL through the shared factory, not this DDL.
 
 CREATE TABLE case_datasets (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id CHAR(32) PRIMARY KEY NOT NULL,
   case_id TEXT NOT NULL,
   dataset_version TEXT NOT NULL,
   seed_hash TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'ready',
-  seeded_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  seeded_at DATETIME NOT NULL,
   UNIQUE (case_id, dataset_version)
 );
 
 CREATE TABLE patients (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  dataset_id UUID NOT NULL REFERENCES case_datasets(id),
+  id CHAR(32) PRIMARY KEY NOT NULL,
+  dataset_id CHAR(32) NOT NULL REFERENCES case_datasets(id),
   external_id TEXT NOT NULL,
   synthetic_mrn TEXT NOT NULL,
   display_name TEXT NOT NULL,
@@ -115,41 +118,41 @@ CREATE TABLE patients (
 );
 
 CREATE TABLE encounters (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  patient_id UUID NOT NULL REFERENCES patients(id),
+  id CHAR(32) PRIMARY KEY NOT NULL,
+  patient_id CHAR(32) NOT NULL REFERENCES patients(id),
   external_id TEXT NOT NULL,
   type TEXT NOT NULL,
   status TEXT NOT NULL,
-  started_at TIMESTAMPTZ,
-  ended_at TIMESTAMPTZ,
+  started_at DATETIME,
+  ended_at DATETIME,
   UNIQUE (patient_id, external_id),
   CHECK (ended_at IS NULL OR started_at IS NULL OR ended_at >= started_at)
 );
 
 CREATE TABLE investigations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id CHAR(32) PRIMARY KEY NOT NULL,
   external_id TEXT NOT NULL UNIQUE,
-  patient_id UUID NOT NULL REFERENCES patients(id),
-  dataset_id UUID NOT NULL REFERENCES case_datasets(id),
+  patient_id CHAR(32) NOT NULL REFERENCES patients(id),
+  dataset_id CHAR(32) NOT NULL REFERENCES case_datasets(id),
   status TEXT NOT NULL DEFAULT 'queued'
       CHECK (status IN ('queued','running','completed','partial','failed','cancelled')),
   question TEXT NOT NULL,
   requested_by TEXT,
   idempotency_key TEXT UNIQUE,
-  retry_of_id UUID REFERENCES investigations(id),
+  retry_of_id CHAR(32) REFERENCES investigations(id),
   version INTEGER NOT NULL DEFAULT 1,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  started_at TIMESTAMPTZ,
-  ended_at TIMESTAMPTZ
+  created_at DATETIME NOT NULL,
+  started_at DATETIME,
+  ended_at DATETIME
 );
 
 CREATE TABLE investigation_events (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  investigation_id UUID NOT NULL REFERENCES investigations(id),
+  id CHAR(32) PRIMARY KEY NOT NULL,
+  investigation_id CHAR(32) NOT NULL REFERENCES investigations(id),
   sequence BIGINT NOT NULL,
   event_type TEXT NOT NULL,
-  payload JSONB NOT NULL DEFAULT '{}'::jsonb,
-  occurred_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  payload JSON NOT NULL DEFAULT '{}',
+  occurred_at DATETIME NOT NULL,
   UNIQUE (investigation_id, sequence)
 );
 
@@ -158,7 +161,7 @@ CREATE INDEX idx_encounter_timeline ON encounters(patient_id, started_at, id);
 CREATE INDEX idx_investigation_patient ON investigations(patient_id, created_at DESC);
 ```
 
-**Critical note:** Schema above is partially executable by design; the catalog tables still require full migrations. Do not use `create_all()` as a replacement for Alembic in persistent demo environments. Add tenant scope to uniqueness constraints once the tenant model is finalized.
+**Critical note:** The skeleton preserves existing illustrative status values; it does not resolve the documented enum conflict. SQLAlchemy models supply UUID and UTC defaults. Schema above is partial by design; the catalog tables still require full migrations. Do not use `create_all()` as a replacement for Alembic in persistent demo environments. Add tenant scope to uniqueness constraints once the tenant model is finalized.
 
 ## 8. Temporal model
 
@@ -175,15 +178,15 @@ Document evidence should reference immutable document version and checksum; chan
 ## 10. Transactions, indexing, consistency
 
 - Case seed: single logical import with preflight validation; insert dependency order and transactional rollback on failed references. Idempotent on `(case_id, dataset_version, external_id)`.
-- Run claim: guarded `UPDATE ... WHERE status='queued' RETURNING` or row lease. Append event and state change atomically; use transactional outbox when stream delivery is external.
+- Run claim: guarded `UPDATE ... WHERE status='queued' AND version=:expected_version` with affected-row validation and version increment, or a similarly guarded lease. Append event and state change atomically; use transactional outbox when stream delivery is external.
 - Report publish: transactionally verify required citations, insert report version, and set investigation terminal status only if report is ready.
 - Index clinical tables on `(patient_id, event_time)` or equivalent; `(encounter_id)` for joins; document versions `(document_id, version_number)`; lab `(patient_id, collected_at, analyte_code)`; medication `(patient_id, effective_at)`; tool calls `(investigation_id, started_at)`; findings `(investigation_id,status)`.
 - Avoid copying entire documents into audit payloads or SSE events; hold access-controlled metadata and stable source references.
 
 ## 11. Security and isolation
 
-- Distinct DB credentials for schema migration, runtime HIS read operations, investigation write/read operations, and offline evaluator.
-- Runtime user/agent role must not have privileges on evaluator schema/database or underlying answer-key files; tests assert explicit permission denial.
+- SQLite has no server credentials or table roles. Keep migration/import writes in maintenance tooling; runtime clinical repositories expose reads only, investigation repositories expose controlled writes, and OS/container permissions restrict the database file.
+- Keep evaluator answers in separate files/database outside runtime mounts and context. Test that runtime processes cannot read them; SQLite table naming is not an access boundary.
 - Scope all resource queries to patient and dataset; add tenant/facility authorization for multi-tenant support. Check every citation deep link server-side.
 - Avoid raw filesystem paths in API. Serve assets via secure IDs and MIME allowlisting.
 - Never log full medical records, API keys, signed URLs or sensitive runtime environment variables. Synthetic data is still treated as controlled demo content.
@@ -208,8 +211,8 @@ Document evidence should reference immutable document version and checksum; chan
 
 ## 14. Contract audit before coding
 
-The repository has previously used differing illustrative patient IDs (`PAT-001`, `SYN-001`) and API routes. Choose the exact external ID and mapping once, then align `case-schema.md`, `hospital-api.md`, `frontend-backend-contract.md`, database constraints, generated client types, and test fixtures. Likewise finalize state enum names and event envelope from `INVESTIGATION_STATE_MACHINE.md` and citation anchor schema from the evidence contract. Record changes in an ADR.
+The repository has previously used differing illustrative patient IDs (`PAT-001`, `SYN-001`) and API routes. Choose the exact external ID and mapping once, then align `case-schema.md`, `hospital-api.md`, `frontend-backend-contract.md`, database constraints, generated client types, and test fixtures. Likewise finalize state enum names and event envelope from `investigation-state-machine.md` and citation anchor schema from the evidence contract. Record changes in an ADR.
 
 ## 15. Definition of done
 
-A clean PostgreSQL database can be migrated, seeded with frozen CASE-001 artifacts, queried using hospital service methods, and used for a genuine investigation run. Every source and derived record has stable provenance, citations resolve to exact authorized sources, migrations and tests pass, and evaluation answer keys are unreachable by runtime credentials.
+A clean file-backed SQLite database can be migrated, seeded with frozen CASE-001 artifacts, queried using hospital service methods, and used for a genuine investigation run. Every source and derived record has stable provenance, citations resolve to exact authorized sources, migrations and tests pass, and evaluation answer keys are unreachable by runtime processes.

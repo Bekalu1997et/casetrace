@@ -1,4 +1,6 @@
 # CASETRACE
+
+Use pnpm for the single Next.js App Router application. See [development stack](development-stack.md) for planned Node.js/pnpm versions, scripts, lockfile and CI commands. No package manifest or scripts exist yet; keep centralized API access, SSE behavior and existing styling unchanged.
 ## Frontend Architecture & Implementation Specification
 
 **Version:** 1.0  

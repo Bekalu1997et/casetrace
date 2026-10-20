@@ -34,3 +34,7 @@ Do not hard-code contradiction conclusions, tool activity, or “live” progres
 
 ## Done when
 Matches UX reference, typechecks, handles server errors, is keyboard-operable, and resolves evidence links to actual data.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

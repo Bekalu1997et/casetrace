@@ -22,10 +22,11 @@ This repository currently contains architecture documents, project guidance, and
 | --- | --- |
 | Web application | Next.js, TypeScript, Tailwind CSS, shadcn/ui; hospital and investigation workspaces |
 | API | Python 3.12+, FastAPI, Pydantic v2; hospital APIs and investigation services |
-| Persistence | PostgreSQL, SQLAlchemy 2, Alembic |
+| Persistence | SQLite, SQLAlchemy 2, Alembic |
 | Investigation execution | Specialized agents, clinical retrieval tools, asyncio workers |
 | Live activity | Server-Sent Events (SSE) |
-| Local infrastructure | Docker Compose |
+| Package management | pnpm (web), uv (API) |
+| Local infrastructure | Local processes preferred; optional Docker Compose for API/web |
 
 Agents retrieve clinical information through defined tools and hospital services, rather than accessing the database or raw case files directly. Models propose findings; deterministic backend code verifies source references, timestamps, and clinical values. Evaluation ground truth must remain isolated from agents and runtime interfaces.
 
@@ -51,7 +52,7 @@ Start with [repository guidance](AGENTS.md) and the [product requirements](docs/
 
 - Architecture: [frontend](docs/frontend-architecture.md), [backend](docs/backend-architecture.md), and [frontend/backend contract](docs/frontend-backend-contract.md).
 - Clinical data: [case schema](docs/case-schema.md), [hospital API](docs/hospital-api.md), and [database schema](docs/database-schema.md).
-- Investigations: [agent tools](docs/agent-tools.md), [multi-agent architecture](docs/multi-agent-architecture.md), [state machine](docs/investigation-state-machine.md), and [evidence contract](docs/evidence-contract.md).
+- Investigations: [agent tools](docs/agent-tools.md), [multi-agent architecture](docs/multi-agent-architecture.md), [state machine](docs/investigation-state-machine.md), and `docs/evidence-contract.md` (missing; finalize before evidence interface implementation).
 - Delivery: [implementation plan](docs/implementation-plan.md), [evaluation plan](docs/evaluation-plan.md), and [demo runbook](docs/demo-runbook.md).
 - Design: [UI design](ui-design/ui-design.md) and [design system](ui-design/design-system.md).
 
@@ -59,6 +60,8 @@ Start with [repository guidance](AGENTS.md) and the [product requirements](docs/
 
 Read the relevant architecture and contracts before implementing a feature. Follow the implementation plan and preserve evidence provenance and distinct timestamp meanings throughout the system.
 
-Setup, run, migration, and test instructions should be added when the corresponding tooling exists and has been verified. No runnable application setup is provided yet.
+See [development stack and SQLite operations](docs/development-stack.md) for the finalized stack, planned toolchain baselines and setup/run/migration/test commands. No runnable application setup is provided yet. Commit `apps/web/pnpm-lock.yaml` and `apps/api/uv.lock` when bootstrapped; use frozen/locked installs in CI. Skills live under `.skill/<name>/SKILL.md`.
+
+SQLite runtime state belongs in `data/runtime/casetrace.db`, resolved against a central absolute root rather than the shell's working directory. WAL, foreign keys and a busy timeout are required. Preserve source assets outside the database and evaluator keys outside runtime access. The [demo runbook](docs/demo-runbook.md) defines planned deterministic reset and recovery.
 
 Use synthetic case data for this prototype. Keep credentials and local environment values out of version control; `.env.example` is reserved for documented placeholder values.

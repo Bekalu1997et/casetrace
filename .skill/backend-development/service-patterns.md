@@ -35,3 +35,7 @@ Use existing contracts for actual state names, orchestration boundaries, and eve
 
 ## Tests
 Mock repositories and tools for unit tests; integration-test against seeded hospital data. Assert no unsupported finding survives verification, and failed tool calls are preserved in the investigation trace.
+
+## Stack alignment
+
+Use uv (`uv run` for application, migrations and tests) and the shared [stack policy](../../docs/development-stack.md). A service must materialize read results and close the session before inference/tool waits; audit-start and audit-result use separate short commits. The persistence service serializes bounded writes, checks versions and atomically commits state plus durable events. Never pass a session to an agent.

@@ -1,6 +1,8 @@
 # CASETRACE — Evaluation Plan
 
-**Document:** `docs/EVALUATION_PLAN.md`  
+Run database integration tests against isolated temporary SQLite files per test/worker, never the demo runtime database. Cover WAL, every-connection FK/busy timeout, UTC round trips, guarded concurrent updates, idempotent retries, migrations and reset/recovery. In-memory tests must skip WAL. See [development stack](development-stack.md); evaluator answers remain physically separate from runtime.
+
+**Document:** `docs/evaluation-plan.md`
 **Status:** Proposed quality and release gates  
 **Version:** 1.0 · **Primary dataset:** CASE-001; expand to CASE-002–CASE-010 after first vertical slice
 

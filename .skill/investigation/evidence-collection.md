@@ -26,3 +26,7 @@ No fabricated values or quotations. No silent patient switch, hidden answer-key 
 
 ## Testing / done
 Mock tool success, timeout, malformed response, amended note, duplicated document, and wrong-patient payload. Assert correct provenance, scoped filtering, error reporting, and evidence deduplication with amendments retained.
+
+## Stack alignment
+
+SQLite writes go through the controlled application persistence service. Commit retrieval/audit start, release sessions during external work, and persist typed results/evidence with stable retry keys in a separate short transaction. See [SQLite operations](../../docs/development-stack.md); concurrent agents must not share sessions or overwrite a newer investigation version.

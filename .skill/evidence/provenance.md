@@ -36,3 +36,7 @@ For each evidence excerpt maintain: `evidence_id`, source-version foreign key, a
 - Repeated fetches of same source/version deduplicate without removing separate legitimate observations.
 - Anchor resolution fails closed for unauthorized viewer, deleted artifact, different patient and unknown version.
 - Exact source lineage is recoverable from every reported key finding.
+
+## Stack alignment
+
+Persist provenance and citation validation atomically with the corresponding finding/event through the controlled persistence service. Preserve source IDs, versions, hashes, anchors and distinct UTC time semantics; retries must not duplicate logical evidence/finding links. Use the [portable SQLite conventions](../../docs/development-stack.md) rather than engine-specific UUID/JSON/time assumptions.

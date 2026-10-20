@@ -1,6 +1,8 @@
 # CASETRACE — Investigation State Machine
 
-**Document:** `docs/INVESTIGATION_STATE_MACHINE.md`  
+Persistence uses SQLite through the controlled application service described in [development stack](development-stack.md). Commit state changes and durable events atomically, require version/status guards, and enforce unique retry/result keys. Emit SSE after commit; do not share sessions between agents or hold transactions across external work.
+
+**Document:** `docs/investigation-state-machine.md`
 **Status:** Proposed canonical lifecycle; reconcile with existing API contracts before implementation  
 **Version:** 1.0 · **Scope:** CASE-001 MVP and extensible multi-agent runs
 
@@ -109,7 +111,7 @@ Event types: `investigation.queued`, `investigation.started`, `stage.started`, `
 ## 9. Concurrency, retries and idempotency
 
 - `POST` create-investigation requests accept an idempotency key if defined by the API; repeated submissions must not create duplicate runs inadvertently.
-- Claim work via DB row lock/lease with heartbeat or equivalent; define lease expiry and retry policy. Use transactional outbox if publishing and persistence are distinct failure domains.
+- Claim work via an atomic version/status-guarded update or guarded lease with heartbeat; validate affected-row count and define lease expiry and bounded retry policy. SQLite has no row-level `FOR UPDATE` locks. Use transactional outbox if publishing and persistence are distinct failure domains.
 - Retry only known transient, idempotent reads with bounded exponential backoff; model calls and writes require explicit idempotency/attempt semantics.
 - Enforce max attempts and deadline at run, stage and tool levels. A worker crash yields recoverable stale lease detection, not a permanently running spinner.
 - Cancellation stops scheduling additional tools, records in-flight outcome, and preserves already retrieved audit evidence.
@@ -128,7 +130,7 @@ Event types: `investigation.queued`, `investigation.started`, `stage.started`, `
 
 ## 11. Database implementation mapping
 
-Suggested tables: `investigations`, `investigation_stages`, `agent_executions`, `tool_calls`, `investigation_events`, `findings`, `finding_evidence_links`, `evidence_refs`, `reports`. See `DATABASE_SCHEMA.md`. All persisted statuses use explicit enums/check constraints, foreign keys, timestamps and version/attempt fields. Add uniqueness `(investigation_id, sequence)` and `(investigation_id, event_id)` or equivalent.
+Suggested tables: `investigations`, `investigation_stages`, `agent_executions`, `tool_calls`, `investigation_events`, `findings`, `finding_evidence_links`, `evidence_refs`, `reports`. See `database-schema.md`. All persisted statuses use explicit enums/check constraints, foreign keys, timestamps and version/attempt fields. Add uniqueness `(investigation_id, sequence)` and `(investigation_id, event_id)` or equivalent.
 
 ## 12. API considerations
 

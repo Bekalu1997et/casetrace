@@ -27,3 +27,7 @@ Review affected contracts → write schema/route tests → implement service and
 
 ## Definition of done
 Request validation, correct statuses, well-defined errors, tests, traceable evidence, no leaked secrets, and frontend-compatible responses.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

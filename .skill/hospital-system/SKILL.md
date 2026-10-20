@@ -12,7 +12,7 @@ Build and maintain the **simulated hospital information system (HIS)** that CASE
 Use for hospital API endpoints, data loading, patient lookup, encounter and artifact retrieval, cross-record queries, tool interfaces, auditing, or tests involving hospital records. Read the specialized file for each operation.
 
 ## Required project context
-Read `AGENT.md`, `case-schema.md`, `hospital-api.md`, `agent-tools.md`, `backend-architecture.md`, `frontend-backend-contract.md` when present. **Existing contracts take precedence** over examples here. Do not silently invent endpoint names, IDs, fields, or database tables if a contract defines them.
+Read `AGENTS.md`, `case-schema.md`, `hospital-api.md`, `agent-tools.md`, `backend-architecture.md`, `frontend-backend-contract.md` when present. **Existing contracts take precedence** over examples here. Do not silently invent endpoint names, IDs, fields, or database tables if a contract defines them.
 
 ## System boundary
 `CASETRACE agent -> approved tool -> hospital service -> synthetic database / artifact store -> provenance-aware response`
@@ -61,3 +61,7 @@ Errors should use a stable machine code, descriptive safe message, and `request_
 
 ## Definition of done
 Every tool returns deterministic fixture-backed results, respects access boundaries, retains exact evidence identifiers, emits a usable audit record, meets existing contracts, and has passing positive/negative tests. The demo can reconstruct CASE-001 by querying the HIS, with no hardcoded revelation.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

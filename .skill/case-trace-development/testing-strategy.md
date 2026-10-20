@@ -31,3 +31,7 @@ Execute targeted checks during changes and whole-project checks before demo deli
 
 ## Definition of done
 Tests cover happy path, at least one edge/failure mode, provenance verification, and regression for any bug fixed.
+
+## Stack alignment
+
+Planned commands and CI lockfile gates are in [development stack](../../docs/development-stack.md). Use `uv run pytest` for configured backend tests and `pnpm test` only once defined in the frontend manifest. Use isolated file-backed SQLite per test/worker; in-memory tests skip WAL. Cover migration, FK settings on new connections, UTC round trips, lock contention, version conflicts, idempotent results, reset and backup recovery.

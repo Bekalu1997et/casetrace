@@ -12,7 +12,7 @@ Implement the evidence-first investigation engine for synthetic hospital histori
 Use for work on investigation orchestration, agent workflows, event streams, run persistence, and investigation API endpoints. Read the specialized skill before implementing each stage.
 
 ## Required project context
-Read `AGENT.md`, `case-schema.md`, `agent-tools.md`, `hospital-api.md`, `frontend-backend-contract.md`, and backend architecture where available. Treat existing contracts as the source of truth; if a field/route differs from examples here, follow the contract and document the mapping. Never silently introduce a competing API.
+Read `AGENTS.md`, `case-schema.md`, `agent-tools.md`, `hospital-api.md`, `frontend-backend-contract.md`, and backend architecture where available. Treat existing contracts as the source of truth; if a field/route differs from examples here, follow the contract and document the mapping. Never silently introduce a competing API.
 
 ## Inputs / outputs
 - Input: authorized synthetic `patient_id`, optional `case_id`, investigator objective, permitted tool scope, run settings.
@@ -66,3 +66,7 @@ A seeded CASE-001 run discovers the intended timeline contradiction only by retr
 
 ## Related skills
 `investigation-planning.md`, `evidence-collection.md`, `timeline-reconstruction.md`, `contradiction-detection.md`, `hypothesis-generation.md`, `hypothesis-testing.md`, `evidence-linking.md`, `uncertainty-analysis.md`, `final-report-generation.md`.
+
+## Finalized stack
+
+Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.

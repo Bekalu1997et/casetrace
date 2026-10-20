@@ -18,7 +18,7 @@ A versioned synthetic dataset, validated seed scripts, environment-specific data
 2. End active runs and capture their statuses; archive required logs and export diagnostics.
 3. Clear only generated demo investigation state: temporary sessions, tool-run cache, derived timelines, generated reports, and ephemeral event streams scoped to the demo tenant.
 4. Restore CASE-001 and optional backups from the versioned synthetic fixture manifest using idempotent seed tooling.
-5. Rebuild indexes/materialized views if used; confirm storage paths and content checksums.
+5. Verify SQLite indexes and derived projections if used; confirm storage paths and content checksums.
 6. Verify seeded patient count, encounter and document counts, evidence IDs, and original artifact availability against manifest values (not invented hard-coded numbers).
 7. Check hospital endpoint health and agent-tool auth/read permissions.
 8. Launch a smoke investigation, verify tool execution and citation opening; then clear this smoke run to leave clean initial UI state.
@@ -27,9 +27,9 @@ A versioned synthetic dataset, validated seed scripts, environment-specific data
 ## Suggested command interface (illustrative; implement and document before use)
 ```bash
 # Never run against production; replace with actual project commands
-python scripts/demo_reset.py --tenant demo --case CASE-001 --dry-run
-python scripts/demo_reset.py --tenant demo --case CASE-001 --confirm
-python scripts/demo_preflight.py --tenant demo --case CASE-001
+uv run --project apps/api python scripts/demo_reset.py --tenant demo --case CASE-001 --dry-run
+uv run --project apps/api python scripts/demo_reset.py --tenant demo --case CASE-001 --confirm
+uv run --project apps/api python scripts/demo_preflight.py --tenant demo --case CASE-001
 ```
 Commands above are proposals, not claims that they already exist.
 
@@ -39,3 +39,7 @@ Commands above are proposals, not claims that they already exist.
 - Investigation starts with no leaked old activity or cached conclusions.
 - Historical audit/run data is archived or retained according to configured policy.
 - Two consecutive full demo runs and resets pass without manual database edits.
+
+## Stack alignment
+
+Follow the [demo runbook](../../docs/demo-runbook.md) and [SQLite operations](../../docs/development-stack.md). Stop workers and close connections before maintenance; archive audits and a consistent backup. Never remove a live DB/WAL/SHM or modify canonical fixtures. Rebuild imported records only through reviewed migrations and validated idempotent seeds; verify hashes and source IDs.

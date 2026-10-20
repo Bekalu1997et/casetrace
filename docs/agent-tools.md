@@ -1,5 +1,7 @@
 # CASETRACE Agent Tools
 
+SQLite migration preserves all tool names, scopes, schemas, provenance and audit behavior. Follow [development stack](development-stack.md): commit audit start before external work, close repository read sessions promptly, and commit results separately through the controlled persistence service. Agents never own database sessions.
+
 **Status:** Canonical  
 **Purpose:** Define the tool interface through which CASETRACE agents retrieve, inspect, compare, and verify clinical evidence.
 
@@ -24,7 +26,7 @@ ClinicalRecordService
   ↓
 Simulated Hospital
   ↓
-PostgreSQL
+SQLite
 ```
 
 The tool layer is the security, abstraction, provenance, and observability boundary between agents and clinical data.
@@ -1809,7 +1811,7 @@ ClinicalRecordService
       ↓
 ObservationRepository
       ↓
-PostgreSQL
+SQLite
 ```
 
 Agents must not skip layers.
@@ -1843,7 +1845,7 @@ ClinicalRecordService
  ↓
 SimulatedHospitalService
  ↓
-PostgreSQL
+SQLite
 ```
 
 Future:
@@ -1878,7 +1880,7 @@ Every tool requires:
 
 ### Integration tests
 
-- Real PostgreSQL
+- Real SQLite
 - Seeded CASE-001
 - Correct source IDs
 - Correct timestamps
@@ -2187,7 +2189,7 @@ The agent tool layer is complete when:
 - Every tool has Pydantic input/output schemas.
 - Every tool has permission metadata.
 - Every tool preserves source provenance.
-- Agents cannot directly access PostgreSQL.
+- Agents cannot directly access SQLite.
 - Agents cannot access ground truth.
 - Patient scope is enforced.
 - Tool executions are persisted.

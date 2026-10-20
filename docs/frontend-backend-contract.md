@@ -1,5 +1,7 @@
 # CASETRACE — Frontend–Backend Contract
 
+Stack alignment: SQLite + aiosqlite replaces the server database; uv manages Python and pnpm manages the Next.js application. See [development stack](development-stack.md) for path resolution and planned commands. This change does not alter API routes, payloads, IDs, enums or SSE contracts.
+
 **Version:** 1.0  
 **Frontend:** Next.js + TypeScript  
 **Backend:** FastAPI + Python  
@@ -28,7 +30,7 @@ The frontend must be able to:
 The backend must expose these capabilities without requiring the frontend to know anything about:
 
 - SQLAlchemy
-- PostgreSQL
+- SQLite
 - agent internals
 - LLM providers
 - tool implementation
@@ -2389,7 +2391,7 @@ Those belong exclusively to the backend.
 Example:
 
 ```env
-DATABASE_URL=postgresql+asyncpg://...
+DATABASE_URL=sqlite+aiosqlite:///./data/runtime/casetrace.db
 API_HOST=0.0.0.0
 API_PORT=8000
 
@@ -2697,7 +2699,7 @@ The completed CASETRACE system should look like:
                             Engine           Engine
                │               │                │
                ▼               ▼                ▼
-          PostgreSQL        Agents          Verification
+          SQLite        Agents          Verification
                │
                ▼
        PDFs / Images / Assets

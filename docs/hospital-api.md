@@ -1,9 +1,11 @@
 # CASETRACE — Hospital API Contract
 
+MVP persistence is SQLite via SQLAlchemy 2.x asyncio and aiosqlite. Clinical tools retain their service/repository boundary. Follow [development stack](development-stack.md) for short read sessions, connection settings, portable types and maintenance-only seeding; no database session is passed to agents.
+
 **File:** `docs/hospital-api.md`  
 **Status:** Canonical — v1  
 **System:** CASETRACE Simulated Hospital Information System  
-**Backend:** FastAPI · PostgreSQL · SQLAlchemy 2 · Pydantic v2  
+**Backend:** FastAPI · SQLite · SQLAlchemy 2 · Pydantic v2
 **Related documents:** `AGENTS.md`, `case-schema.md`, `agent-tools.md`, `backend-architecture.md`, `frontend-backend-contract.md`
 
 ---
@@ -61,7 +63,7 @@ SimulatedHospitalService
 Clinical Repositories
     |
     v
-PostgreSQL + Asset Storage
+SQLite + Asset Storage
 ```
 
 ### B. CASETRACE Investigation Engine
@@ -98,7 +100,7 @@ Agents communicate with registered tools.
 
 Tools communicate with the `ClinicalRecordService`.
 
-**Agents must never directly call hospital REST endpoints, access SQLAlchemy sessions, or query PostgreSQL.**
+**Agents must never directly call hospital REST endpoints, access SQLAlchemy sessions, or query SQLite.**
 
 In the initial monolith, the tool layer may call the clinical service in-process. An HTTP adapter can be introduced later without changing agent behavior.
 
@@ -1361,7 +1363,7 @@ ClinicalRecordService
         +-- FutureFHIRHospitalService
 ```
 
-The simulated implementation uses PostgreSQL repositories.
+The simulated implementation uses SQLite repositories.
 
 The future FHIR implementation may map standardized FHIR resources into the same internal clinical models.
 
@@ -1469,7 +1471,7 @@ This prevents missing or duplicate records when timestamps are identical.
 Binary files must be stored separately from clinical metadata.
 
 ```text
-PostgreSQL
+SQLite
    |
    +-- document metadata
    +-- imaging metadata
@@ -1626,7 +1628,7 @@ Asset Validation
 Clinical Data Extraction
     |
     v
-PostgreSQL
+SQLite
     |
     v
 Hospital REST API
@@ -1953,7 +1955,7 @@ Add composite indexes based on actual query patterns.
 
 For v1:
 
-- PostgreSQL text search or indexed text matching is sufficient.
+- Indexed scalar filtering and bounded text matching are sufficient; introduce SQLite FTS only when a measured requirement justifies it.
 - Do not require Elasticsearch.
 - Do not require a vector database for basic hospital document search.
 - Keep search behavior deterministic and inspectable.
@@ -2239,7 +2241,7 @@ Recommended approach:
 Build:
 
 ```text
-PostgreSQL
+SQLite
 SQLAlchemy models
 Alembic migrations
 Case validator
@@ -2305,7 +2307,7 @@ Verify the complete flow:
 CASE-001
    |
    v
-Seed PostgreSQL
+Seed SQLite
    |
    v
 Hospital API

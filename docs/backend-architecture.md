@@ -1,10 +1,12 @@
 # CASETRACE
 
+The MVP uses async SQLAlchemy 2.x with aiosqlite, managed by uv. Follow [development stack and SQLite operations](development-stack.md) for centralized absolute paths, WAL, per-connection foreign keys/busy timeout, session lifecycle and bounded write transactions. No session is held across LLM/tool waits; one persistence service owns version-guarded state transitions.
+
 ## Backend Architecture & Implementation Specification
 
 **Version:** 1.0
 **Backend:** Python + FastAPI
-**Database:** PostgreSQL
+**Database:** SQLite
 **Primary purpose:** Synthetic hospital information system + multi-agent clinical investigation engine
 **Target:** Hackathon prototype with production-oriented architecture
 
@@ -48,7 +50,7 @@ The backend must make the following architecture possible:
               |
       Simulated Hospital
               |
-        PostgreSQL
+        SQLite
               +
       Clinical Documents
       PDF / Images / Assets
@@ -193,7 +195,7 @@ Evidence engine confirms/rejects
 | API             | FastAPI            |
 | Validation      | Pydantic v2        |
 | ORM             | SQLAlchemy 2       |
-| Database        | PostgreSQL         |
+| Database        | SQLite         |
 | Migrations      | Alembic            |
 | Async execution | asyncio            |
 | Streaming       | Server-Sent Events |
@@ -335,7 +337,7 @@ apps/
 
 # 5. Database Architecture
 
-PostgreSQL is the system of record.
+SQLite is the system of record.
 
 The database should contain two logical domains.
 
@@ -566,7 +568,7 @@ encounter_summary
 scanned_document
 ```
 
-Large binary files should not be stored directly inside PostgreSQL.
+Large binary files should not be stored directly inside SQLite.
 
 Store:
 
@@ -1143,7 +1145,7 @@ Source References
 
 # 25. Investigation State
 
-Persist investigation state in PostgreSQL.
+Persist investigation state in SQLite.
 
 ```text
 investigations
@@ -1281,7 +1283,7 @@ GET /api/investigations/{id}/events
 Backend:
 
 ```text
-PostgreSQL
+SQLite
      ↓
 Investigation Event Service
      ↓
@@ -1505,7 +1507,7 @@ If the product grows later, this graph abstraction can move to a dedicated graph
 Separate structured data from binary artifacts.
 
 ```text
-PostgreSQL
+SQLite
     |
     +── metadata
     +── relationships
@@ -2155,7 +2157,7 @@ The final result should be compared against the hidden evaluation fixture.
 
 Build:
 
-- PostgreSQL.
+- SQLite.
 - SQLAlchemy models.
 - Alembic.
 - Case loader.

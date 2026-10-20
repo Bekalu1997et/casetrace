@@ -1,5 +1,25 @@
 # AGENTS.md — CASETRACE
 
+## Finalized implementation stack
+
+Use Next.js App Router + TypeScript + pnpm, FastAPI + Python 3.12+ + uv,
+and SQLite + aiosqlite + SQLAlchemy 2.x asyncio + Alembic for the MVP.
+Preserve Tailwind CSS and shadcn/ui. Read [development stack and SQLite
+operations](docs/development-stack.md) before setup, persistence, migration,
+or concurrency work. It defines toolchain baselines, planned commands,
+absolute database path resolution, WAL, per-connection foreign keys and busy
+timeout, short sessions, guarded state updates, test isolation and recovery.
+Agents retain the existing tool/service boundary and never hold transactions
+while waiting for inference or external operations. Runtime state belongs in
+`data/runtime/casetrace.db`; never commit it or its sidecars. Local development
+is preferred; optional Docker needs only API/web with persistent writable
+runtime storage, one API process, and no separate database service.
+
+Development skills are installed in `.skill/<name>/SKILL.md`. No application
+manifests or lockfiles exist yet; setup commands and version pins remain
+planned until Phase 1 bootstrap. Do not implement application features as part
+of documentation alignment.
+
 ## 1. Mission
 
 You are an AI coding agent working on **CASETRACE**.
@@ -94,7 +114,7 @@ Agents
 Agents do **not** directly access:
 
 ```text
-PostgreSQL
+SQLite
 SQLAlchemy
 filesystem
 raw case JSON
@@ -330,7 +350,7 @@ Redis
 
 unless there is a demonstrated need.
 
-For the first version, a FastAPI application, PostgreSQL, asyncio workers, and SSE are sufficient.
+For the first version, a FastAPI application, SQLite, asyncio workers, and SSE are sufficient.
 
 ---
 
@@ -442,7 +462,7 @@ Python 3.12+
 FastAPI
 Pydantic v2
 SQLAlchemy 2
-PostgreSQL
+SQLite
 Alembic
 asyncio
 SSE
@@ -462,7 +482,7 @@ Tools / Agents
  ↓
 Repositories
  ↓
-PostgreSQL
+SQLite
 ```
 
 Keep boundaries explicit.
@@ -919,7 +939,7 @@ Do not give every agent every tool.
 
 # 17. Database Rules
 
-Use PostgreSQL.
+Use SQLite.
 
 Use SQLAlchemy 2.
 
@@ -1267,7 +1287,7 @@ data/assets/
 
 Database stores metadata and relationships.
 
-Do not store large binary files directly inside PostgreSQL unless explicitly required.
+Do not store large binary files directly inside SQLite unless explicitly required.
 
 Use an abstraction:
 
@@ -1872,7 +1892,7 @@ for required configuration.
 The development environment should support:
 
 ```text
-PostgreSQL
+SQLite
 FastAPI
 Next.js
 ```
@@ -1884,7 +1904,6 @@ Initial architecture:
 ```text
 docker-compose
     │
-    ├── postgres
     ├── api
     └── web
 ```
@@ -2193,7 +2212,7 @@ The frontend should not display:
 
 ```text
 SQLAlchemy
-PostgreSQL query
+SQLite query
 Python stack trace
 internal class name
 LLM provider internals
@@ -2497,7 +2516,7 @@ Before considering a task complete:
 Backend is considered functional when:
 
 ```text
-[ ] PostgreSQL works
+[ ] SQLite works
 [ ] CASE-001 seeds successfully
 [ ] CASE-002 through CASE-010 validate
 [ ] Clinical APIs work
