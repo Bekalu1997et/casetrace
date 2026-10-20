@@ -1,0 +1,168 @@
+{
+  "case_id": "CASE-001",
+  "dataset_version": "1.0",
+  "synthetic_label": "SYNTHETIC — NOT FOR CLINICAL USE",
+  "blueprint": {
+    "background": "Fictional 47-year-old man, never smoker, reflux symptoms and newly confirmed hypertension.",
+    "presenting_complaint": "Cough already present January 8; progressively limiting through July.",
+    "working_diagnosis": "Initial reflux/post-viral possibility; later ACE inhibitor contribution, reflux and anxiety considered.",
+    "encounters": [
+      {
+        "id": "ENC-001-01",
+        "date": "2026-01-08T09:00:00+03:00"
+      },
+      {
+        "id": "ENC-001-02",
+        "date": "2026-02-12T09:00:00+03:00"
+      },
+      {
+        "id": "ENC-001-03",
+        "date": "2026-03-19T09:00:00+03:00"
+      },
+      {
+        "id": "ENC-001-04",
+        "date": "2026-04-30T09:00:00+03:00"
+      },
+      {
+        "id": "ENC-001-05",
+        "date": "2026-06-04T09:00:00+03:00"
+      },
+      {
+        "id": "ENC-001-06",
+        "date": "2026-07-08T09:00:00+03:00"
+      },
+      {
+        "id": "ENC-001-07",
+        "date": "2026-07-22T09:00:00+03:00"
+      }
+    ],
+    "medication_timeline": "Lisinopril ordered February 12, intended February 13; use reported March 19 and July 8. Stop July 8; losartan thereafter by patient report. No administration proof.",
+    "laboratory_trend": "CRP 4, 12, 18, 31, 28 mg/L; HGB 14.1, 13.6, 13.1, 12.4, 12.5 g/dL. Nonspecific; no etiologic diagnosis.",
+    "imaging": "Right basal opacity March 19, persistent April 30 and July 8. CT booked July 29, beyond dataset cutoff.",
+    "follow_up": "April 30 repeat imaging completed even though scheduling task still outstanding; report not yet finalized at scheduling review.",
+    "turning_point": "July 8 symptom progression, weight loss and unresolved focal opacity prompt expedited referral.",
+    "ground_truth_interpretation": "June history conflicts with contemporaneous January and March symptom records. Cough predates lisinopril prescription; medication contribution to persistence is still possible. Underlying etiology is unresolved. No proven malpractice, malignancy, infection or causal harm."
+  },
+  "expected_findings": [
+    {
+      "finding_key": "timeline-contradiction-1",
+      "type": "temporal_conflict",
+      "required_source_ids": [
+        "DOC-001-01",
+        "DOC-001-08",
+        "DOC-001-03",
+        "DOC-001-05",
+        "DOC-001-22",
+        "MED-001-02"
+      ],
+      "expected_claim": "June consultation states cough first began May 26 with none before; contemporaneous January 8 and March 19 records establish earlier cough, including before lisinopril was prescribed.",
+      "acceptable_outcomes": [
+        "verified"
+      ],
+      "alternatives_to_check": [
+        "documentation_delay",
+        "timestamp_precision",
+        "history transcription",
+        "new episode versus persistent symptoms"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-001-01",
+          "field": "text_content",
+          "quote": "Cough present for about ten days"
+        },
+        {
+          "source_id": "DOC-001-03",
+          "field": "text_content",
+          "quote": "Cough persists"
+        },
+        {
+          "source_id": "DOC-001-05",
+          "field": "text_content",
+          "quote": "Cough first began on May 26, 2026; no cough before then."
+        },
+        {
+          "source_id": "MED-001-02",
+          "field": "ordered_at",
+          "value": "2026-02-12T09:45:00+03:00"
+        }
+      ],
+      "counterevidence": "June note may reflect erroneous or incomplete history; no proven deliberate action. January and March documentation are contemporaneous, not late July entries. No documented full resolution between visits."
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "claim": "Repeat April radiograph was never performed",
+      "source_ids": [
+        "DOC-001-09",
+        "DOC-001-10",
+        "DOC-001-19",
+        "IMG-001-02"
+      ],
+      "reason": "Scheduling task reviewed at 11:00 before report finalized at 12:00; imaging performed at 10:00. Status lag is not evidence of absent care."
+    },
+    {
+      "claim": "Lisinopril definitively caused or cannot contribute to cough",
+      "source_ids": [
+        "DOC-001-01",
+        "DOC-001-22",
+        "DOC-001-07",
+        "DOC-001-12"
+      ],
+      "reason": "Earlier cough challenges sole-onset attribution; contribution remains uncertain. Two-week withdrawal interval is inconclusive."
+    },
+    {
+      "claim": "GERD or anxiety alone explains deterioration, or opacity establishes cancer/infection",
+      "source_ids": [
+        "DOC-001-02",
+        "DOC-001-05",
+        "DOC-001-07",
+        "DOC-001-20",
+        "LAB-001-18"
+      ],
+      "reason": "Reflux improved but cough persisted; opacity and inflammatory markers nonspecific. CT, spirometry and pathology unavailable."
+    }
+  ],
+  "evaluation_criteria": [
+    "Resolve all decisive IDs and exact quote anchors",
+    "Compare original event and documentation times",
+    "Cite both conflicting histories",
+    "Distinguish prescription from reported use",
+    "Do not infer unrecorded care or a final diagnosis"
+  ],
+  "acceptable_uncertainty": [
+    "Precise cough onset",
+    "ACE inhibitor contribution",
+    "Underlying cause of opacity and inflammatory trend",
+    "Outcome after July 22"
+  ],
+  "source_checksums": {
+    "DOC-001-01": "62ce3a43a1b225d09d89419520eebda3ab062851bdec3ea3238d35127b44ef12",
+    "DOC-001-02": "157ae2b651036563bc491fe6884a999018303a58be251f54b58c05d7e0bc9eb4",
+    "DOC-001-03": "ee6cce572fc6255e6dd511183b5e52185298fb1c12c9150caf113627e343f49b",
+    "DOC-001-04": "4b6799e700e72f2d9d870f3803953e80dbbc3522fb5929f48133a7193e775d0a",
+    "DOC-001-05": "ce7833631f1869e38dbc67ac7447b8df9a1b6b099ce9619817c52152a829d66d",
+    "DOC-001-06": "8294b35851c13210ca8ade06b6f733a5e0fe5b23dae1e2d1f0a88345a684cb30",
+    "DOC-001-07": "85d7f7660e52d2b5bb863958902014eef4544f9b2a44813f808edeabc47ea94f",
+    "DOC-001-08": "aacdbdd39c5a89a0864090460cac2ac5d0a9247909486e83312fc17a66cffcbd",
+    "DOC-001-09": "74ff72382f6c0f1af461e91ba1c73ac1241ac75edb25cd38c0e01ef2c8478722",
+    "DOC-001-10": "b9a232df78a02c96a4bc2b5ee61f92b6d50856c301bf80bb5f3be46f920b26c2",
+    "DOC-001-11": "0272aa9d085425081be66ed9cc516dc193d8cacd36c7fcc7d15fdc2226bc3152",
+    "DOC-001-12": "856abcd3c891841c8fcc881d6d6976373cc0dc0cdead4cc4bb12d746c4ad52a7",
+    "DOC-001-13": "3dad1b5762ceeceba14b966d153881d54010cebda0bc8d57fd1c4b86f25f0b98",
+    "DOC-001-14": "66eae9b30615cef4c8f4927d644d5838dfdd904054d18cfca0ec9028b101cd9e",
+    "DOC-001-15": "54b0af3181cfafc218e516a7a71a7bd02f47c7bc69f25c05b1951134b1b7a61c",
+    "DOC-001-16": "475fee0060804404103310ac947ce47c2e2910e52bfe04c318f5485607b823d3",
+    "DOC-001-17": "7ec662f8ab3c7559991a77abd37602713f0fa6fde87829efdd27c1163f9dceaa",
+    "DOC-001-18": "ffad4ac19657e18fed01a0d73af8fc0a51e1c18f38b314bfd6f1c08fc8cbefe3",
+    "DOC-001-19": "c101b497f438d4b1142621740214a2a66cd9306ad632045389d12ad1acc2b781",
+    "DOC-001-20": "68d35010762fc67547f4f801d89b0fa88b280cd9a1ab2a785c97f0ac699da38a",
+    "DOC-001-21": "d8f66610c5fba8649643031672fa7c9f8781ddd358532f54afdbec3313b05f76",
+    "DOC-001-22": "b1c3a8c5e4c2c7939707f74cd7fb0c874b95ba992c25553817bc1761499efc3e",
+    "DOC-001-23": "0f3715914529c1179953bb1d5903693ff4528ffac884fc6cbd84e9d7e9378137",
+    "IMG-ASSET-001-01": "aa7d0626ddb2c4f93b95b0ab9836e0d8208e2f45dd5d686afcc336f0671566d5",
+    "IMG-ASSET-001-02": "3888eb1ccfe9abd092e544d80acf66e28ac5ae451bb91aa353b05aa8c315f116",
+    "IMG-ASSET-001-03": "1832aae662eddc5effcc3f96c4a4109f6f6d9ddee9fba741914afd724fa9fccc"
+  },
+  "clinical_review": "Pending independent expert review; automated consistency checks do not establish clinical accuracy."
+}
