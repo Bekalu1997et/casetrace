@@ -1,19 +1,19 @@
 # CASETRACE — Development stack and SQLite operations
 
-Status: approved stack, implementation requirements. Applications, manifests, lockfiles, migrations, command scripts and Dockerfiles do not yet exist. Commands below are planned examples, not verified runnable setup.
+Status: approved stack and operational policy. Phase 1 manifests, lockfiles, baseline migration, commands and Dockerfiles now exist. See [local development](local-development.md) for setup and [Phase 1 report](phase-1-report.md) for executed validation. Domain, worker, seeding and recovery requirements below remain future implementation obligations.
 
 ## Stack and toolchain
 
 - Frontend: Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui; pnpm and `apps/web/pnpm-lock.yaml`.
 - Backend: Python 3.12+, FastAPI, Pydantic v2, SQLAlchemy 2.x asyncio, Alembic, uv; `apps/api/pyproject.toml` and `apps/api/uv.lock`.
 - MVP storage: SQLite through `sqlite+aiosqlite`; local database `data/runtime/casetrace.db`. Assets remain in `data/assets/` and existing case asset locations, outside database blobs.
-- Execution: existing controlled agent orchestration, asyncio workers and SSE. No additional infrastructure is required.
+- Planned execution: controlled agent orchestration, asyncio workers and SSE. These are not implemented by the Phase 1 foundation. No additional infrastructure is required.
 
-No existing package configuration pins Node.js or pnpm. The planned supported baseline is Node.js 24 LTS with pnpm 10.x; confirm the chosen Next.js version supports this pair at bootstrap. Pin exact compatible patches in the Node version file and `packageManager`, and declare Node support in `engines`. Select Python 3.12 initially via `uv python pin 3.12` in `apps/api` and declare `requires-python` in `pyproject.toml`. Pin the uv version used by CI during bootstrap. These are planned baselines, not claims about installed or tested versions.
+The foundation pins Node.js 24.22.0 in `.node-version`, pnpm 10.34.0 in `packageManager`, and Python 3.12 in `apps/api/.python-version`. The web manifest declares Node 24 support. uv 0.11.17 is used for validation and pinned in the API Dockerfile. Lockfiles select exact dependencies. Next.js supports Node 20.9 and above; Node 24 satisfies that requirement. No CI pipeline is installed yet; future CI must use these pins and locked installs.
 
 ## Development commands
 
-Run frontend commands from `apps/web` after its manifest exists:
+Run frontend commands from `apps/web`:
 
 ```sh
 pnpm install
@@ -23,9 +23,9 @@ pnpm lint
 pnpm test
 ```
 
-All scripts above are planned. Define `dev`, `build`, `lint`, and a meaningful `test` script before documenting them as available; do not assume Next.js provides a lint command. One web application does not require a pnpm workspace. Commit `pnpm-lock.yaml`; CI uses `pnpm install --frozen-lockfile` with the pinned pnpm version.
+These scripts are defined: ESLint runs directly, `test` runs Vitest, and `typecheck` runs TypeScript. One web application does not require a pnpm workspace. Preserve `pnpm-lock.yaml`; CI should use `pnpm install --frozen-lockfile` with the pinned pnpm version.
 
-Run backend commands from `apps/api` after its project exists:
+Run backend commands from `apps/api`:
 
 ```sh
 uv python pin 3.12
@@ -42,7 +42,7 @@ uv run pytest
 
 ## Central configuration and paths
 
-Phase 1 must implement one settings loader shared by API, workers, Alembic, seeds and tests. Load the root `.env` explicitly rather than depending on process working directory; process environment and explicit test overrides take precedence.
+Phase 1 provides one settings loader shared by API, Alembic and tests; future workers and seeds must reuse it. It loads the root `.env` explicitly rather than depending on process working directory; process environment and explicit test overrides take precedence.
 
 `CASETRACE_ROOT` optionally supplies an absolute repository/data root. Otherwise derive the root from the installed source location of `apps/api/app/core/config.py` (four parents above that file's containing directory), never `Path.cwd()`. Validate that configured roots are absolute and expected directories exist. If packaging changes that layout, require `CASETRACE_ROOT` rather than guessing.
 
@@ -56,7 +56,7 @@ ASSET_STORAGE_PATH=./data/assets
 
 Parse URLs using SQLAlchemy URL utilities. Resolve relative SQLite database filenames and asset paths against `CASETRACE_ROOT`, then construct an absolute SQLAlchemy URL; preserve explicit absolute test paths and the `:memory:` sentinel. Reject unsupported URL schemes/configuration instead of silently choosing a different database. Create the database parent directory before connecting, including in Alembic and seeds. Never rewrite test paths to the demo database. Verify root and `apps/api` invocations resolve to the same file.
 
-Docker is optional; local development is the preferred simple workflow. The existing Compose file is an empty scaffold, not a runnable deployment. When Dockerfiles exist, define only `api` and `web`, set `CASETRACE_ROOT=/app`, map host `./data/runtime` to writable `/app/data/runtime`, and mount approved source records/assets read-only. Run migrations against the same mount before serving. Do not mount evaluator keys or an entire answer-key-bearing case bundle. Use one API process with in-process asyncio workers, no replicas sharing the writable database. Keep WAL storage on a local filesystem, not a network share. Planned commands are `docker compose up --build` and `docker compose down`; stopping must retain runtime storage. Do not use volume removal as a reset shortcut.
+Docker is optional; local development is preferred. Compose defines only `api` and `web`, sets `CASETRACE_ROOT=/app`, maps host `./data/runtime` to writable `/app/data/runtime`, and mounts assets read-only. The API runs migrations before serving. Cases and evaluator keys are excluded. Use one API process; future workers remain in process with no replicas sharing the writable database. Keep WAL storage on a local filesystem, not a network share. Commands are `docker compose up --build` and `docker compose down`; stopping retains runtime storage. Do not use volume removal as a reset shortcut. Container execution still requires independent Docker validation; see the Phase 1 report.
 
 ## Connection lifecycle and transaction policy
 
@@ -78,7 +78,7 @@ Use application-generated UUIDs with SQLAlchemy `Uuid(as_uuid=True)` (portable e
 
 Known instants enter as timezone-aware values normalized to UTC. A shared SQLAlchemy type adapter must reject naive inputs, store UTC using SQLite-compatible `DateTime` serialization, and restore UTC awareness on load; `DateTime(timezone=True)` alone does not preserve SQLite offsets. Preserve original literal/offset, precision, and each clinical time field separately. Date-only source values remain dates, never invented midnight instants. SQLAlchemy/native types can later map to PostgreSQL UUID, JSONB and timezone-aware timestamps without changing public IDs or timestamp semantics.
 
-Use Alembic revisions for persistent databases, not `create_all()`. The planned Alembic async environment uses the shared settings/connection factory and `run_sync`; review autogenerated migrations, use batch table recreation for unsupported ALTER operations, preserve named constraints/indexes, back up before destructive changes, and run foreign-key checks after migration. Never rewrite applied revisions. SQLite JSON features depend on the linked library; test required operators. Database schema changes and concurrent seeds require exclusive maintenance, not a live agent run.
+Use Alembic revisions for persistent databases, not `create_all()`. The Alembic async environment uses the shared settings/connection factory and `run_sync`; review autogenerated migrations, use batch table recreation for unsupported ALTER operations, preserve named constraints/indexes, back up before destructive changes, and run foreign-key checks after migration. Never rewrite applied revisions. Revision `0001_foundation` establishes version tracking only; domain tables await P0-02. SQLite JSON features depend on the linked library; test required operators. Database schema changes and concurrent seeds require exclusive maintenance, not a live agent run.
 
 Use a unique temporary file database per test/parallel worker and the same connection configuration as production. File-backed integration tests cover WAL, lock contention, migrations and recovery. In-memory unit databases skip WAL and need an explicit shared connection/pool policy if accessed through several sessions; otherwise each connection may see a different database. Test root/path overrides, FK checks on newly opened connections, UTC round trips, version conflicts, idempotent findings, rollback and no answer-key leakage. Never point tests at `data/runtime/casetrace.db`.
 

@@ -6,7 +6,7 @@ The initial demonstration focuses on a timeline contradiction that becomes visib
 
 ## Project status
 
-This repository currently contains architecture documents, project guidance, and the application folder scaffold. The API and web applications are not yet implemented. Dependency manifests, database migrations, startup commands, and automated checks are not yet available. The root configuration files may still be placeholders.
+Phase 1 implements the FastAPI/SQLite foundation, versioned Alembic baseline, Next.js application shell, typed health client and automated foundation checks. Hospital records, investigation agents and reports remain future work. See [local setup](docs/local-development.md) and the [implementation report](docs/phase-1-report.md) for verification and remaining limits.
 
 ## Intended experience
 
@@ -35,7 +35,7 @@ Agents retrieve clinical information through defined tools and hospital services
 ```text
 AGENTS.md           Repository instructions and architectural rules
 docs/               Product requirements, architecture, contracts, and plans
-ui-design/          Design specifications and prototypes
+ui-design/          Empty design placeholders; usable references are under docs/casetrace-ui-design/
 apps/api/           Backend application scaffold
 apps/web/           Frontend application scaffold
 data/cases/         Synthetic case folders, CASE-001 through CASE-010
@@ -54,13 +54,13 @@ Start with [repository guidance](AGENTS.md) and the [product requirements](docs/
 - Clinical data: [case schema](docs/case-schema.md), [hospital API](docs/hospital-api.md), and [database schema](docs/database-schema.md).
 - Investigations: [agent tools](docs/agent-tools.md), [multi-agent architecture](docs/multi-agent-architecture.md), [state machine](docs/investigation-state-machine.md), and `docs/evidence-contract.md` (missing; finalize before evidence interface implementation).
 - Delivery: [implementation plan](docs/implementation-plan.md), [evaluation plan](docs/evaluation-plan.md), and [demo runbook](docs/demo-runbook.md).
-- Design: [UI design](ui-design/ui-design.md) and [design system](ui-design/design-system.md).
+- Design: [UI design and tokens](docs/casetrace-ui-design/ui-design.md) and [HTML prototypes](docs/casetrace-ui-design/index.html). The files under `ui-design/` are empty placeholders.
 
 ## Development
 
 Read the relevant architecture and contracts before implementing a feature. Follow the implementation plan and preserve evidence provenance and distinct timestamp meanings throughout the system.
 
-See [development stack and SQLite operations](docs/development-stack.md) for the finalized stack, planned toolchain baselines and setup/run/migration/test commands. No runnable application setup is provided yet. Commit `apps/web/pnpm-lock.yaml` and `apps/api/uv.lock` when bootstrapped; use frozen/locked installs in CI. Skills live under `.skill/<name>/SKILL.md`.
+See [local development](docs/local-development.md) for executable WSL setup/run/test commands and [development stack and SQLite operations](docs/development-stack.md) for storage policy. Lockfiles live in each application; use frozen/locked installs. Skills live under `.skill/<name>/SKILL.md`.
 
 SQLite runtime state belongs in `data/runtime/casetrace.db`, resolved against a central absolute root rather than the shell's working directory. WAL, foreign keys and a busy timeout are required. Preserve source assets outside the database and evaluator keys outside runtime access. The [demo runbook](docs/demo-runbook.md) defines planned deterministic reset and recovery.
 

@@ -15,10 +15,10 @@ while waiting for inference or external operations. Runtime state belongs in
 is preferred; optional Docker needs only API/web with persistent writable
 runtime storage, one API process, and no separate database service.
 
-Development skills are installed in `.skill/<name>/SKILL.md`. No application
-manifests or lockfiles exist yet; setup commands and version pins remain
-planned until Phase 1 bootstrap. Do not implement application features as part
-of documentation alignment.
+Development skills are installed in `.skill/<name>/SKILL.md`. Phase 1 application
+manifests, lockfiles and foundation commands now exist; see
+[local development](docs/local-development.md). Domain implementation remains gated
+by the contract audit. Documentation-only alignment must not add product features.
 
 ## 1. Mission
 

@@ -1,6 +1,6 @@
 # CASETRACE — Demo runbook
 
-Status: planned operational procedure. Applications, migration/seed/reset scripts, manifests and tests are not implemented yet. Do not present these commands as working today.
+Status: planned full-demo procedure. Phase 1 application startup, baseline migration and foundation checks exist; see [local development](local-development.md). Case seeding, investigations and reset commands below remain planned and must not be presented as working.
 
 ## Data separation and preflight
 
