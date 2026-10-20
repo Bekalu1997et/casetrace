@@ -26,10 +26,10 @@ also exits 2 and rolls back the entire import.
 
 Required inputs are `data/cases/CASE-001/case.json` using the canonical case
 schema and referenced assets beneath `ASSET_STORAGE_PATH/cases/CASE-001/`.
-The checkout currently has neither CASE-001 records nor assets. These commands
-therefore fail with a precise missing-file error until approved canonical data
-is supplied. No example patient from a design document is used as a substitute.
-YAML parsing and in-place amendment imports remain unimplemented.
+CASE-001 now has authored clinical records, PDF documents and educational image
+assets; see [dataset authoring and validation](case001-dataset.md). The existing
+importer accepts this clinical input. YAML parsing and in-place amendment imports
+remain unimplemented.
 
 In another terminal:
 
@@ -74,7 +74,9 @@ All database tests use temporary files and real Alembic migrations. The checked-
 control, not a CASE-001 fixture. Tests create attachment bytes under temporary
 asset roots, check image/MIME/hash integrity, import rollback, deterministic
 identifiers, cross-patient constraints, chronology and answer-key non-disclosure.
-They do not mutate canonical cases or the normal runtime database.
+They do not mutate canonical cases or the normal runtime database. CASE-001
+acceptance tests additionally require `--group case-data`; they check the authored
+dataset, byte-for-byte reproduction, real API retrieval and all registered assets.
 
 For the full live browser/API control flow in WSL (with uv/pnpm on PATH):
 

@@ -41,6 +41,12 @@ images, referrals, chronology or private answer key exists in this checkout.
 Examples in architecture documents are not canonical clinical records. The test
 fixture is a separate synthetic pipeline control, not a replacement CASE-001.
 
+CASE-001 authoring (2026-10-21): the user authorized creation of the complete
+multimodal fixture. [Dataset documentation](case001-dataset.md) records its
+PRD-aligned clinical input and separate offline evaluation package. The empty
+directory audit above is historical. No API, database or finding contract was
+changed to accommodate the dataset.
+
 - Source metadata is restricted to department, width, height and synthetic_label.
   Unknown clinical keys (including evaluator annotations) fail validation.
 - Exact substring document search has an unranked relevance_score of 1 for every
