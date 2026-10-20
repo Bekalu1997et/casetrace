@@ -216,3 +216,38 @@ The repository has previously used differing illustrative patient IDs (`PAT-001`
 ## 15. Definition of done
 
 A clean file-backed SQLite database can be migrated, seeded with frozen CASE-001 artifacts, queried using hospital service methods, and used for a genuine investigation run. Every source and derived record has stable provenance, citations resolve to exact authorized sources, migrations and tests pass, and evaluation answer keys are unreachable by runtime processes.
+
+## Phase 2 implemented hospital mappings
+
+[Contract decisions](CONTRACT_DECISIONS.md) fixes public IDs and DTO mappings.
+`0002_hospital` adds the hospital catalog and `0003_clinical_reports` adds:
+
+| Table | Fields and relationships |
+| --- | --- |
+| `diagnoses` | Common scoped source columns; name, code_system, code, status, diagnosed_at |
+| `symptoms` | Common scoped source columns; name, onset_at, severity, frequency, status, description |
+| `diagnostic_reports` | Common scoped source columns; report_type, title, status, issued_at, conclusion, document_id FK, imaging_study_id FK |
+| `report_observations` | Composite PK of report_id FK and observation_id FK |
+
+The existing API/case field names map to storage explicitly: patient
+`synthetic_identifier/date_of_birth` → `synthetic_mrn/birth_date`; encounter
+`encounter_type` → `type`; observation `test_code/specimen_collected_at` →
+`analyte_code/collected_at`; medication `medication_name/dose_unit/start_at` →
+`drug_name/unit/effective_at` (the last only for exact instants). Document text
+lives in `document_versions`; storage metadata lives in `assets`. Referral
+`ordered_at/appointment_at` → `requested_at/scheduled_at`. Source payloads retain
+original validated clinical fields and precision, never evaluator sections.
+
+The canonical observation has no lab order ID, so `lab_order_id` is nullable.
+Encounter department/provider and document title/MIME remain separate typed
+columns; do not substitute facility names. Diagnosis/symptom date-only values
+retain their source literal with a null normalized instant. Imported medications
+represent documented history, never assumed administration. Source-version and
+created/updated metadata derive from the case version/timestamps.
+
+All importer cross-references (including report/observation/study) are validated
+inside the one-patient case before the import transaction. Encounter and source
+ document patient links additionally use composite DB foreign keys. Runtime
+repositories expose reads only; imports require maintenance access. Applied
+source updates/amendments remain a separate future workflow; changed imports
+fail closed rather than rewriting old document versions or citations.

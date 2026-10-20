@@ -2448,3 +2448,21 @@ Do not create endpoints that expose evaluation metadata.
 Do not merge hospital responsibilities with agent reasoning.
 
 **The simulated hospital must be realistic enough to investigate, but simple enough to build reliably for the hackathon.**
+
+## Phase 2 implementation status
+
+The implementation uses `/api/hospital/v1` as this contract requires. See
+[Phase 2 development](phase-2-development.md) for maintenance commands and
+[contract decisions](CONTRACT_DECISIONS.md) for storage mappings and scope.
+Phase 1 `/api/health` retains its existing health/error format; hospital errors
+use this document's `error` plus `meta.request_id` envelope. No unversioned
+hospital aliases or new authentication scheme are introduced. Local demo access
+is trusted and is not a claim of production authorization.
+
+Exact substring document search is case-insensitive, ordered by document ID,
+and returns relevance_score=1 for every match (unranked retrieval, not evidence
+confidence). Lab series refuses mixed units with RESOURCE_CONFLICT rather than
+silently converting. Unknown clinical instants remain null; timeline excludes
+unknown/date-only event times without replacing them with documentation times.
+Assets distinguish unknown records, missing registrations, missing files and
+integrity failures. They never reveal server paths or answer keys.

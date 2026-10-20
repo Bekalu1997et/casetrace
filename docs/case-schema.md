@@ -1506,3 +1506,35 @@ Therefore:
 not:
 
 **LLM → Guess → Explanation**
+
+# Phase 2 implemented serialization
+
+The maintenance CLI currently accepts `data/cases/<case_id>/case.json`, a JSON
+serialization of the canonical envelope above. It does not introduce a second
+clinical field schema. The required case identity/version/status/created_at/
+updated_at and typed clinical fields are validated with Pydantic. Clinical arrays
+may be empty when source data is absent. JSON source dictionaries must not contain
+unknown clinical fields. YAML parsing is not implemented yet; a missing JSON
+file fails explicitly, without converting or modifying source files.
+
+Optional `diagnostic_reports` uses exactly the DiagnosticReport fields from
+`hospital-api.md`; observations are linked by `observation_ids`. Diagnoses and
+symptoms use those same documented public schemas. The illustrative diagnosis
+`status: active` above is not an accepted diagnosis enum; use its actual
+source-supported uncertainty state rather than translating it silently.
+
+Known clinical instants require explicit offsets despite older naive examples.
+Medication start/end and diagnosis/symptom onset may remain ISO dates. They do
+not enter the instant-only chronology as assumed midnight. Completed observation
+values must be present; ordered/cancelled observations may have no result.
+
+Storage paths are relative to configured `ASSET_STORAGE_PATH`, under
+`cases/<case_id>/`. Registering an asset requires existing bytes of the declared
+MIME; import does not generate or copy assets. Metadata accepts department,
+width, height, synthetic_label only. HTML attachments are download-only.
+
+Top-level editor/evaluation sections (title, description, metadata, ground_truth,
+investigation_target, timeline_relationships, evidence_relationships,
+red_herrings, noise) never enter hospital persistence. Validation of the hidden
+clinical mystery/evaluation graph is still an offline CASE-001 acceptance gate;
+clinical import success is not a claim that the intended mystery is complete.

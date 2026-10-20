@@ -2714,3 +2714,13 @@ And the most important product principle is:
 > **The frontend should show the investigation as an evidence-driven process, not as a chatbot conversation.**
 
 That distinction should remain intact throughout implementation.
+
+## Phase 2 hospital interface alignment
+
+For hospital source data the versioned paths, resource DTOs, pagination and error
+envelopes in [hospital-api.md](hospital-api.md) are canonical. Earlier
+`/api/patients` examples in architecture documents are historical examples, not
+separate runtime endpoints. The frontend uses `lib/api/hospital.ts` and never
+loads canonical case files or evaluator keys. Record pages are `/patients` and
+`/patients/[patientId]`; their IDs come from the API rather than fixed PAT/SYN
+translations. Investigation interface decisions remain gated for Phase 3.
