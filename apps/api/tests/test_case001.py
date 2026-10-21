@@ -43,8 +43,42 @@ def test_case001_integrity_and_reproduction(tmp_path):
     assert report["pdf_pages_rendered"] >= 23
     generate(tmp_path)
     validate(tmp_path)
-    for directory in ["data/cases/CASE-001", "data/assets/cases/CASE-001", "evaluation/CASE-001"]:
-        assert file_hashes(ROOT / directory) == file_hashes(tmp_path / directory)
+    # PNG compression bytes differ across linked zlib builds (Windows vs Linux),
+    # even with identical decoded RGB pixels. Frozen originals still pass their
+    # exact manifest checks above; only regenerated PNG encodings may differ.
+    from PIL import Image
+
+    assert (ROOT / "data/cases/CASE-001/case.json").read_bytes() == (
+        tmp_path / "data/cases/CASE-001/case.json"
+    ).read_bytes()
+    original = json.loads((ROOT / "data/cases/CASE-001/manifest.json").read_text(encoding="utf-8"))
+    recreated = json.loads(
+        (tmp_path / "data/cases/CASE-001/manifest.json").read_text(encoding="utf-8")
+    )
+    image_ids = []
+    for left, right in zip(original["assets"], recreated["assets"], strict=True):
+        old_path = ROOT / "data/assets" / left["storage_path"]
+        new_path = tmp_path / "data/assets" / right["storage_path"]
+        if left["mime_type"] == "image/png":
+            image_ids.append(left["id"])
+            with Image.open(old_path) as old, Image.open(new_path) as new:
+                assert (old.mode, old.size, old.tobytes()) == (new.mode, new.size, new.tobytes())
+            for name in ["sha256", "byte_size"]:
+                left.pop(name)
+                right.pop(name)
+        else:
+            assert old_path.read_bytes() == new_path.read_bytes()
+    assert original == recreated
+    original_key = json.loads(
+        (ROOT / "evaluation/CASE-001/answer-key.json").read_text(encoding="utf-8")
+    )
+    recreated_key = json.loads(
+        (tmp_path / "evaluation/CASE-001/answer-key.json").read_text(encoding="utf-8")
+    )
+    for image_id in image_ids:
+        original_key["source_checksums"].pop(image_id)
+        recreated_key["source_checksums"].pop(image_id)
+    assert original_key == recreated_key
 
 
 @pytest.mark.parametrize("mutation", ["gold_anchor", "lab_value", "followup_time", "asset_bytes"])

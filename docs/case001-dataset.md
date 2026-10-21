@@ -40,6 +40,10 @@ uv run --locked python -m app.hospital.cli validate CASE-001
 uv run --locked --group case-data pytest -q
 ```
 
+PNG compression may differ between Windows/Linux zlib builds even when decoded
+RGB pixels match. Reproduction tests compare those pixels and all noncompression
+manifest fields; frozen source assets still require their exact recorded SHA-256.
+
 Generation writes authored CASE-001 files; use `--output-root <empty-directory>`
 to reproduce in isolation. Fixed source times and invariant PDF rendering permit
 byte comparisons using the locked dependency versions. Do not regenerate or

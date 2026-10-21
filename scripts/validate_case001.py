@@ -30,9 +30,9 @@ def validate(root):
     source = root / "data/cases/CASE-001/case.json"
     asset_root = root / "data/assets"
     validated = validate_case(source, LocalAssetStorage(asset_root))
-    case = json.loads(source.read_text())
-    manifest = json.loads((source.parent / "manifest.json").read_text())
-    key = json.loads((root / "evaluation/CASE-001/answer-key.json").read_text())
+    case = json.loads(source.read_text(encoding="utf-8"))
+    manifest = json.loads((source.parent / "manifest.json").read_text(encoding="utf-8"))
+    key = json.loads((root / "evaluation/CASE-001/answer-key.json").read_text(encoding="utf-8"))
     require(
         hashlib.sha256(source.read_bytes()).hexdigest() == manifest["case_sha256"],
         "case checksum mismatch",

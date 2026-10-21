@@ -304,7 +304,14 @@ def test_asset_symlink_escape(setup, tmp_path):
     secret = tmp_path / "private.txt"
     secret.write_text(SENTINEL)
     link = storage.root / "cases/CONTROL-001/escape.txt"
-    link.symlink_to(secret)
+    try:
+        link.symlink_to(secret)
+    except OSError as exc:
+        if getattr(exc, "winerror", None) == 1314:
+            pytest.skip(
+                "Windows requires Developer Mode or symlink privilege for this security test"
+            )
+        raise
     with pytest.raises(AssetError, match="escapes"):
         storage.resolve("cases/CONTROL-001/escape.txt", "CONTROL-001")
 
