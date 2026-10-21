@@ -15,8 +15,8 @@ test("CASE-001 investigation resolves actual evidence and survives refresh", asy
   await expect(page).toHaveURL(/\/investigations\/INV-/);
   const id = new URL(page.url()).pathname.split("/").at(-1)!;
   await expect(page.getByRole("link", { name: "Open investigation report →" })).toBeVisible({ timeout: 90000 });
-  const state = await (await request.get(`http://localhost:8000/api/investigations/${id}`)).json();
-  const findings = await (await request.get(`http://localhost:8000/api/investigations/${id}/findings`)).json();
+  const state = await (await request.get(`${process.env.API_TEST_URL ?? "http://localhost:8000"}/api/investigations/${id}`)).json();
+  const findings = await (await request.get(`${process.env.API_TEST_URL ?? "http://localhost:8000"}/api/investigations/${id}/findings`)).json();
   expect(["completed", "completed_with_limitations"]).toContain(state.status);
   expect(findings.items.some((finding: { status: string }) => finding.status === "verified")).toBe(true);
   await page.getByRole("button", { name: "Compare source records" }).first().click();
@@ -36,7 +36,7 @@ test("CASE-001 investigation resolves actual evidence and survives refresh", asy
   await expect(page.getByRole("region", { name: /^Original source / })).toBeVisible();
   await page.getByRole("link", { name: "Open investigation report →" }).click();
   await expect(page.getByRole("heading", { name: "Executive summary" })).toBeVisible();
-  const report = await (await request.get(`http://localhost:8000/api/investigations/${id}/report`)).json();
+  const report = await (await request.get(`${process.env.API_TEST_URL ?? "http://localhost:8000"}/api/investigations/${id}/report`)).json();
   await expect(page.getByRole("heading", { name: report.summary.headline })).toBeVisible();
   await page.getByRole("button", { name: / · supports$/ }).first().click();
   await expect(page.getByRole("region", { name: "Report source evidence" })).toBeVisible();
