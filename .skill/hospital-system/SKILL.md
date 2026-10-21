@@ -21,6 +21,14 @@ Clinical tools consume DTO capabilities. Keep repository/session composition in
 the local adapter; `AssetReader` verifies registered assets after read-session
 release. See `docs/refactoring/06-backend-refactor-report.md`.
 
+Refactor 04 tool inputs live in `app/tools/inputs.py`; registry execution is the
+production authorization/audit boundary. Use only catalogued filters and exact
+identifier aliases. Search records marked `representation=search_hit` carry an
+original source hash plus a separate representation hash: retrieve the original
+before creating evidence anchors. Timeline categories require underlying role
+permissions; never bypass those permissions through aggregation. See the
+executable section of `docs/agent-tools.md` for time axes and compatibility limits.
+
 `CASETRACE agent -> approved tool -> hospital service -> synthetic database / artifact store -> provenance-aware response`
 
 The agent never reads source JSON files, database internals, or ground-truth answer keys directly. Those are private to setup/validation. All investigation evidence must be acquired through documented, audited hospital tools.

@@ -7,12 +7,87 @@ failed validation/permission calls. Synthesis has no clinical tools. The optiona
 get_referrals read is restricted to contradiction investigation for follow-up
 reconciliation. get_imaging_asset_metadata resolves registered metadata with
 patient ownership checked through the parent study; its version tracks that study.
-No image interpretation tool is introduced. Search returns snippets; document
-detail is separately retrieved and asset-integrity checked. The initial
-build_patient_timeline adapter supplies clinical-event records; the timeline
-specialist and supervisor merge these with separately retrieved encounters,
-documents, observations, medication periods, reports and imaging metadata into
-the reusable report projection. Partial dates remain explicit.
+No image interpretation tool is introduced. Search returns explicitly marked
+snippets; document detail is separately retrieved and asset-integrity checked.
+Refactor 04 adds tool-specific inputs and targeted filters over ClinicalSource.
+build_patient_timeline defaults to clinical events for existing specialists and
+accepts explicit authorized categories for aggregation. Original records remain
+in records; a separate timeline projection preserves named times and precision.
+The supervisor's existing report projection remains unchanged.
+
+## Refactor 04 executable contract
+
+See [inventory, coverage and measured outcomes](refactoring/08-clinical-tools-refactor-report.md).
+The following supersedes illustrative input/output examples where they differ:
+
+- `app/tools/inputs.py` defines each tool's Pydantic schema. Registry catalog
+  exposes it alongside operation-specific descriptions and scope. Unknown fields,
+  malformed IDs, unsupported enum values, naive/reversed time ranges, invalid
+  paging and conflicting selectors fail. Page defaults remain limit=20/offset=0;
+  limits are 1–100, offset 0–10000. Instants require offsets; bounds are inclusive.
+- All calls are scoped to the investigation's selected patient. Registry supplies
+  patient_id when omitted. search_patient matches only this patient's ID, MRN or
+  display name, case-insensitively; it is not cross-patient discovery.
+- Exact calls accept record_id or the documented encounter_id/document_id/
+  observation_id/medication_id/report_id/imaging_asset_id/imaging_study_id alias.
+  Supplying both forms is rejected. An optional encounter_id association is
+  checked on detail calls except get_encounter (where it is the selector).
+  Optional source_version/source_hash reject stale references. Imaging-report
+  preconditions refer to the returned report document, not the parent study.
+- Encounter filters use started_at, observations specimen_collected_at, document
+  search event_at, medication history ordered_at, reports issued_at, imaging
+  performed_at and referrals ordered_at. Stable clinical ordering is ascending
+  with source-ID ties and unknowns last; search uses stable document-ID order.
+  Date-only medication start/end remain original values and do not become order
+  times. Original hospital HTTP sorting/filter semantics are retained.
+- Analyte and medication names and body_region use exact case-insensitive equality;
+  test codes, departments, IDs and other enums use exact equality. Search matches
+  a case-insensitive substring in title or clinical text, including whitespace
+  literally. Empty query lists document metadata. Both clinical-note tool names
+  remain document aliases; document_type explicitly narrows retrieval.
+- Search SourceRecord uses representation=search_hit and representation_hash over
+  the returned hit data. source_hash/source_version continue identifying the
+  original hospital DTO. representation=source is the default for original DTOs.
+  Never use a snippet's fields with an original-source hash as an evidence anchor.
+  Full retrieval and deterministic verification are still required.
+- compare_lab_results accepts a distinct record_id/other_id pair OR test_name
+  and/or test_code. Analyte selection checks the whole selected series and returns
+  its chronologically earliest/latest pair. Both coded tests must have equal
+  codes; when both codes are absent only exact case-insensitive names match.
+  Mixed coded/uncoded observations, incompatible/missing units, nonnumeric values,
+  invalid timestamps and missing collection times fail. No conversions occur.
+  Original values/times remain in records. Optional analysis returns direction,
+  signed change_absolute and change_percent (null for zero baseline), without
+  clinical interpretation. Insufficient observations are an explicit error.
+- Timeline include supports the five documented categories (encounters, events,
+  observations, medications, documents) for the timeline role. That role explicitly
+  gains medication-history read access; the other role permissions are unchanged.
+  Each category needs its underlying read permission. Catalog allowed_categories
+  reflects this. Imaging/report/referral and diagnosis/symptom categories are
+  rejected for this role, even though the aggregation implementation can project
+  those DTOs. New scopes require a deliberate authorization change.
+  Date-only entries form a separate labelled group after instants; unknowns last.
+  No ordering of a date-only entry relative to same-day instants is asserted.
+  Timeline date filters apply to the named primary time and exclude unknown/dates.
+  Aggregation and analyte selection are capped at 10000 scanned records.
+- ToolResult retains status, records, source_refs, total, has_more, retrieved_at;
+  optional analysis and timeline are additive internal fields. Errors remain
+  propagated HospitalError/Pydantic validation/timeout exceptions with durable
+  failed audit events. An empty valid search is status=empty, not a missing-patient
+  or missing-record substitute. partial means another page exists.
+- Registry validates typed source DTOs, patient ownership, identity, content hash,
+  versions, unique references, result size and pagination. Asset ownership is
+  resolved through its parent study. No filesystem paths or raw file capability
+  enter tool results. Documents retain MIME, has_asset, clinical text and original
+  source identity/version/hash; binary integrity is checked through AssetReader.
+- Audit preserves actual start/end/status/duration and source IDs. Sanitized IDs
+  and pagination plus a fingerprint of allowlisted arguments permit correlation
+  without logging query text or complete documents. Actor/run validation and
+  separate short commits remain authoritative; failed validation, authorization,
+  timeout, budget and output checks cannot produce a successful completion.
+
+No public endpoint, source fingerprint, migration, provider or specialist reasoning
+rule changes in this milestone. No cache, semantic search or pixel analysis is added.
 
 SQLite migration preserves all tool names, scopes, schemas, provenance and audit behavior. Follow [development stack](development-stack.md): commit audit start before external work, close repository read sessions promptly, and commit results separately through the controlled persistence service. Agents never own database sessions.
 

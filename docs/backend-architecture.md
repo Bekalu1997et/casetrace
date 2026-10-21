@@ -1,5 +1,11 @@
 # CASETRACE
 
+Refactor 04: the tool registry owns per-tool input schemas, category permissions,
+budgets, deadlines, output/provenance validation and durable audit. Document,
+laboratory and timeline handlers use the existing ClinicalSource DTO boundary.
+No public endpoints or database schemas change. See [tool contracts](agent-tools.md)
+and [implementation results](refactoring/08-clinical-tools-refactor-report.md).
+
 R02 implementation: [backend refactor report](refactoring/06-backend-refactor-report.md)
 records the current DTO clinical source, simulated adapter, shared evidence rules,
 scoped executor, persistence collaborators and composition root. Public contracts,
