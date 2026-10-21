@@ -293,6 +293,14 @@ class ClinicalRecordService:
                         title=title,
                         description=f"Source {types[resource]} record",
                         source_ref=dto.SourceRef(type=types[resource], id=record.external_id),
+                        encounter_id=data.get("encounter_id")
+                        if resource != "encounters"
+                        else record.external_id,
+                        timestamps={
+                            key: value.isoformat() if isinstance(value, datetime) else value
+                            for key, value in data.items()
+                            if key.endswith("_at")
+                        },
                     )
                 )
         start, end = filters.get("start_at"), filters.get("end_at")

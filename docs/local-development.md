@@ -116,3 +116,29 @@ see [Phase 2 development](phase-2-development.md) and
 [contract decisions](CONTRACT_DECISIONS.md). The earlier domain-table gate above
 is historical Phase 1 context. CASE-001 acceptance and Phase 3 investigation
 contracts remain separate open gates.
+
+## Refactor 03 clinical maintenance
+
+From `apps/api`:
+
+```sh
+uv run python -m app.hospital.cli validate CASE-001 --format text
+uv run python -m app.hospital.cli validate CASE-001 --format json
+uv run python -m app.hospital.cli discover CASE-001
+```
+
+Validation defaults to JSON for script compatibility. Errors exit 2 and carry
+clinical record/field diagnostics; warnings do not prevent import. The existing
+`python ../../scripts/validate_case.py CASE-001` wrapper accepts the same format
+option. Manifests, if present, must match canonical bytes and registered assets.
+Cases without manifests remain supported with a warning. Only the offline
+`validate_case001.py` acceptance tool reads evaluator keys and deeply renders
+PDFs/decodes images; the normal validator does not.
+
+Discovery reads existing imported dataset fingerprints without creating a missing
+database. An existing database must already be migrated. It never generates cases
+or imports records. `not_present` is returned for absent canonical cases; a changed
+same-version source is `source_conflict`, never silently considered ready/imported.
+Import output now includes deterministic `import_id` and `source_hash`, preserving
+the original fingerprint algorithm. Changed source versions and historical source
+resolution still require a separately approved amendment policy.

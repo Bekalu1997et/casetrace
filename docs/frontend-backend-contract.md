@@ -2749,3 +2749,11 @@ separate runtime endpoints. The frontend uses `lib/api/hospital.ts` and never
 loads canonical case files or evaluator keys. Record pages are `/patients` and
 `/patients/[patientId]`; their IDs come from the API rather than fixed PAT/SYN
 translations. Investigation interface decisions remain gated for Phase 3.
+
+## Refactor 03 compatible hospital timeline metadata
+
+The existing hospital timeline adds optional encounter_id, named timestamps and
+primary time_precision (instant). Original resource/source hashes and all existing
+fields are unchanged. Date-only and absent primary times remain in the original
+resource endpoints. See hospital-api.md for exact behavior. Case discovery is
+maintenance-only; a public case-library metadata contract remains deferred.

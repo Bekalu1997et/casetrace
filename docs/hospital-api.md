@@ -2466,3 +2466,20 @@ silently converting. Unknown clinical instants remain null; timeline excludes
 unknown/date-only event times without replacing them with documentation times.
 Assets distinguish unknown records, missing registrations, missing files and
 integrity failures. They never reveal server paths or answer keys.
+
+## Refactor 03 timeline compatibility extension
+
+The existing `/api/hospital/v1/patients/{id}/timeline` entries additionally expose
+`encounter_id`, `timestamps` (original named temporal values, including null and
+date-only strings), and `time_precision: "instant"` for the primary timestamp.
+The primary timestamp and timestamp_type retain their prior semantics. Missing
+and date-only primary times stay outside this instant-only projection; obtain
+them from the original resource endpoint. Other time fields never substitute for
+the primary time. Source DTOs and evidence fingerprints remain unchanged.
+
+Case readiness is available to maintenance tooling via
+`python -m app.hospital.cli discover CASE-001`. It distinguishes not_present,
+invalid, missing_assets, available_not_imported, imported and source_conflict.
+Imported means the canonical clinical/asset fingerprint matches persisted state.
+This is not a public case-library endpoint. A runtime case catalog still needs
+an approved metadata publication contract; raw case files are not runtime inputs.

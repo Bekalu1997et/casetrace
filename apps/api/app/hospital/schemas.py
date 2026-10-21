@@ -327,6 +327,9 @@ class TimelineEntry(BaseModel):
     title: str
     description: str
     source_ref: SourceRef
+    encounter_id: str | None = None
+    timestamps: dict[str, str | None] = Field(default_factory=dict)
+    time_precision: Literal["instant"] = "instant"
 
 
 class PatientSummary(BaseModel):

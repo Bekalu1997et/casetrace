@@ -1509,6 +1509,17 @@ not:
 
 # Phase 2 implemented serialization
 
+Refactor 03 retains this serialization and immutable import policy. Maintenance
+validation aggregates clinical-only diagnostics (code, severity, case/file,
+record type/ID and field). An adjacent manifest, when present, is an integrity
+contract: identity/version, case bytes, counts and asset registry must agree.
+Cases without a manifest remain supported with a warning. Manifest checks never
+load evaluator keys. Cross-encounter source links are review warnings because a
+later report can legitimately cite an earlier record. Inverted imaging intervals
+and negative medication doses are errors; documentation chronology is a review
+warning, never an automatic repair of the mystery. No clinical expertise is
+implied by passing these checks.
+
 The maintenance CLI currently accepts `data/cases/<case_id>/case.json`, a JSON
 serialization of the canonical envelope above. It does not introduce a second
 clinical field schema. The required case identity/version/status/created_at/

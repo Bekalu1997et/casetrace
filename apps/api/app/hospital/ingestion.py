@@ -27,16 +27,23 @@ def instant(value: str | None) -> datetime | None:
     return datetime.fromisoformat(value) if value and len(value) > 10 else None
 
 
-async def ingest(session: AsyncSession, validated: ValidatedCase) -> dict[str, object]:
+def import_fingerprint(validated: ValidatedCase) -> str:
+    """Frozen clinical/asset identity shared by preflight discovery and persistence."""
     case = validated.clinical
     payload = case.model_dump(mode="json")
     content = {
         "clinical": payload,
         "assets": {key: info.sha256 for key, info in sorted(validated.assets.items())},
     }
-    seed_hash = hashlib.sha256(
+    return hashlib.sha256(
         json.dumps(content, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+
+
+async def ingest(session: AsyncSession, validated: ValidatedCase) -> dict[str, object]:
+    case = validated.clinical
+    payload = case.model_dump(mode="json")
+    seed_hash = import_fingerprint(validated)
 
     def uid(kind: str, value: str) -> UUID:
         return stable_id(case.case_id, case.version, kind, value)
@@ -70,6 +77,8 @@ async def ingest(session: AsyncSession, validated: ValidatedCase) -> dict[str, o
         "case_id": case.case_id,
         "version": case.version,
         "counts": counts,
+        "import_id": str(uid("dataset", case.case_id)),
+        "source_hash": seed_hash,
     }
     try:
         async with session.begin():
