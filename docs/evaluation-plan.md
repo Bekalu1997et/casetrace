@@ -160,3 +160,7 @@ On every schema/agent change: contract tests, fixed CASE-001 golden run, citatio
 ## 12. Definition of done
 
 An evaluator can independently reproduce the CASE-001 finding from permitted hospital sources, explain every claimed contradiction via original citations, observe honest uncertainty/failure behavior, and generate a pass/fail report with exact test versions and denominators.
+
+## Phase 5 executable implementation
+
+`scripts/evaluate_system.py` runs the migrated/imported CASE-001 application through real FastAPI APIs with isolated SQLite state, freezes reports before offline scoring, and independently checks source anchors and timeline projections. Exact/partial discovery formulas, commands and limitations are documented in [Phase 5 operations](phase-5-development.md). [Measured release results](phase-5-report.md) supersede illustrative metrics above; clinical support and calibration remain pending expert review.

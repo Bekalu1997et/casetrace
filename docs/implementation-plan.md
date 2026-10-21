@@ -473,3 +473,7 @@ A **phase** is complete only when its exit gate is demonstrably satisfied with c
 - [ ] Final report hyperlinks resolve to original records
 - [ ] Demo resets and repeats reliably
 - [ ] Live/replay fallback modes are correctly labeled
+
+## Phase 5 executed validation
+
+Evaluation, adversarial verification guards, dedicated offline demo reset and real CASE-001 browser rehearsal are implemented. See [operations](phase-5-development.md) and [release assessment](phase-5-report.md) for measured passes and unresolved gates. Phase 5 is not fully complete: configured live inference, enforced local filesystem separation, expert clinical assessment and broader fault/accessibility coverage remain outstanding.

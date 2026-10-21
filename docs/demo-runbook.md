@@ -1,67 +1,31 @@
-# CASETRACE — Demo runbook
+﻿# CASETRACE demo runbook
 
-Phase 3 executable workflow and current limitations are in
-[development instructions](phase-3-development.md) and the
-[implementation report](phase-3-report.md). CASE-001 now exists and imports.
-Use explicit deterministic_rules mode unless a live provider/model is configured
-and validated. The browser workspace and evidence navigation now work with real
-API/SSE activity. Follow [Phase 4 development](phase-4-development.md) for executable
-startup and the browser journey; [Phase 4 report](phase-4-report.md) records live
-CASE-001 checks. The planned reset/maintenance procedures below remain separate
-work and must not be presented as implemented commands.
+Executable preparation/reset/evaluation commands are in [Phase 5 operations](phase-5-development.md). Use the dedicated demo database; stop its API before reset. Validate assets and inspect the latest evaluation summary before presenting. Default execution is explicitly deterministic rules mode. Do not describe it as live LLM reasoning. A configured provider requires its own live acceptance run.
 
-Status: planned full-demo procedure. Phase 1 application startup, baseline migration and foundation checks exist; see [local development](local-development.md). Case seeding, investigations and reset commands below remain planned and must not be presented as working.
+## Primary presentation: four minutes
 
-## Data separation and preflight
+| Time | Presenter action | Transition |
+| --- | --- | --- |
+| 0:00–0:25 | Explain that CASETRACE investigates fragmented synthetic records; this prototype is not validated clinical decision support. | Open dashboard. |
+| 0:25–1:00 | Search Daniel, open the chart, browse encounters, laboratory history and original notes. | Ask what changes when records are connected. |
+| 1:00–1:35 | Start a real investigation. Show actual agent/tool activity and execution mode. | Open timeline while work progresses. |
+| 1:35–2:30 | Inspect the onset contradiction after it is verified. Compare June history with the earlier contemporaneous symptom event and contextual notes. | Open original sources and their distinct event/documentation times. |
+| 2:30–3:10 | Review medication orders versus reported use, follow-up limitations and competing explanations. | State that temporal evidence does not establish drug causality or a final diagnosis. |
+| 3:10–4:00 | Open the persisted final report, inspect citations and uncertainty, refresh to demonstrate persistence. | Close with real retrieval, temporal comparison, deterministic verification and auditability. |
 
-Keep canonical synthetic CASE-001–CASE-010 inputs in `data/cases/`, generated PDFs/images in their existing asset locations, imported structured source records in SQLite, derived investigations in investigation tables, and evaluation answers in separate offline files unavailable to runtime. Seeds import only an explicitly validated clinical projection; never expose the whole answer-key-bearing bundle to an agent. Complete and validate CASE-001 before scaling.
+Do not promise a specific runtime. Use measured results in the Phase 5 report, and disclose any partial state. The strict exact-anchor benchmark can grade discovery as partial even though a record-level contradiction is verified; do not claim a perfect benchmark.
 
-Use [development stack and SQLite operations](development-stack.md) for toolchain setup, absolute paths, WAL, connection configuration, backup and recovery. Record the selected case manifest version/hash and Alembic revision. Confirm synthetic labels, asset hashes, decisive source availability, hospital API access and configured model availability without revealing the expected answer. The database must be reconstructible from frozen fixtures plus reviewed migrations/seeds; source fixtures alone cannot recover lost investigation history.
+## Ninety-second backup
 
-## Planned local startup and tests
+Open a previously completed real investigation by its saved URL. Say explicitly: “This is a previously completed run.” Show execution mode, activity history, the contradiction's source comparison and persisted report. Do not animate replay as current activity. Keep the original database or its consistent backup: exported JSON alone does not provide a browsable replay. No prerecorded video is currently supplied.
 
-After Phase 1 provides manifests and entrypoints, run from `apps/api`:
+## Recovery
 
-```sh
-uv sync
-uv run alembic upgrade head
-uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-In another terminal, from `apps/web`, after the named scripts exist:
-
-```sh
-pnpm install
-pnpm dev
-```
-
-Stop each server with Ctrl+C. Planned checks are `uv run pytest` from `apps/api` and `pnpm lint`, `pnpm test`, `pnpm build` from `apps/web`. CI uses `uv sync --locked`, `uv run --locked pytest` and `pnpm install --frozen-lockfile`. These commands have not been executed against an application in this repository.
-
-Planned root-level commands after scripts and their argument contracts are implemented:
-
-```sh
-uv run --project apps/api python scripts/validate_case.py --case CASE-001
-uv run --project apps/api python scripts/seed_case.py --case CASE-001
-uv run --project apps/api python scripts/demo_preflight.py --case CASE-001
-uv run --project apps/api python scripts/demo_reset.py --case CASE-001 --dry-run
-uv run --project apps/api python scripts/demo_reset.py --case CASE-001 --confirm
-```
-
-Validation is a hard prerequisite to seeding. CLI flags are proposed, not existing contracts. `seed_all_cases.py` remains planned and gated behind CASE-001 acceptance.
-
-## Deterministic reset
-
-1. Require an explicit synthetic demo environment (`APP_ENV=demo`), verify the resolved absolute database path and selected case/dataset, and refuse test/production or mismatched targets.
-2. Stop accepting new runs, end or cancel active runs according to the state machine, stop all workers, close sessions and archive retained audit data and a consistent backup. Never reset while a worker can write.
-3. Under exclusive maintenance, transactionally clear only selected derived investigation rows in FK-safe order: reports, finding/evidence links, findings, evidence, tool/agent/stage runs, events and investigations, including optional lease/cache state. Preserve immutable imported clinical rows and canonical files. Report deletion counts and rollback on failure.
-4. Validate the frozen case, apply required migrations, and run idempotent seed tooling to verify or restore missing imported records. A changed fixture hash/version must fail or use an explicit versioned import; do not silently overwrite source records.
-5. Verify source counts/IDs, timestamps and asset checksums against the manifest, foreign-key integrity, migration revision, no active leases and no stale results. Record reset time, dataset hash, result and archive location.
-6. Restart services, run the actual CASE-001 retrieval → timeline/specialists → targeted contradiction retrieval → deterministic verification → report path, and open the decisive evidence. Archive and reset that smoke run to return to the presentation starting state. Repeat reset/run twice and compare source identity and core verified findings, allowing documented nondeterministic prose.
-
-A full rebuild is a separate explicit synthetic-demo maintenance mode: back up and archive the existing database first, create a new file through Alembic, then validate/seed frozen cases and verify hashes. Never delete canonical cases, assets or evaluator keys; never remove live WAL/SHM files as a reset operation.
-
-## Failure recovery
-
-Use persisted REST state and events to distinguish failed/partial/interrupted runs. Reconcile retries with existing idempotency/attempt keys; never label a replay as a fresh investigation. For database recovery follow the backup/restore procedure in the shared stack policy, including integrity and foreign-key checks. If an LLM is unavailable, disclose any recorded fallback and preserve the failed run's audit. Complete report/evidence acceptance is a real end-to-end gate, not a frontend animation.
-
-Optional Docker startup remains planned until Dockerfiles and Compose services exist. It needs API/web only, persistent writable runtime storage, approved read-only source/asset mounts and one API process. `docker compose down` must preserve runtime state; reset uses the same maintenance procedure, not volume deletion.
+- LLM unavailable: show a labeled completed real run, or explicitly select rules mode for a new run. Never silently replace failed inference.
+- Slow run: inspect already persisted activity and timeline; leave its true state visible.
+- Connection loss: refresh the existing investigation URL. REST restores state and SSE reconnects; do not launch repeated runs accidentally.
+- Interrupted worker: startup marks interrupted work failed. Preserve its history; create a new investigation. There is no resume/cancel API.
+- Missing asset: show the source-unavailable message and structured source if available. Do not fabricate a preview.
+- Database issue: stop the dedicated API, retain the backup and use the approved offline reset. Never remove live WAL/SHM files or reset the normal development database.
+- Partial failure: show completed-with-limitations and the actual missing work. Do not call it fully complete.
+- Network outage: use a previously verified local run if services work. A recorded walkthrough must be captured from real execution and labeled; one has not been prepared here.

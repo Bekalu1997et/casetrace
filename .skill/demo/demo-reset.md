@@ -43,3 +43,7 @@ Commands above are proposals, not claims that they already exist.
 ## Stack alignment
 
 Follow the [demo runbook](../../docs/demo-runbook.md) and [SQLite operations](../../docs/development-stack.md). Stop workers and close connections before maintenance; archive audits and a consistent backup. Never remove a live DB/WAL/SHM or modify canonical fixtures. Rebuild imported records only through reviewed migrations and validated idempotent seeds; verify hashes and source IDs.
+
+## Implemented Phase 5 command
+
+Use `scripts/demo_reset.py --database <absolute dedicated data/runtime/demo/casetrace-demo.db> --dry-run`, then `--confirm --offline` with the dedicated API stopped. The authoritative environment equivalent is development mode plus this exact target allowlist; APP_ENV=demo is not a supported application enum. Existing data is backed up, active runs are refused, and only investigation-domain rows are cleared in dependency order. See [Phase 5 operations](../../docs/phase-5-development.md). Offline acknowledgment is an operator prerequisite, not an enforced OS maintenance lock.

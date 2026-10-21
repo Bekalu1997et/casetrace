@@ -72,3 +72,7 @@ See [local development](docs/local-development.md) for executable WSL setup/run/
 SQLite runtime state belongs in `data/runtime/casetrace.db`, resolved against a central absolute root rather than the shell's working directory. WAL, foreign keys and a busy timeout are required. Preserve source assets outside the database and evaluator keys outside runtime access. The [demo runbook](docs/demo-runbook.md) defines planned deterministic reset and recovery.
 
 Use synthetic case data for this prototype. Keep credentials and local environment values out of version control; `.env.example` is reserved for documented placeholder values.
+
+## Phase 5 validation
+
+See [evaluation and safe demo operations](docs/phase-5-development.md), [release-readiness assessment](docs/phase-5-report.md), and the [four-minute demo runbook](docs/demo-runbook.md). Rules-mode API/browser runs are verified; live LLM execution and clinical expert review remain unverified. The dedicated reset never targets the normal development database.
