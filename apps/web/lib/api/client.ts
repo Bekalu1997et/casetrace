@@ -16,21 +16,29 @@ function isErrorResponse(value: unknown): value is ApiErrorResponse {
     && (!("request_id" in error) || typeof error.request_id === "string");
 }
 
-export async function request<T>(path: string, parse: (value: unknown) => T,
-  signal?: AbortSignal, options?: Pick<RequestInit, "method" | "body" | "headers">): Promise<T> {
+export function apiUrl(path: string): string {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!baseUrl) throw new ApiRequestError("API address is not configured.", "CONFIGURATION_ERROR");
-  const timeout = AbortSignal.timeout(8000);
-  let response: Response;
+  return `${baseUrl.replace(/\/$/, "")}${path}`;
+}
+
+export async function fetchApi(path: string, signal?: AbortSignal, options?: RequestInit, streaming = false): Promise<Response> {
+  const url = apiUrl(path);
+  const timeout = streaming ? undefined : AbortSignal.timeout(8000);
   try {
-    response = await fetch(`${baseUrl.replace(/\/$/, "")}${path}`, {
-      ...options,
-      headers: { Accept: "application/json", ...options?.headers }, cache: "no-store",
-      signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
-    });
-  } catch {
-    throw new ApiRequestError("Unable to reach the API. Check that the backend is running.", "NETWORK_ERROR");
+    return await fetch(url, { ...options, cache: "no-store",
+      signal: signal && timeout ? AbortSignal.any([signal, timeout]) : signal ?? timeout });
+  } catch (error) {
+    if (signal?.aborted) throw new ApiRequestError("Request cancelled.", "CANCELLED");
+    if (timeout?.aborted) throw new ApiRequestError("The API request timed out. Retry the request.", "TIMEOUT");
+    throw new ApiRequestError(error instanceof Error ? "Unable to reach the API. Check that the backend is running." : "API connection failed.", "NETWORK_ERROR");
   }
+}
+
+export async function request<T>(path: string, parse: (value: unknown) => T,
+  signal?: AbortSignal, options?: Pick<RequestInit, "method" | "body" | "headers">): Promise<T> {
+  const response = await fetchApi(path, signal, { ...options,
+    headers: { Accept: "application/json", ...options?.headers } });
   let body: unknown;
   try { body = await response.json(); }
   catch { throw new ApiRequestError("The API returned invalid JSON.", "INVALID_RESPONSE", response.status); }
@@ -40,5 +48,9 @@ export async function request<T>(path: string, parse: (value: unknown) => T,
     );
     throw new ApiRequestError("The API request failed.", "HTTP_ERROR", response.status);
   }
-  return parse(body);
+  try { return parse(body); }
+  catch (error) {
+    if (error instanceof ApiRequestError) throw error;
+    throw new ApiRequestError("The API response does not match the expected contract.", "INVALID_RESPONSE", response.status);
+  }
 }

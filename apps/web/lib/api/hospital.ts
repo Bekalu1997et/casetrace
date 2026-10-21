@@ -1,4 +1,4 @@
-import { ApiRequestError, request } from "@/lib/api/client";
+import { ApiRequestError, request, fetchApi } from "@/lib/api/client";
 import type { ClinicalRecord, Collection, Patient, RecordSection } from "@/types/hospital";
 
 const prefix = "/api/hospital/v1";
@@ -50,13 +50,19 @@ export const hospitalApi = {
     }, signal);
   },
   patients: (offset = 0, signal?: AbortSignal, query = "") => request(`${prefix}/patients?offset=${offset}&query=${encodeURIComponent(query)}`, value => parseCollection(value, parsePatient), signal),
-  patient: (id: string, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}`, value => parsePatient(object(value).data), signal),
-  records: (id: string, section: RecordSection, offset = 0, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}/${section}?offset=${offset}`, value => parseCollection(value, item => parseRecord(section, item)), signal),
+  patient: (id: string, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}`, value => {
+    const patient = parsePatient(object(value).data);
+    if (patient.id !== id) throw new ApiRequestError("Patient identity does not match the request.", "SOURCE_SCOPE_MISMATCH");
+    return patient;
+  }, signal),
+  records: (id: string, section: RecordSection, offset = 0, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}/${section}?offset=${offset}`, value => parseCollection(value, item => {
+    const record = parseRecord(section, item);
+    if (record.patient_id !== id) throw new ApiRequestError("Record does not belong to this patient.", "SOURCE_SCOPE_MISMATCH");
+    return record;
+  }), signal),
   imagingAssets: (id: string, signal?: AbortSignal, offset = 0) => request(`${prefix}/imaging-studies/${encodeURIComponent(id)}/assets?offset=${offset}`, value => parseCollection(value, item => stringFields(item, ["id", "imaging_study_id", "asset_type", "mime_type"]) as { id: string; imaging_study_id: string; asset_type: string; mime_type: string }), signal),
   documentAsset: async (id: string, signal?: AbortSignal, imaging = false): Promise<string> => {
-    const base = process.env.NEXT_PUBLIC_API_URL;
-    if (!base) throw new ApiRequestError("API address is not configured.", "CONFIGURATION_ERROR");
-    const response = await fetch(`${base.replace(/\/$/, "")}${prefix}/${imaging ? "imaging-assets" : "documents"}/${encodeURIComponent(id)}/${imaging ? "content" : "asset"}`, { signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(8000)]) : AbortSignal.timeout(8000), cache: "no-store" });
+    const response = await fetchApi(`${prefix}/${imaging ? "imaging-assets" : "documents"}/${encodeURIComponent(id)}/${imaging ? "content" : "asset"}`, signal);
     if (!response.ok) throw new ApiRequestError("Document asset is unavailable.", "ASSET_UNAVAILABLE", response.status);
     const mime = response.headers.get("content-type")?.split(";")[0];
     if (!["application/pdf", "image/png", "image/jpeg", "text/plain", "text/html"].includes(mime ?? "")) throw new ApiRequestError("This document is available as a download only.", "UNSUPPORTED_PREVIEW");

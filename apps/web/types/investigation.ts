@@ -6,6 +6,7 @@ export interface SourceRef { type: string; id: string }
 export interface Anchor {
   source: SourceRef; source_version: number; source_hash: string;
   encounter_id: string | null; field: string; expected: unknown; quote: string | null;
+  char_start?: number | null; char_end?: number | null;
   relationship: "supports" | "contradicts" | "contextualizes" | "derived_from";
 }
 export interface Finding {
@@ -26,6 +27,7 @@ export interface TimelineEvent {
   precision: "instant" | "day" | "unknown"; timestamps: Record<string, string | null>; title: string;
 }
 export interface Hypothesis {
+  alternatives?: string[]; limitations?: string[];
   explanation: string; supports: Anchor[]; weakens: Anchor[];
   missing_evidence: string[]; verdict: "supported" | "weakened" | "inconclusive";
 }
