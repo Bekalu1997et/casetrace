@@ -6,7 +6,11 @@ The initial demonstration focuses on a timeline contradiction that becomes visib
 
 ## Project status
 
-Phase 1 implements the FastAPI/SQLite foundation, versioned Alembic baseline, Next.js application shell, typed health client and automated foundation checks. Hospital records, investigation agents and reports remain future work. See [local setup](docs/local-development.md) and the [implementation report](docs/phase-1-report.md) for verification and remaining limits.
+The foundation and synthetic hospital are implemented. Phase 3 adds a controlled,
+tool-backed investigation worker, source verification, persisted findings/reports,
+REST/SSE APIs and a typed client. CASE-001 runs in explicitly labelled deterministic
+rules mode; optional Gemini proposals require configured credentials/model. See
+[Phase 3 development](docs/phase-3-development.md) for commands and limitations.
 
 ## Intended experience
 

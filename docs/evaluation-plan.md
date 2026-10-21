@@ -1,5 +1,12 @@
 # CASETRACE — Evaluation Plan
 
+Phase 3 now provides `scripts/run_investigation.py` for runtime execution and
+`scripts/evaluate_investigation.py` for separate post-finalization evaluation.
+See [executed results](phase-3-report.md) and [commands](phase-3-development.md).
+The evaluator requires a finalized report before opening the isolated key. Source
+coverage is across findings; repeated anchors are not independent corroboration.
+Recorded verification metrics do not establish clinical diagnostic accuracy.
+
 Run database integration tests against isolated temporary SQLite files per test/worker, never the demo runtime database. Cover WAL, every-connection FK/busy timeout, UTC round trips, guarded concurrent updates, idempotent retries, migrations and reset/recovery. In-memory tests must skip WAL. See [development stack](development-stack.md); evaluator answers remain physically separate from runtime.
 
 **Document:** `docs/evaluation-plan.md`

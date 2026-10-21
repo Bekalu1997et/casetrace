@@ -1,5 +1,13 @@
 # CASETRACE — Demo runbook
 
+Phase 3 executable workflow and current limitations are in
+[development instructions](phase-3-development.md) and the
+[implementation report](phase-3-report.md). CASE-001 now exists and imports.
+Use explicit deterministic_rules mode unless a live provider/model is configured
+and validated. The investigation API and SSE stream are real; the full workspace
+and evidence-navigation UI remain Phase 4 work. Do not present API readiness as
+a completed browser demonstration or mocked provider tests as live inference.
+
 Status: planned full-demo procedure. Phase 1 application startup, baseline migration and foundation checks exist; see [local development](local-development.md). Case seeding, investigations and reset commands below remain planned and must not be presented as working.
 
 ## Data separation and preflight
