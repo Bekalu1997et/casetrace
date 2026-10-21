@@ -14,6 +14,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps/api"))
+from fastapi.testclient import TestClient
+
 from app.core.config import Settings, load_settings
 from app.core.database import Database
 from app.evidence.verification import EvidenceVerifier
@@ -25,7 +27,6 @@ from app.hospital.validation import validate_case
 from app.main import create_app
 from app.schemas.investigation import Candidate, SourceRef
 from app.tools.clinical import ClinicalTools
-from fastapi.testclient import TestClient
 
 
 def migrate(settings):
@@ -63,7 +64,7 @@ async def independently_check(settings, report):
         tools = ClinicalTools(
             SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
         )
-        verifier = EvidenceVerifier(tools, "SYN-001")
+        verifier = EvidenceVerifier(tools, "SYN-001", settings.investigation_reasoning)
         findings, anchors, temporal = [], [], []
         for finding in report["verified_findings"]:
             candidate = Candidate.model_validate({k: finding[k] for k in Candidate.model_fields})
@@ -98,7 +99,7 @@ async def independently_check(settings, report):
         await database.dispose()
 
 
-def run(output, repeats, live=False, strategy="baseline"):
+def run(output, repeats, live=False, strategy="baseline", reasoning="legacy"):
     output.mkdir(parents=True, exist_ok=False)
     results = []
     with tempfile.TemporaryDirectory(prefix="casetrace-phase5-") as directory:
@@ -107,6 +108,7 @@ def run(output, repeats, live=False, strategy="baseline"):
         )
         settings = load_settings(**overrides) if live else Settings(**overrides)
         settings.investigation_strategy = strategy
+        settings.investigation_reasoning = reasoning
         if live and (
             settings.llm_provider != "gemini" or not settings.llm_api_key or not settings.llm_model
         ):
@@ -160,6 +162,7 @@ def run(output, repeats, live=False, strategy="baseline"):
         summary = {
             "mode": "live" if live else "deterministic_rules",
             "strategy": strategy,
+            "reasoning": reasoning,
             "model": settings.llm_model if live else None,
             "startup_seconds": startup,
             "import": imported,
@@ -180,5 +183,6 @@ if __name__ == "__main__":
     parser.add_argument("--repeats", default=3, type=int, choices=range(1, 11))
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--strategy", choices=["baseline", "adaptive_rules"], default="baseline")
+    parser.add_argument("--reasoning", choices=["legacy", "structured"], default="legacy")
     args = parser.parse_args()
-    run(args.output, args.repeats, args.live, args.strategy)
+    run(args.output, args.repeats, args.live, args.strategy, args.reasoning)

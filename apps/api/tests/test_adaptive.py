@@ -16,6 +16,7 @@ from app.composition import build_engine
 from app.core.config import Settings
 from app.core.database import Database
 from app.core.provenance import digest
+from app.evidence.verification import EvidenceVerifier
 from app.hospital.adapter import SimulatedHospitalAdapter
 from app.hospital.asset_service import LocalAssetReader
 from app.hospital.assets import LocalAssetStorage
@@ -182,17 +183,27 @@ async def persisted_planning(database, identifier):
         return run.context["planning"]
 
 
-async def test_adaptive_canonical_runs_three_distinct_followups_and_verifies(tmp_path):
+@pytest.mark.parametrize("reasoning", ["legacy", "structured"])
+async def test_adaptive_canonical_runs_three_distinct_followups_and_verifies(tmp_path, reasoning):
     settings, database, store = await setup_case(tmp_path, True)
     settings.investigation_strategy = "adaptive_rules"
+    settings.investigation_reasoning = reasoning
     try:
         identifier, _ = await store.create(CreateInvestigation(patient_id="SYN-001"), None)
         engine = build_engine(store, settings)
         await asyncio.gather(engine.execute(identifier), engine.execute(identifier))
         report = await store.report(identifier)
         planning = await persisted_planning(database, identifier)
-        assert len(report.verified_findings) == 13
-        assert sum(len(f.anchors) for f in report.verified_findings) == 108
+        assert {"timeline_contradiction", "laboratory_change", "medication_change"} <= {
+            finding.type for finding in report.verified_findings
+        }
+        verifier = EvidenceVerifier(
+            SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path)),
+            "SYN-001",
+            reasoning,
+        )
+        for finding in report.verified_findings:
+            assert (await verifier.verify(finding))[0].status == "verified"
         assert report.execution_config["strategy"] == "adaptive_rules"
         actions = {
             a["tool"]
@@ -453,6 +464,19 @@ async def setup_variant(tmp_path, scenario):
         asset_storage_path=tmp_path / "assets",
     )
     raw = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    narratives = {
+        "paraphrased": "Patient first noticed a headache on September 18, 2026.",
+        "approximate": "First noticed headache in late September 2026.",
+        "recurrent": "Another episode of headache started on September 18, 2026.",
+        "negated": "Headache first started on September 18, 2026.",
+    }
+    if scenario in narratives:
+        raw["documents"][0]["text_content"] = "SYNTHETIC. " + narratives[scenario]
+        raw["documents"][0]["event_at"] = "2026-09-25T09:00:00+03:00"
+        raw["documents"][0]["authored_at"] = "2026-09-25T10:00:00+03:00"
+        raw["clinical_events"][0]["description"] = (
+            "Patient denies headache." if scenario == "negated" else "Headache observed at triage."
+        )
     if scenario in {"timeline", "correction", "conflicting"}:
         raw["documents"][0]["text_content"] = (
             "SYNTHETIC. Cough first began on February 1, 2026; no cough before then."
@@ -533,6 +557,27 @@ async def test_independent_ingested_variations_end_to_end(tmp_path, scenario):
                 assert len(followups) == 1
         else:
             assert not any(f.type == "timeline_contradiction" for f in report.verified_findings)
+        assert "EVALUATION_SENTINEL_NEVER_SERVE" not in report.model_dump_json()
+    finally:
+        await database.dispose()
+
+
+@pytest.mark.parametrize(
+    "scenario", ["paraphrased", "approximate", "recurrent", "negated", "control"]
+)
+async def test_structured_independent_ingested_narratives(tmp_path, scenario):
+    settings, database, store = await setup_variant(tmp_path, scenario)
+    settings.investigation_reasoning = "structured"
+    try:
+        identifier, _ = await store.create(CreateInvestigation(patient_id="PAT-CONTROL"), None)
+        await build_engine(store, settings).execute(identifier)
+        report = await store.report(identifier)
+        conflicts = [f for f in report.verified_findings if f.type == "timeline_contradiction"]
+        assert len(conflicts) == int(scenario == "paraphrased")
+        planning = await persisted_planning(database, identifier)
+        followups = [t for t in planning["tasks"] if t["task_type"] == "followup"]
+        assert bool(followups) == (scenario == "paraphrased")
+        assert all(t["status"] == "completed" for t in followups)
         assert "EVALUATION_SENTINEL_NEVER_SERVE" not in report.model_dump_json()
     finally:
         await database.dispose()

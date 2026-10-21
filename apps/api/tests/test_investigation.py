@@ -54,8 +54,10 @@ async def setup_case(tmp_path: Path, canonical: bool = False):
     return settings, database, InvestigationStore(database)
 
 
-async def test_case001_engine_and_post_run_evaluation(tmp_path):
+@pytest.mark.parametrize("reasoning", ["legacy", "structured"])
+async def test_case001_engine_and_post_run_evaluation(tmp_path, reasoning):
     settings, database, store = await setup_case(tmp_path, True)
+    settings.investigation_reasoning = reasoning
     try:
         id_, _ = await store.create(CreateInvestigation(patient_id="SYN-001"), "benchmark")
         engine = build_engine(store, settings)
@@ -93,6 +95,7 @@ async def test_case001_engine_and_post_run_evaluation(tmp_path):
                 SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
             ),
             "SYN-001",
+            reasoning,
         )
         for finding in report.verified_findings:
             verification, _ = await verifier.verify(finding)
