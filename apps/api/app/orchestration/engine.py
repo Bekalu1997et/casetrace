@@ -1,0 +1,307 @@
+"""Bounded deterministic supervisor; individual failures preserve useful evidence."""
+
+import asyncio
+import logging
+from collections.abc import Awaitable, Callable
+from typing import Any, Literal
+from uuid import uuid4
+
+from app.agents import analysis
+from app.agents.specialists import (
+    ContradictionInvestigator,
+    LaboratoryAgent,
+    MedicationAgent,
+    RetrievalAgent,
+    TimelineAgent,
+)
+from app.core.config import Settings
+from app.evidence.verification import EvidenceVerifier
+from app.llm.provider import GeminiProvider, LLMProvider
+from app.orchestration.store import InvestigationStore, RunConflict, now
+from app.schemas.investigation import AgentResult, Candidate, Finding, Report, SourceRecord
+from app.tools.clinical import ClinicalTools
+from app.tools.registry import ToolRegistry
+
+logger = logging.getLogger("casetrace.investigation")
+
+
+class InvestigationEngine:
+    def __init__(
+        self,
+        store: InvestigationStore,
+        settings: Settings,
+        provider: LLMProvider | None = None,
+    ):
+        self.store, self.settings = store, settings
+        self.provider = provider or (
+            GeminiProvider(settings) if settings.llm_provider == "gemini" else None
+        )
+        self.tasks: dict[str, asyncio.Task[None]] = {}
+        self.semaphore = asyncio.Semaphore(1)
+
+    def schedule(self, public_id: str) -> None:
+        if public_id not in self.tasks:
+            task = asyncio.create_task(self.execute(public_id))
+            self.tasks[public_id] = task
+            task.add_done_callback(lambda _: self.tasks.pop(public_id, None))
+
+    async def close(self) -> None:
+        tasks = list(self.tasks.values())
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+    async def execute(self, public_id: str) -> None:
+        async with self.semaphore:
+            try:
+                await self.store.transition(public_id, "running", "Worker claimed run")
+            except RunConflict:
+                return
+            try:
+                async with asyncio.timeout(self.settings.investigation_timeout_seconds):
+                    await self._run(public_id)
+            except BaseException as exc:
+                logger.error(
+                    "investigation.failed",
+                    extra={"investigation_id": public_id, "error_type": type(exc).__name__},
+                )
+                await asyncio.shield(
+                    self.store.transition(
+                        public_id,
+                        "failed",
+                        type(exc).__name__,
+                    )
+                )
+                if isinstance(exc, asyncio.CancelledError):
+                    raise
+
+    async def _run(self, public_id: str) -> None:
+        state = await self.store.snapshot(public_id)
+        patient = state["patient_id"]
+        clinical = ClinicalTools(self.store.database, self.settings.resolved_asset_path)
+        registry = ToolRegistry(
+            self.store,
+            clinical,
+            public_id,
+            patient,
+            max_calls=self.settings.investigation_max_tool_calls,
+            max_per_agent=self.settings.investigation_max_calls_per_agent,
+            max_chars=self.settings.investigation_max_context_chars,
+        )
+        limits: list[str] = []
+        records: dict[tuple[str, str], SourceRecord] = {}
+        proposals: list[Candidate] = []
+        hypotheses = []
+
+        async def run_agent(name: str, factory: Callable[[Any], Awaitable[Any]]) -> Any:
+            execution = await self.store.agent_start(public_id, name)
+            try:
+                output = await factory(execution)
+            except Exception as exc:
+                await self.store.agent_end(public_id, execution, type(exc).__name__)
+                limits.append(
+                    f"{name} failed: {type(exc).__name__}; related conclusions incomplete."
+                )
+                logger.warning(
+                    "agent.failed",
+                    extra={
+                        "investigation_id": public_id,
+                        "agent_run_id": str(execution),
+                        "error_type": type(exc).__name__,
+                    },
+                )
+                return None
+            except asyncio.CancelledError:
+                await self.store.agent_end(public_id, execution, "CANCELLED")
+                raise
+            await self.store.agent_end(public_id, execution)
+            return output
+
+        await self.store.stage(public_id, "record_discovery")
+        manifest = await run_agent(
+            "retrieval", lambda id_: RetrievalAgent(registry, "retrieval", id_).run()
+        )
+        if manifest is None:
+            raise RuntimeError("RECORD_DISCOVERY_FAILED")
+        if len(manifest) <= 1:
+            raise RuntimeError("NO_CLINICAL_EVIDENCE")
+        for record in manifest:
+            if record.source.type in {"imaging_study", "diagnostic_report"}:
+                records[(record.source.type, record.source.id)] = record
+        await self.store.record(public_id, "records.retrieved", {"record_count": len(manifest)})
+        await self.store.stage(public_id, "record_discovery", True)
+        await self.store.stage(public_id, "timeline_reconstruction")
+        timeline_output = await run_agent(
+            "timeline", lambda id_: TimelineAgent(registry, "timeline", id_).run()
+        )
+        if timeline_output:
+            result, sources = timeline_output
+            proposals.extend(result.candidates)
+            for record in sources:
+                records[(record.source.type, record.source.id)] = record
+        await self.store.stage(public_id, "timeline_reconstruction", True)
+        await self.store.stage(public_id, "specialist_analysis")
+        outputs = await asyncio.gather(
+            run_agent("laboratory", lambda id_: LaboratoryAgent(registry, "laboratory", id_).run()),
+            run_agent("medication", lambda id_: MedicationAgent(registry, "medication", id_).run()),
+        )
+        for output in outputs:
+            if output:
+                result, sources = output
+                proposals.extend(result.candidates)
+                for record in sources:
+                    records[(record.source.type, record.source.id)] = record
+        await self.store.stage(public_id, "specialist_analysis", True)
+        await self.store.stage(public_id, "contradiction_verification")
+
+        async def investigate(id_: Any) -> AgentResult:
+            specialist = ContradictionInvestigator(registry, "contradiction", id_)
+            # Target clinical discrepancy candidates, not every medication observation.
+            await specialist.retrieve_candidates(
+                [c for c in proposals if c.type == "timeline_contradiction"]
+            )
+            result = await specialist.followups()
+            if self.provider:
+                model = await self.provider.propose(
+                    "contradiction",
+                    {
+                        "objective": state["objective"],
+                        "candidates": [c.model_dump(mode="json") for c in proposals],
+                    },
+                )
+                result.candidates.extend(model.candidates)
+                result.hypotheses.extend(model.hypotheses)
+                result.limitations.extend(model.limitations)
+            return result
+
+        extra = await run_agent("contradiction", investigate)
+        if extra:
+            proposals.extend(extra.candidates)
+            hypotheses.extend(extra.hypotheses)
+            limits.extend(extra.limitations)
+        hypotheses.extend(analysis.challenge(proposals))
+        verifier = EvidenceVerifier(clinical, patient)
+        # Never accept model verdicts as established clinical explanations.
+        for hypothesis in hypotheses:
+            hypothesis.verdict = "inconclusive"
+            for anchor in hypothesis.supports + hypothesis.weakens:
+                probe = Candidate(
+                    type="clinical_relationship",
+                    title="Hypothesis citation check",
+                    claim="Hypothesis evidence",
+                    claim_kind="hypothesis",
+                    rule="interpretation",
+                    anchors=[anchor],
+                )
+                result, _ = await verifier.verify(probe)
+                if result.status == "rejected":
+                    hypothesis.supports = []
+                    hypothesis.weakens = []
+                    hypothesis.missing_evidence.append("Proposed source anchors failed validation.")
+                    limits.append(
+                        "A model hypothesis contained invalid citations; its evidence was removed."
+                    )
+                    break
+        for candidate in proposals[:40]:
+            finding_id = f"FND-{uuid4().hex}"
+            await self.store.record(public_id, "finding.proposed", {"finding_id": finding_id})
+            await self.store.record(public_id, "verification.started", {"finding_id": finding_id})
+            verification, canonical_claim = await verifier.verify(candidate)
+            status: Literal["verified", "rejected", "unresolved"] = {
+                "verified": "verified",
+                "rejected": "rejected",
+                "inconclusive": "unresolved",
+            }[  # type: ignore[assignment]
+                verification.status
+            ]
+            finding = Finding(
+                **{
+                    **candidate.model_dump(),
+                    "claim": canonical_claim,
+                    "title": {
+                        "field_observation": "Verified source fields",
+                        "lab_change": "Recorded laboratory change",
+                        "onset_conflict": "Conflicting documented symptom chronology",
+                    }.get(candidate.rule, candidate.title)
+                    if status == "verified"
+                    else candidate.title,
+                },
+                id=finding_id,
+                investigation_id=public_id,
+                status=status,
+                verification=verification,
+                support_level="strong"
+                if status == "verified"
+                else "insufficient"
+                if status == "rejected"
+                else "limited",
+                created_at=now(),
+                verified_at=now() if status == "verified" else None,
+            )
+            await self.store.save_finding(public_id, finding)
+            await self.store.record(
+                public_id,
+                "verification.completed",
+                {
+                    "finding_id": finding_id,
+                    "status": verification.status,
+                },
+            )
+        if len(proposals) > 40:
+            limits.append("Finding budget exhausted; additional proposals were not assessed.")
+        timeline = analysis.timeline(list(records.values()))
+        await self.store.context(
+            public_id,
+            timeline=[e.model_dump(mode="json") for e in timeline],
+            hypotheses=[h.model_dump(mode="json") for h in hypotheses],
+            limitations=limits,
+        )
+        await self.store.stage(public_id, "contradiction_verification", True)
+        await self.store.stage(public_id, "report_synthesis")
+
+        async def synthesize(_: Any) -> Report:
+            findings = await self.store.findings(public_id)
+            verified = [f for f in findings if f.status == "verified"]
+            conflicts = [f for f in verified if f.type == "timeline_contradiction"]
+            mode = self.provider.mode if self.provider else "deterministic_rules"
+            return Report(
+                investigation_id=public_id,
+                status="completed_with_limitations" if limits else "completed",
+                summary={
+                    "headline": f"{len(conflicts)} verified record chronology discrepancies; "
+                    f"{len(verified)} supported observations.",
+                    "description": "Findings describe synthetic source records. "
+                    "Available records do not establish a final diagnosis or causal conclusion.",
+                },
+                timeline=timeline,
+                verified_findings=verified,
+                rejected_findings=[f for f in findings if f.status == "rejected"],
+                unresolved_findings=[f for f in findings if f.status == "unresolved"],
+                hypotheses=hypotheses,
+                limitations=limits
+                + [
+                    "Synthetic research prototype; not for clinical decisions.",
+                    "Narrative parsing is deliberately narrow; unrecognized claims require review.",
+                    "Records outside the imported dataset are unknown.",
+                ]
+                + (
+                    ["No live LLM inference: deterministic rules mode."]
+                    if self.provider is None
+                    else []
+                ),
+                generated_at=now(),
+                execution_mode=mode,
+                execution_config={
+                    "model": self.settings.llm_model if self.provider else "none",
+                    "max_tool_calls": self.settings.investigation_max_tool_calls,
+                    "max_model_requests": 1 if self.provider else 0,
+                    "max_model_retries": self.settings.llm_max_retries,
+                    "parser_policy": "explicit-onset-v1",
+                },
+            )
+
+        report = await run_agent("synthesis", synthesize)
+        if report is None:
+            raise RuntimeError("REPORT_SYNTHESIS_FAILED")
+        await self.store.stage(public_id, "report_synthesis", True)
+        await self.store.finalize(public_id, report)

@@ -6,13 +6,17 @@ from uuid import uuid4
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import inspect
 
 from app.api.routes.health import router
 from app.api.routes.hospital import router as hospital_router
+from app.api.routes.investigations import router as investigation_router
 from app.core.config import Settings, load_settings
 from app.core.database import Database
 from app.core.errors import install_error_handlers, internal_error_response
 from app.core.logging import configure_logging
+from app.orchestration.engine import InvestigationEngine
+from app.orchestration.store import InvestigationStore
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -25,9 +29,21 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         application.state.database = database
         try:
             await database.initialize()
+            store = InvestigationStore(database)
+            engine = InvestigationEngine(store, config)
+            application.state.investigation_store = store
+            application.state.investigation_engine = engine
+            async with database.engine.connect() as connection:
+                migrated = await connection.run_sync(
+                    lambda conn: inspect(conn).has_table("investigations")
+                )
+            if migrated:
+                await store.recover()
             logging.getLogger("casetrace").info("application.started")
             yield
         finally:
+            if hasattr(application.state, "investigation_engine"):
+                await application.state.investigation_engine.close()
             await database.dispose()
             logging.getLogger("casetrace").info("application.stopped")
 
@@ -40,6 +56,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     install_error_handlers(application)
     application.include_router(router)
     application.include_router(hospital_router)
+    application.include_router(investigation_router)
 
     @application.middleware("http")
     async def request_context(
@@ -67,7 +84,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         CORSMiddleware,
         allow_origins=config.cors_allowed_origins,
         allow_methods=["GET", "POST", "OPTIONS"],
-        allow_headers=["Content-Type"],
+        allow_headers=["Content-Type", "Idempotency-Key", "Last-Event-ID"],
         expose_headers=["X-Request-ID"],
     )
     return application

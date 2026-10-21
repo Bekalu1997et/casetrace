@@ -1,5 +1,19 @@
 # CASETRACE Agent Tools
 
+Phase 3 implementation uses `app/tools/registry.py` as the executable registry.
+It exposes typed schemas, descriptions and explicit role scopes, checks the
+persisted agent/run identity, enforces patient scope and budgets and records
+failed validation/permission calls. Synthesis has no clinical tools. The optional
+get_referrals read is restricted to contradiction investigation for follow-up
+reconciliation. get_imaging_asset_metadata resolves registered metadata with
+patient ownership checked through the parent study; its version tracks that study.
+No image interpretation tool is introduced. Search returns snippets; document
+detail is separately retrieved and asset-integrity checked. The initial
+build_patient_timeline adapter supplies clinical-event records; the timeline
+specialist and supervisor merge these with separately retrieved encounters,
+documents, observations, medication periods, reports and imaging metadata into
+the reusable report projection. Partial dates remain explicit.
+
 SQLite migration preserves all tool names, scopes, schemas, provenance and audit behavior. Follow [development stack](development-stack.md): commit audit start before external work, close repository read sessions promptly, and commit results separately through the controlled persistence service. Agents never own database sessions.
 
 **Status:** Canonical  

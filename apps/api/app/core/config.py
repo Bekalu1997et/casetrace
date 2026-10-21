@@ -32,6 +32,16 @@ class Settings(BaseSettings):
     asset_storage_path: Path = Path("data/assets")
     cors_allowed_origins: list[str] = ["http://localhost:3000"]
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    llm_provider: Literal["rules", "gemini"] = "rules"
+    llm_model: str = Field(default="", pattern=r"^[A-Za-z0-9._-]*$")
+    llm_api_key: str = Field(default="", repr=False)
+    llm_timeout_seconds: float = Field(default=30, gt=0, le=120)
+    llm_max_retries: int = Field(default=1, ge=0, le=2)
+    llm_max_output_tokens: int = Field(default=4000, ge=100, le=16000)
+    investigation_timeout_seconds: float = Field(default=180, gt=0, le=600)
+    investigation_max_tool_calls: int = Field(default=100, ge=1, le=300)
+    investigation_max_calls_per_agent: int = Field(default=30, ge=1, le=100)
+    investigation_max_context_chars: int = Field(default=100000, ge=1000, le=500000)
 
     @field_validator("casetrace_root")
     @classmethod

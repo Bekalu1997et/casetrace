@@ -25,6 +25,27 @@ class ClinicalAssetService:
     def __init__(self, repository: HospitalRepository):
         self.repository = repository
 
+    async def metadata(
+        self, patient_external_id: str, asset_id: str
+    ) -> tuple[ImagingAssetResponse, int]:
+        record = await self.repository.get(db.ImagingAsset, asset_id)
+        if record is None:
+            raise HospitalError()
+        study = await self.repository.by_id(db.ImagingStudy, record.study_id)
+        patient = await self.repository.get(db.Patient, patient_external_id)
+        if study is None or patient is None or study.patient_id != patient.id:
+            raise HospitalError()
+        metadata = record.payload.get("metadata", {})
+        return ImagingAssetResponse(
+            id=record.external_id,
+            imaging_study_id=study.external_id,
+            asset_type=record.asset_kind,
+            mime_type=record.payload["mime_type"],
+            width=metadata.get("width"),
+            height=metadata.get("height"),
+            metadata=metadata,
+        ), study.source_version
+
     async def describe(self, patient_id: object, asset: db.Asset | None) -> AssetDescriptor:
         if asset is None:
             raise HospitalError("ASSET_NOT_FOUND")
