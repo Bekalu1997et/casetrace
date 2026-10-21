@@ -82,3 +82,14 @@ Use synthetic case data for this prototype. Keep credentials and local environme
 ## Phase 5 validation
 
 See [evaluation and safe demo operations](docs/phase-5-development.md), [release-readiness assessment](docs/phase-5-report.md), and the [four-minute demo runbook](docs/demo-runbook.md). Rules-mode API/browser runs are verified; live LLM execution and clinical expert review remain unverified. The dedicated reset never targets the normal development database.
+
+
+### Frontend architecture (Refactor 07)
+
+Existing routes now compose domain modules in `apps/web/features/`. Shared shell
+and UI states live in `components/`; typed clients, scoped reads, validation and
+SSE remain in `lib/`. No new clinical or inventory routes are implied.
+See [frontend refactor report](docs/refactoring/11-frontend-architecture-refactor-report.md)
+for migration mapping, test results, the retained server-state strategy and
+Refactor 08 prerequisites. Run `pnpm typecheck`, `pnpm lint`, `pnpm test` and
+`pnpm build` from `apps/web` (`pnpm.cmd` in Windows PowerShell).

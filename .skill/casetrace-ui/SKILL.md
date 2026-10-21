@@ -49,3 +49,14 @@ Inspect design prototypes and contracts → identify types/endpoints → build t
 ## Finalized stack
 
 Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.
+
+## Refactor 07 source navigation
+
+Use `features/evidence/navigation.ts` for source selections and anchor grouping,
+`features/evidence/hooks/use-evidence-selection` for identifier-only URL state,
+and `use-source` for patient-scoped retrieval. Source panels consume these
+boundaries. Original optional `char_start`/`char_end` use Python Unicode code-point
+indices: highlight only when the current field substring equals the exact quote.
+Missing offsets use the field-level fallback; mismatched spans show an error.
+Never infer PDF pages. Use shared shell/navigation, environment banner and UI states.
+See `docs/refactoring/11-frontend-architecture-refactor-report.md` for deferred screens.

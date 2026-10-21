@@ -1,3 +1,17 @@
+## Refactor 07 implementation direction
+
+The current Refactor 07 request supersedes the Refactor 01 advice against a
+feature tree: migrate existing domain functionality incrementally into `features/`.
+Routes compose features; shared components contain no feature dependencies.
+Typed domain adapters stay in `lib/api`, contracts in `types`, streaming in
+`lib/sse`. Evidence selection and grouping belong to evidence, not its renderer.
+Retain the existing scoped read hooks for this milestone: reads are cancelled on
+identity change, explicit retry refetches, and REST reconciles live activity.
+There is no cross-route cache or query invalidation promise. TanStack Query is
+deferred until shared clinical queries warrant a cache; adding it solely for
+file migration would create a second lifecycle beside the working SSE owner.
+No new library, backend endpoint or clinical screen is required.
+
 # CASETRACE
 
 For the audited implementation and retained product gaps, see the

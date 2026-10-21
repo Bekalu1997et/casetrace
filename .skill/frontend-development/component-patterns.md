@@ -41,3 +41,15 @@ Monolithic pages, props carrying entire patient charts unnecessarily, arbitrary 
 
 ## Tests
 Render components with empty/full/partial fixtures, missing evidence, long notes, long identifier values, and keyboard navigation. Verify clicking evidence opens the exact target record.
+
+## Refactor 07 implemented ownership
+
+Use `apps/web/features/{dashboard,patients,investigations,evidence,timeline,documents,imaging,records}`.
+Only create feature modules for implemented functionality. `records` owns the
+shared clinical record card so evidence never imports patient-chart composition.
+Routes import feature views; `components/{layout,shared,ui}` cannot import features.
+API adapters remain `lib/api/{hospital,investigations,health}`; transport is
+`lib/api/client`, runtime investigation parsers are `lib/validation`, contracts
+remain in `types`. `lib/api/use-resource` owns cancellable scoped reads.
+Presentation formatting is `lib/formatters/text`, shared statuses/time/panels in
+`components/shared/presentation`. Architectural tests enforce the dependency DAG.
