@@ -32,6 +32,14 @@ class HospitalRepository:
     async def patients(self) -> list[db.Patient]:
         return list(await self.session.scalars(select(db.Patient).order_by(db.Patient.external_id)))
 
+    async def source_versions(self, model: type[T], identifiers: list[str]) -> dict[str, int]:
+        rows = await self.session.execute(
+            select(cast(Any, model).external_id, cast(Any, model).source_version).where(
+                cast(Any, model).external_id.in_(identifiers)
+            )
+        )
+        return {identifier: version for identifier, version in rows}
+
     async def for_patient(self, model: type[T], patient: db.Patient) -> list[T]:
         return list(
             await self.session.scalars(

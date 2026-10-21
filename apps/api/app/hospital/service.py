@@ -82,6 +82,9 @@ class ClinicalRecordService:
         records = await self.repository.for_patient(RESOURCES[resource][1], patient)
         data = [await self.project(resource, record) for record in records]
         date_field = RESOURCES[resource][2]
+        # Internal tool capability: medication order chronology is distinct from start_at.
+        if filters.get("_time_field") == "ordered_at" and resource == "medications":
+            date_field = "ordered_at"
         start, end = filters.get("start_at"), filters.get("end_at")
         if start and end and start > end:
             raise HospitalError("VALIDATION_ERROR", 422)
@@ -93,9 +96,22 @@ class ClinicalRecordService:
                 "end_at",
                 "sort",
                 "event_types",
+                "_time_field",
+                "_sort",
+                "_casefold",
             }:
                 continue
-            data = [item for item in data if getattr(item, key, None) == value]
+            data = [
+                item
+                for item in data
+                if (
+                    str(getattr(item, key, "")).casefold() == value.casefold()
+                    if filters.get("_casefold")
+                    and key in {"test_name", "medication_name", "body_region"}
+                    and isinstance(value, str)
+                    else getattr(item, key, None) == value
+                )
+            ]
 
         def in_range(item: BaseModel) -> bool:
             raw = getattr(item, date_field, None)
@@ -113,7 +129,7 @@ class ClinicalRecordService:
             key=lambda item: (
                 as_instant(getattr(item, date_field)) or datetime.min.replace(tzinfo=UTC)
             ),
-            reverse=resource == "encounters",
+            reverse=filters.get("_sort", "desc" if resource == "encounters" else "asc") == "desc",
         )
         data = known + unknown
         total = len(data)
@@ -186,6 +202,13 @@ class ClinicalRecordService:
             if position < 0 and query.casefold() not in document.title.casefold():
                 continue
             if filters.get("document_type") and document.document_type != filters["document_type"]:
+                continue
+            if filters.get("encounter_id") and document.encounter_id != filters["encounter_id"]:
+                continue
+            if (
+                filters.get("department")
+                and document.metadata.get("department") != filters["department"]
+            ):
                 continue
             if (start and (document.event_at is None or document.event_at < start)) or (
                 end and (document.event_at is None or document.event_at > end)

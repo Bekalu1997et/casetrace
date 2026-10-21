@@ -72,14 +72,34 @@ class SimulatedHospitalAdapter:
         self, source_type: SourceType, patient_id: str, filters: dict[str, Any]
     ) -> tuple[list[SourceRecord], int]:
         async with self.database.session() as session:
-            service = ClinicalRecordService(HospitalRepository(session))
+            repo = HospitalRepository(session)
+            service = ClinicalRecordService(repo)
             rows, total = await service.list_records(
                 RESOURCE_TYPES[source_type], patient_id, filters
             )
-            ids = [str(row.model_dump()["id"]) for row in rows]
-        records = [
-            await self.resolve(patient_id, SourceRef(type=source_type, id=id_)) for id_ in ids
-        ]
+            # Reuse projected DTOs: do not reopen a session and project every row twice.
+            records = []
+            descriptors = []
+            versions = await repo.source_versions(
+                RESOURCES[RESOURCE_TYPES[source_type]][1],
+                [str(dto.model_dump()["id"]) for dto in rows],
+            )
+            for dto in rows:
+                data = dto.model_dump(mode="json")
+                if data["id"] not in versions:
+                    raise HospitalError()
+                records.append(
+                    SourceRecord(
+                        source=SourceRef(type=source_type, id=data["id"]),
+                        source_version=versions[data["id"]],
+                        source_hash=digest(data),
+                        data=data,
+                    )
+                )
+                if source_type == "document" and data.get("has_asset"):
+                    descriptors.append(await ClinicalAssetService(repo).document(data["id"]))
+        for descriptor in descriptors:
+            await self.assets.verified_path(descriptor)
         return records, total
 
     async def search_documents(
