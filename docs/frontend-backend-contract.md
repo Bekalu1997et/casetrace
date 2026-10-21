@@ -2730,6 +2730,18 @@ That distinction should remain intact throughout implementation.
 
 ## Phase 2 hospital interface alignment
 
+### Phase 4 browser implementation
+
+The browser uses the existing versioned hospital APIs and Phase 3 investigation
+DTOs/client, not historical illustrative DTOs below/above. Creation schedules
+execution with one POST and a retained Idempotency-Key. Findings, timeline and
+hypotheses come from investigation snapshots/results; activity comes from the
+ordered persisted events endpoint and SSE replay. No new backend paths were
+introduced. Source details resolve through allowlisted hospital resource paths
+and are checked against the investigation patient. The source inspector identifies
+current source records separately from investigation-time hashes/versions.
+See [Phase 4 development](phase-4-development.md) for route and reconnection behavior.
+
 For hospital source data the versioned paths, resource DTOs, pagination and error
 envelopes in [hospital-api.md](hospital-api.md) are canonical. Earlier
 `/api/patients` examples in architecture documents are historical examples, not

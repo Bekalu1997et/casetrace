@@ -8,7 +8,10 @@ The initial demonstration focuses on a timeline contradiction that becomes visib
 
 The foundation and synthetic hospital are implemented. Phase 3 adds a controlled,
 tool-backed investigation worker, source verification, persisted findings/reports,
-REST/SSE APIs and a typed client. CASE-001 runs in explicitly labelled deterministic
+REST/SSE APIs and a typed client. Phase 4 connects the browser dashboard, patient
+chart, live investigation workspace, original-source evidence and printable report.
+See [Phase 4 development](docs/phase-4-development.md) and its
+[validation report](docs/phase-4-report.md). CASE-001 runs in explicitly labelled deterministic
 rules mode; optional Gemini proposals require configured credentials/model. See
 [Phase 3 development](docs/phase-3-development.md) for commands and limitations.
 
@@ -56,7 +59,7 @@ Start with [repository guidance](AGENTS.md) and the [product requirements](docs/
 
 - Architecture: [frontend](docs/frontend-architecture.md), [backend](docs/backend-architecture.md), and [frontend/backend contract](docs/frontend-backend-contract.md).
 - Clinical data: [case schema](docs/case-schema.md), [hospital API](docs/hospital-api.md), and [database schema](docs/database-schema.md).
-- Investigations: [agent tools](docs/agent-tools.md), [multi-agent architecture](docs/multi-agent-architecture.md), [state machine](docs/investigation-state-machine.md), and `docs/evidence-contract.md` (missing; finalize before evidence interface implementation).
+- Investigations: [agent tools](docs/agent-tools.md), [multi-agent architecture](docs/multi-agent-architecture.md), [state machine](docs/investigation-state-machine.md), and [evidence contract](docs/evidence-contract.md).
 - Delivery: [implementation plan](docs/implementation-plan.md), [evaluation plan](docs/evaluation-plan.md), and [demo runbook](docs/demo-runbook.md).
 - Design: [UI design and tokens](docs/casetrace-ui-design/ui-design.md) and [HTML prototypes](docs/casetrace-ui-design/index.html). The files under `ui-design/` are empty placeholders.
 
