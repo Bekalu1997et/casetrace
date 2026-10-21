@@ -15,6 +15,7 @@ from app.agents.specialists import (
     TimelineAgent,
 )
 from app.clinical.ports import ClinicalSource
+from app.clinical.relationships import investigative_relationships, medication_associations
 from app.core.config import Settings
 from app.core.provenance import digest, now
 from app.evidence.verification import EvidenceVerifier
@@ -174,7 +175,10 @@ class InvestigationEngine:
             await self.store.stage(public_id, "record_discovery", True)
             await self.store.stage(public_id, "timeline_reconstruction")
             timeline_output = await run_agent(
-                "timeline", lambda id_: TimelineAgent(executor, "timeline", id_).run()
+                "timeline",
+                lambda id_: TimelineAgent(
+                    executor, "timeline", id_, self.settings.investigation_reasoning
+                ).run(),
             )
             if timeline_output:
                 result, sources = timeline_output
@@ -225,8 +229,12 @@ class InvestigationEngine:
                 proposals.extend(extra.candidates)
                 hypotheses.extend(extra.hypotheses)
                 limits.extend(extra.limitations)
+        if self.settings.investigation_reasoning == "structured":
+            sources = list(records.values())
+            proposals.extend(investigative_relationships(sources))
+            proposals.extend(medication_associations(sources))
         hypotheses.extend(analysis.challenge(proposals))
-        verifier = EvidenceVerifier(self.clinical, patient)
+        verifier = EvidenceVerifier(self.clinical, patient, self.settings.investigation_reasoning)
         # Never accept model verdicts as established clinical explanations.
         for hypothesis in hypotheses:
             hypothesis.verdict = "inconclusive"

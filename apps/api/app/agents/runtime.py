@@ -12,6 +12,7 @@ from app.agents.specialists import (
     Specialist,
     TimelineAgent,
 )
+from app.clinical.reasoning import reasoning_limitations
 from app.core.provenance import digest
 from app.schemas.investigation import AgentResult, SourceRecord
 from app.schemas.planning import (
@@ -208,11 +209,13 @@ class SpecialistTaskAgent:
         return output
 
 
-def reassess(records: list[SourceRecord]) -> AgentResult:
+def reassess(records: list[SourceRecord], reasoning: str = "legacy") -> AgentResult:
     """Re-run established analyses on source records after targeted retrieval."""
     return AgentResult(
         candidates=analysis.contradictions(
             [r for r in records if r.source.type == "document"],
             [r for r in records if r.source.type == "clinical_event"],
-        )
+            reasoning,
+        ),
+        limitations=reasoning_limitations(records) if reasoning == "structured" else [],
     )

@@ -1,9 +1,21 @@
 """Reusable deterministic analyses of retrieved records; no hidden answer identifiers."""
 
+from app.clinical.hypotheses import assess_hypotheses
+from app.clinical.laboratory import analyte_key
+from app.clinical.reasoning import structured_contradictions
 from app.clinical.rules import anchor as anchor
-from app.clinical.rules import contradictions as contradictions
+from app.clinical.rules import contradictions as legacy_contradictions
 from app.clinical.rules import instant as instant
 from app.schemas.investigation import Candidate, Hypothesis, SourceRecord, TimelineEvent
+
+
+def contradictions(
+    notes: list[SourceRecord], events: list[SourceRecord], reasoning: str = "legacy"
+) -> list[Candidate]:
+    return (structured_contradictions if reasoning == "structured" else legacy_contradictions)(
+        notes, events
+    )
+
 
 TIME_FIELDS = (
     "occurred_at",
@@ -81,16 +93,15 @@ def timeline(records: list[SourceRecord]) -> list[TimelineEvent]:
 
 
 def lab_changes(records: list[SourceRecord]) -> list[Candidate]:
-    groups: dict[tuple[str, str], list[SourceRecord]] = {}
+    groups: dict[tuple[str, str, str], list[SourceRecord]] = {}
     for record in records:
         if record.data.get("value_numeric") is None or not instant(
             record.data.get("specimen_collected_at"),
         ):
             continue
-        key = (
-            str(record.data.get("test_code") or record.data["test_name"]),
-            str(record.data.get("unit")),
-        )
+        key = analyte_key(record)
+        if key is None:
+            continue
         groups.setdefault(key, []).append(record)
     findings = []
     for group in groups.values():
@@ -108,7 +119,16 @@ def lab_changes(records: list[SourceRecord]) -> list[Candidate]:
                 anchors=[
                     anchor(r, f)
                     for r in [first, last]
-                    for f in ["test_name", "value_numeric", "unit", "specimen_collected_at"]
+                    for f in [
+                        "test_name",
+                        "test_code",
+                        "value_numeric",
+                        "unit",
+                        "specimen_collected_at",
+                        "reference_range_low",
+                        "reference_range_high",
+                    ]
+                    if f in r.data and r.data[f] is not None
                 ],
                 limitations=[
                     "A numerical change alone does not establish clinical significance or cause."
@@ -157,7 +177,11 @@ def followups(referrals: list[SourceRecord]) -> list[Candidate]:
             "the available record does not establish completion.",
             claim_kind="interpretation",
             rule="interpretation",
-            anchors=[anchor(r, "status")],
+            anchors=[
+                anchor(r, f)
+                for f in ["status", "ordered_at", "appointment_at"]
+                if r.data.get(f) is not None
+            ],
             limitations=[
                 "Missing completion documentation is not proof of missed care. "
                 "Care may have occurred elsewhere; future appointments are not overdue."
@@ -169,18 +193,4 @@ def followups(referrals: list[SourceRecord]) -> list[Candidate]:
 
 
 def challenge(candidates: list[Candidate]) -> list[Hypothesis]:
-    return [
-        Hypothesis(
-            explanation=(
-                "Retrospective history or a different episode may explain "
-                "the conflicting chronology."
-            ),
-            supports=c.anchors[:1],
-            weakens=c.anchors[1:],
-            missing_evidence=[
-                "Clarification of the history and whether the records describe the same episode."
-            ],
-        )
-        for c in candidates
-        if c.type == "timeline_contradiction"
-    ]
+    return assess_hypotheses(candidates)

@@ -3,13 +3,17 @@
 from uuid import UUID
 
 from app.agents import analysis
+from app.clinical.reasoning import reasoning_limitations
 from app.schemas.investigation import AgentResult, Candidate, SourceRecord, ToolResult
 from app.tools.ports import ToolExecutor
 
 
 class Specialist:
-    def __init__(self, tools: ToolExecutor, name: str, execution_id: UUID):
+    def __init__(
+        self, tools: ToolExecutor, name: str, execution_id: UUID, reasoning: str = "legacy"
+    ):
         self.tools, self.name, self.execution_id = tools, name, execution_id
+        self.reasoning = reasoning
 
     async def call(self, tool: str, **args: object) -> ToolResult:
         return await self.tools.execute(
@@ -62,7 +66,10 @@ class TimelineAgent(Specialist):
             notes.extend((await self.call("get_clinical_note", record_id=hit.source.id)).records)
         events.sort(key=lambda r: (str(r.data.get("occurred_at") or "~"), r.source.id))
         return AgentResult(
-            candidates=analysis.contradictions(notes, events)
+            candidates=analysis.contradictions(notes, events, self.reasoning),
+            limitations=reasoning_limitations(notes + events)
+            if self.reasoning == "structured"
+            else [],
         ), events + encounters + notes
 
 

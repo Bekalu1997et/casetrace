@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from app.hospital.schemas import ClinicalModel, Identifier
 
@@ -88,7 +88,19 @@ class Anchor(ClinicalModel):
     field: str = Field(min_length=1, max_length=100)
     expected: Any
     quote: str | None = Field(default=None, max_length=2000)
+    char_start: int | None = Field(default=None, ge=0)
+    char_end: int | None = Field(default=None, ge=1)
     relationship: Literal["supports", "contradicts", "contextualizes", "derived_from"] = "supports"
+
+    @model_validator(mode="after")
+    def paired_offsets(self) -> "Anchor":
+        if (self.char_start is None) != (self.char_end is None):
+            raise ValueError("Source offsets must be paired")
+        if self.char_start is not None and (
+            self.quote is None or self.char_end is None or self.char_end <= self.char_start
+        ):
+            raise ValueError("Source offsets require a nonempty exact quote")
+        return self
 
 
 class Candidate(ClinicalModel):
@@ -121,6 +133,8 @@ class Hypothesis(ClinicalModel):
     weakens: list[Anchor] = Field(default_factory=list, max_length=20)
     missing_evidence: list[str] = Field(min_length=1, max_length=10)
     verdict: Literal["supported", "weakened", "inconclusive"] = "inconclusive"
+    alternatives: list[str] = Field(default_factory=list, max_length=10)
+    limitations: list[str] = Field(default_factory=list, max_length=10)
 
 
 class AgentResult(ClinicalModel):

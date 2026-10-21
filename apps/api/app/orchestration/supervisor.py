@@ -130,7 +130,9 @@ class InvestigationSupervisor:
                 {"task_id": item.id, "agent_run_id": str(execution), "attempt": item.attempts},
             )
             agent = SpecialistTaskAgent(
-                SPECIALISTS[item.assigned_agent](scoped, item.assigned_agent, execution),
+                SPECIALISTS[item.assigned_agent](
+                    scoped, item.assigned_agent, execution, self.settings.investigation_reasoning
+                ),
                 SUPPORTED[item.assigned_agent],
             )
             try:
@@ -355,7 +357,8 @@ class InvestigationSupervisor:
                 task_id=f"REASSESS-{uuid4().hex}",
                 agent="timeline",
                 analysis=reassess(
-                    [r for r in self.records.values() if r.representation == "source"]
+                    [r for r in self.records.values() if r.representation == "source"],
+                    self.settings.investigation_reasoning,
                 ),
             )
         )

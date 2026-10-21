@@ -47,6 +47,9 @@ def build_report(
             "max_tool_calls": settings.investigation_max_tool_calls,
             "max_model_requests": 1 if provider else 0,
             "max_model_retries": settings.llm_max_retries,
-            "parser_policy": "explicit-onset-v1",
+            "parser_policy": "structured-claims-v1"
+            if settings.investigation_reasoning == "structured"
+            else "explicit-onset-v1",
+            "reasoning": settings.investigation_reasoning,
         },
     )

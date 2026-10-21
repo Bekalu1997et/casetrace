@@ -3,6 +3,8 @@
 import re
 from datetime import UTC, date, datetime
 
+from app.clinical.extraction import context_priority, extract_claims
+from app.clinical.spans import contextual_span, source_anchor
 from app.schemas.investigation import Anchor, Candidate, SourceRecord
 
 
@@ -17,6 +19,10 @@ def instant(value: object) -> datetime | None:
 
 
 def anchor(record: SourceRecord, field: str, quote: str | None = None) -> Anchor:
+    value = record.data.get(field)
+    if quote and isinstance(value, str) and quote in value:
+        start = value.index(quote)
+        return source_anchor(record, field, *contextual_span(value, start, start + len(quote)))
     return Anchor(
         source=record.source,
         source_version=record.source_version,
@@ -95,7 +101,20 @@ def contradictions(notes: list[SourceRecord], events: list[SourceRecord]) -> lis
                     and entered.date() < parsed[1]
                     and mention
                 ):
-                    item = anchor(earlier, "text_content", mention[0])
+                    claims = [
+                        c
+                        for c in extract_claims(earlier)
+                        if c.concept == parsed[0]
+                        and c.assertion in {"presence", "worsening"}
+                        and c.polarity == "positive"
+                        and c.subject == "patient"
+                        and c.certainty == "asserted"
+                        and c.temporality == "current"
+                    ]
+                    if not claims:
+                        continue
+                    claims.sort(key=context_priority)
+                    item = claims[0].anchor
                     item.relationship = "contextualizes"
                     context.append(item)
             # Both original source documents and event-level timestamps remain reviewable.

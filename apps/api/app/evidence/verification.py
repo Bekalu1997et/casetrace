@@ -1,6 +1,8 @@
 """Resolve every assertion against hospital records, not model self-confidence."""
 
+from app.clinical.laboratory import analyte_key, range_description
 from app.clinical.ports import SourceResolver
+from app.clinical.reasoning import structured_contradictions
 from app.clinical.rules import contradictions, instant, onset_pair
 from app.evidence.provenance import anchor_matches
 from app.hospital.errors import HospitalError
@@ -8,8 +10,9 @@ from app.schemas.investigation import Candidate, Check, SourceRecord, Verificati
 
 
 class EvidenceVerifier:
-    def __init__(self, clinical: SourceResolver, patient_id: str):
+    def __init__(self, clinical: SourceResolver, patient_id: str, reasoning: str = "legacy"):
         self.clinical, self.patient_id = clinical, patient_id
+        self.reasoning = reasoning
 
     async def verify(self, candidate: Candidate) -> tuple[Verification, str]:
         checks = []
@@ -81,10 +84,19 @@ class EvidenceVerifier:
                 instant(a.get("specimen_collected_at")),
                 instant(b.get("specimen_collected_at")),
             )
+            complete = all(
+                any(
+                    anchor.source == row.source and anchor.field == field
+                    for anchor in candidate.anchors
+                )
+                for row in rows
+                for field in ["test_name", "value_numeric", "unit", "specimen_collected_at"]
+            )
             valid = bool(
-                first.source.type == last.source.type == "observation"
-                and a.get("test_name") == b.get("test_name")
-                and a.get("unit") == b.get("unit")
+                complete
+                and first.source.type == last.source.type == "observation"
+                and analyte_key(first) is not None
+                and analyte_key(first) == analyte_key(last)
                 and a.get("value_numeric") is not None
                 and b.get("value_numeric") is not None
                 and a["value_numeric"] != b["value_numeric"]
@@ -97,6 +109,7 @@ class EvidenceVerifier:
                 f"({first.source.id}, {a.get('specimen_collected_at')}) to "
                 f"{b.get('value_numeric')} {b.get('unit')} "
                 f"({last.source.id}, {b.get('specimen_collected_at')})."
+                f" {range_description(first)} {range_description(last)}"
             )
         elif (
             candidate.rule == "onset_conflict"
@@ -112,9 +125,38 @@ class EvidenceVerifier:
                 )
             ]
             events = [r for r in rows if r.source.type == "clinical_event"]
-            valid = len(notes) == len(events) == 1 and onset_pair(notes[0], events[0])
+            if self.reasoning == "structured":
+                regenerated = structured_contradictions(
+                    [r for r in rows if r.source.type == "document"], events
+                )
+                # All decisive source passages AND chronology fields must be cited.
+                supplied = [a.model_dump() for a in candidate.anchors]
+                matched = next(
+                    (
+                        c
+                        for c in regenerated
+                        if c.rule == "onset_conflict"
+                        and all(a.model_dump() in supplied for a in c.anchors)
+                    ),
+                    None,
+                )
+                valid = matched is not None
+                if matched:
+                    claim = matched.claim
+            else:
+                valid = len(notes) == len(events) == 1 and onset_pair(notes[0], events[0])
+                if valid:
+                    regenerated_legacy = contradictions(notes, events)
+                    required = regenerated_legacy[0].anchors
+                    valid = all(
+                        any(
+                            a.source == r.source and a.field == r.field and a.quote == r.quote
+                            for a in candidate.anchors
+                        )
+                        for r in required
+                    )
+                    claim = regenerated_legacy[0].claim
             if valid:
-                claim = contradictions(notes, events)[0].claim
                 classification = "VERIFIED_CONTRADICTION"
         checks.append(
             Check(

@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     investigation_max_calls_per_agent: int = Field(default=30, ge=1, le=100)
     investigation_max_context_chars: int = Field(default=100000, ge=1000, le=500000)
     investigation_strategy: Literal["baseline", "adaptive_rules"] = "baseline"
+    investigation_reasoning: Literal["legacy", "structured"] = "legacy"
     investigation_max_tasks: int = Field(default=40, ge=1, le=100)
     investigation_max_depth: int = Field(default=2, ge=0, le=5)
     investigation_max_followup_iterations: int = Field(default=2, ge=0, le=5)
