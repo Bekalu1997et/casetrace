@@ -47,6 +47,8 @@ class SourceRecord(ClinicalModel):
     source_version: int
     source_hash: str
     data: dict[str, Any]
+    representation: Literal["source", "search_hit"] = "source"
+    representation_hash: str | None = None
 
 
 class ToolInput(ClinicalModel):
@@ -61,6 +63,12 @@ class ToolInput(ClinicalModel):
     offset: int = Field(default=0, ge=0, le=10000)
 
 
+class LabComparison(ClinicalModel):
+    direction: Literal["increasing", "decreasing", "unchanged"]
+    change_absolute: float
+    change_percent: float | None
+
+
 class ToolResult(ClinicalModel):
     status: Literal["success", "empty", "partial"]
     records: list[SourceRecord]
@@ -68,6 +76,8 @@ class ToolResult(ClinicalModel):
     total: int
     has_more: bool
     retrieved_at: datetime
+    analysis: LabComparison | None = None
+    timeline: list["TimelineEvent"] = Field(default_factory=list)
 
 
 class Anchor(ClinicalModel):
