@@ -17,14 +17,15 @@ function isErrorResponse(value: unknown): value is ApiErrorResponse {
 }
 
 export async function request<T>(path: string, parse: (value: unknown) => T,
-  signal?: AbortSignal): Promise<T> {
+  signal?: AbortSignal, options?: Pick<RequestInit, "method" | "body" | "headers">): Promise<T> {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!baseUrl) throw new ApiRequestError("API address is not configured.", "CONFIGURATION_ERROR");
   const timeout = AbortSignal.timeout(8000);
   let response: Response;
   try {
     response = await fetch(`${baseUrl.replace(/\/$/, "")}${path}`, {
-      headers: { Accept: "application/json" }, cache: "no-store",
+      ...options,
+      headers: { Accept: "application/json", ...options?.headers }, cache: "no-store",
       signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
     });
   } catch {
