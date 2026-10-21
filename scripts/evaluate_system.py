@@ -98,7 +98,7 @@ async def independently_check(settings, report):
         await database.dispose()
 
 
-def run(output, repeats, live=False):
+def run(output, repeats, live=False, strategy="baseline"):
     output.mkdir(parents=True, exist_ok=False)
     results = []
     with tempfile.TemporaryDirectory(prefix="casetrace-phase5-") as directory:
@@ -106,6 +106,7 @@ def run(output, repeats, live=False):
             app_env="test", database_url=f"sqlite+aiosqlite:///{Path(directory) / 'test.db'}"
         )
         settings = load_settings(**overrides) if live else Settings(**overrides)
+        settings.investigation_strategy = strategy
         if live and (
             settings.llm_provider != "gemini" or not settings.llm_api_key or not settings.llm_model
         ):
@@ -158,6 +159,7 @@ def run(output, repeats, live=False):
                 )
         summary = {
             "mode": "live" if live else "deterministic_rules",
+            "strategy": strategy,
             "model": settings.llm_model if live else None,
             "startup_seconds": startup,
             "import": imported,
@@ -177,5 +179,6 @@ if __name__ == "__main__":
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--repeats", default=3, type=int, choices=range(1, 11))
     parser.add_argument("--live", action="store_true")
+    parser.add_argument("--strategy", choices=["baseline", "adaptive_rules"], default="baseline")
     args = parser.parse_args()
-    run(args.output, args.repeats, args.live)
+    run(args.output, args.repeats, args.live, args.strategy)
