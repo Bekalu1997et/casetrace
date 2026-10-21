@@ -13,6 +13,22 @@ class EvidenceVerifier:
     async def verify(self, candidate: Candidate) -> tuple[Verification, str]:
         checks = []
         records: dict[str, SourceRecord] = {}
+        identities = [(a.source.type, a.source.id, a.field) for a in candidate.anchors]
+        if len(set(identities)) != len(identities) or (
+            candidate.rule == "field_observation"
+            and not any(a.relationship == "supports" for a in candidate.anchors)
+        ):
+            return Verification(
+                status="rejected",
+                checks=[
+                    Check(
+                        type="evidence_completeness",
+                        status="failed",
+                        message="Distinct anchors and at least one supporting anchor are required.",
+                    )
+                ],
+                classification="INSUFFICIENT_EVIDENCE",
+            ), candidate.claim
         for anchor in candidate.anchors:
             try:
                 source = await self.clinical.resolve(self.patient_id, anchor.source)

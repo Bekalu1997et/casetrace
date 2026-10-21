@@ -14,13 +14,36 @@ def evaluate(report_path: Path, key_path: Path) -> dict:
     conflicts = [f for f in verified if f["type"] == "timeline_contradiction"]
     cited = {a["source"]["id"] for f in verified for a in f["anchors"]}
     required = {id_ for f in key["expected_findings"] for id_ in f["required_source_ids"]}
-    detected = sum(
+    partial = sum(
         any(
             len(
                 {a["source"]["id"] for a in conflict["anchors"]}
                 & {a["source_id"] for a in expected["anchors"]}
             )
             >= 2
+            for conflict in conflicts
+        )
+        for expected in key["expected_findings"]
+    )
+    detected = sum(
+        all(
+            any(
+                a["source"]["id"] == expected_anchor["source_id"]
+                and a["field"] == expected_anchor["field"]
+                and (
+                    expected_anchor.get("quote") is None
+                    or expected_anchor["quote"] in (a.get("quote") or str(a["expected"]))
+                )
+                and ("value" not in expected_anchor or a["expected"] == expected_anchor["value"])
+                for finding in verified
+                for a in finding["anchors"]
+            )
+            for expected_anchor in expected["anchors"]
+        )
+        and set(expected["required_source_ids"]) <= cited
+        and any(
+            {a["source"]["id"] for a in conflict["anchors"]}
+            & {a["source_id"] for a in expected["anchors"]}
             for conflict in conflicts
         )
         for expected in key["expected_findings"]
@@ -37,6 +60,13 @@ def evaluate(report_path: Path, key_path: Path) -> dict:
         "record_contradictions_detected": len(conflicts),
         "expected_discovery_detected": detected == len(key["expected_findings"]),
         "expected_discoveries_detected": detected,
+        "expected_discoveries_total": len(key["expected_findings"]),
+        "partial_discoveries": partial if not detected else 0,
+        "discovery_grade": "exact"
+        if detected == len(key["expected_findings"])
+        else "partial"
+        if partial
+        else "failure",
         "verified_findings": len(verified),
         "verified_anchors": len(anchors),
         "failed_verification_checks_in_verified_findings": len(verified) - passed,
