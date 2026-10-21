@@ -15,6 +15,12 @@ Use for hospital API endpoints, data loading, patient lookup, encounter and arti
 Read `AGENTS.md`, `case-schema.md`, `hospital-api.md`, `agent-tools.md`, `backend-architecture.md`, `frontend-backend-contract.md` when present. **Existing contracts take precedence** over examples here. Do not silently invent endpoint names, IDs, fields, or database tables if a contract defines them.
 
 ## System boundary
+Refactor 02 uses `app/clinical/ports.py` (ClinicalReader/SourceResolver/
+ClinicalSource) and `app/hospital/adapter.py` (SimulatedHospitalAdapter).
+Clinical tools consume DTO capabilities. Keep repository/session composition in
+the local adapter; `AssetReader` verifies registered assets after read-session
+release. See `docs/refactoring/06-backend-refactor-report.md`.
+
 `CASETRACE agent -> approved tool -> hospital service -> synthetic database / artifact store -> provenance-aware response`
 
 The agent never reads source JSON files, database internals, or ground-truth answer keys directly. Those are private to setup/validation. All investigation evidence must be acquired through documented, audited hospital tools.

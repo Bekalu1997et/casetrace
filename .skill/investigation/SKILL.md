@@ -59,6 +59,12 @@ These may be logical modules within one FastAPI service; do **not** require sepa
 `run.started`, `plan.created`, `tool.started`, `tool.succeeded`, `tool.failed`, `evidence.registered`, `timeline.updated`, `contradiction.detected`, `hypothesis.updated`, `verification.completed`, `report.ready`, `run.failed`. Each includes run ID, monotonically increasing sequence, timestamp, stage, and safe payload; do not leak hidden ground truth or unneeded PHI.
 
 ## Execution constraints
+Refactor 02: use `composition.build_engine` for local composition. The engine
+requires ClinicalSource and InvestigationRuntime capabilities; specialists get
+ToolExecutor only. Persistence commands/activity/findings/queries/recovery share
+one InvestigationPersistence writer/CAS boundary. Do not create separate writer
+locks or move external waits inside transactions when extending collaborators.
+
 Bound tool calls, retries, input size, and execution duration. Prefer deterministic rule-based temporal checks before model interpretation. Use durable state or replayable events; demo reset seeds known synthetic cases and clears only run artifacts. Favor understandable FastAPI modules over excessive abstractions.
 
 ## Validation / definition of done

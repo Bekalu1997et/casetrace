@@ -15,6 +15,10 @@ API endpoints, dependency injection, hospital data retrieval, agent orchestratio
 Read backend architecture, `frontend-backend-contract.md`, `hospital-api.md`, `agent-tools.md`, and `case-schema.md` before editing interface behavior. Apply `api-patterns.md`, `service-patterns.md`, and the database skill.
 
 ## Architecture rules
+- Refactor 02 composition lives in `app/composition.py` and FastAPI lifespan.
+  Construct local engines with `build_engine`; inject clinical/assets/provider
+  capabilities through `create_app` for tests. Keep HTTP repository/service
+  factories in `app/api/dependencies.py`.
 - Routers: HTTP auth/validation/serialization; services: domain use cases; repositories: persistence and retrieval; tool adapters: explicit, auditable calls.
 - Preserve source record immutability; derivations and user annotations belong in separate storage.
 - Do not give agent runtime direct access to hidden case ground truth.

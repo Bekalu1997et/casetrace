@@ -5,6 +5,13 @@ decisions and proposed future corrections. It grants no blanket approval for
 breaking changes. See [audit](01-current-state-audit.md),
 [gaps](02-specification-gap-matrix.md) and [backlog](05-refactoring-backlog.md).
 
+R02 verification (2026-10-21): generated OpenAPI is exactly equal before/after;
+logical CASE-001 reports, anchors and evaluation results are equivalent. Clinical
+data, answer keys, ORM mappings and applied migrations are unchanged. Internal
+construction now uses `composition.build_engine` and
+`ClinicalTools(ClinicalSource)`; these are internal Python construction changes,
+not new HTTP contracts. See [executed report](06-backend-refactor-report.md).
+
 ## Specification authority
 
 Apply the current user request and clinical/evidence invariants first, then approved

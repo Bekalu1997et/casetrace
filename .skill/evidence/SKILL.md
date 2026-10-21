@@ -85,6 +85,12 @@ These are **examples, not replacements for project schemas**. Do not use example
 8. Persist append-only audit trail and rerun validation against fixture ground truth **only in isolated tests**.
 
 ## Required verification
+Refactor 02: EvidenceVerifier consumes SourceResolver; shared deterministic
+chronology rules live in `app/clinical/rules.py`, exact anchor comparison in
+`app/evidence/provenance.py`, and canonical DTO digests in
+`app/core/provenance.py`. Preserve fingerprint bytes and rule outcomes during
+structural changes; do not import agent implementations into verification.
+
 - All cited evidence resolves to the authorized original patient record/version.
 - Every material factual report claim cites at least one exact source anchor; comparisons cite **each side**.
 - Revoked or changed source versions do not silently point to new content.

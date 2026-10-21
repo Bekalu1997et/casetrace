@@ -1,6 +1,11 @@
 # CASETRACE — Implementation Plan
 
 **Document:** `docs/implementation-plan.md`
+
+Refactor 02 is implemented; see the
+[backend refactor report](refactoring/06-backend-refactor-report.md) for actual
+modules, regression evidence and Refactor 03 prerequisites. The structural change
+does not complete the later clinical reasoning or data-versioning milestones.
 **Status:** Implementation baseline / revise against repository contracts  
 **Version:** 1.0  
 **Primary release:** CASE-001 evidence-backed vertical slice  

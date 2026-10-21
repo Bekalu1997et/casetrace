@@ -6,6 +6,13 @@ implemented or approval for breaking contract changes. The
 the [gap matrix](02-specification-gap-matrix.md) supplies evidence and the
 [backlog](05-refactoring-backlog.md) defines acceptance gates.
 
+R02 implementation update (2026-10-21): DTO clinical ports, the local adapter,
+specialist executor capability, shared evidence rules, persistence collaborators,
+report assembly and dependency composition are implemented. See the
+[backend refactor report](06-backend-refactor-report.md) for actual modules and
+validation. Later reasoning, lineage, report-publication invariants and frontend
+targets below remain future work.
+
 ## Retained system shape
 
 Keep Next.js App Router/TypeScript/pnpm/Tailwind/shadcn and one FastAPI

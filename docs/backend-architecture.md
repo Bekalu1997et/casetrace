@@ -1,5 +1,10 @@
 # CASETRACE
 
+R02 implementation: [backend refactor report](refactoring/06-backend-refactor-report.md)
+records the current DTO clinical source, simulated adapter, shared evidence rules,
+scoped executor, persistence collaborators and composition root. Public contracts,
+SQLite schema and deterministic investigation behavior remain unchanged.
+
 The [Refactor 01 audit](refactoring/01-current-state-audit.md) maps these requirements
 to actual modules. [Compatibility decisions](refactoring/04-contract-compatibility.md)
 identify superseded route/state/DTO examples; [target architecture](refactoring/03-target-architecture.md)

@@ -27,6 +27,12 @@ than burying them in a structural milestone.
 
 ## R02 — Backend architecture
 
+Implemented 2026-10-21; see [R02 report](06-backend-refactor-report.md) for extracted
+boundaries, unchanged contracts and validation evidence. The tasks below remain
+the acceptance specification. The three existing browser journeys now execute
+successfully against isolated data; broader R10 accessibility, live-provider and
+operating-system isolation gates remain open.
+
 Objective: make the simulated hospital replaceable and investigation components
 independently testable while preserving the working vertical slice. Covers
 B-01/B-02/B-08/B-11, T-24 and structural parts of A-01.
