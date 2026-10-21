@@ -7,11 +7,13 @@ import { hospitalApi } from "@/lib/api/hospital";
 
 export function PatientDirectory() {
   const [offset, setOffset] = useState(0);
-  const load = useCallback((signal: AbortSignal) => hospitalApi.patients(offset, signal), [offset]);
-  const state = useHospitalData(`patients:${offset}`, load);
+  const [query, setQuery] = useState("");
+  const load = useCallback((signal: AbortSignal) => hospitalApi.patients(offset, signal, query), [offset, query]);
+  const state = useHospitalData(`patients:${offset}:${query}`, load);
   return <section className="space-y-5" aria-labelledby="directory-title">
     <div><p className="eyebrow">Hospital records</p><h1 id="directory-title">Synthetic patient directory</h1>
       <p className="mt-2 text-sm text-muted-foreground">Source clinical records. Select a patient to browse the available history.</p></div>
+    <label className="block text-sm">Search patients<input className="field mt-2 block w-full" type="search" value={query} placeholder="Name or patient identifier" onChange={event => { setQuery(event.target.value); setOffset(0); }} /></label>
     {!state.data && !state.error && <p role="status">Loading patients…</p>}
     {state.error && <div role="alert">{state.error} <Button variant="outline" onClick={state.retry}>Retry</Button></div>}
     {state.data && <><p className="text-sm text-muted-foreground">{state.data.pagination.total} patients available</p>

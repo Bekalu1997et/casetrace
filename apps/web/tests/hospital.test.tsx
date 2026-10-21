@@ -5,6 +5,7 @@ import { PatientRecord } from "@/components/patients/patient-record";
 import { RecordCard } from "@/components/patients/record-card";
 import { DocumentAsset } from "@/components/documents/document-asset";
 import { hospitalApi, parseCollection, parsePatient } from "@/lib/api/hospital";
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 const patient = { id: "PAT-CONTROL", case_id: "CONTROL-001", synthetic_identifier: "MRN-SYN-CONTROL", display_name: "Synthetic Pipeline Control", date_of_birth: "1990-01-01", sex: "unknown", created_at: "2026-01-01T00:00:00Z" };
 const envelope = <T,>(data: T[], total = data.length) => ({ data, pagination: { limit: 20, offset: 0, total, has_more: false }, meta: { request_id: "req_control" } });

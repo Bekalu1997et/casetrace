@@ -14,11 +14,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <p className="mt-auto hidden border-t border-white/15 pt-5 text-xs leading-relaxed text-slate-400 md:block">Synthetic records.<br />Evidence-backed investigation.</p>
     </aside>
     <div className="min-w-0">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-card px-6 py-5">
-        <span className="text-sm text-muted-foreground">Workspace / Overview</span>
+      <header className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-border bg-card px-6 py-5">
+        <span className="text-sm text-muted-foreground">Hospital & investigation workspace</span>
         <span className="rounded-full border border-teal/20 bg-accent px-3 py-1.5 text-[10px] font-semibold tracking-wide text-teal">SYNTHETIC DEMO — NOT FOR CLINICAL USE</span>
       </header>
-      <main id="main" className="mx-auto max-w-6xl px-6 py-9 lg:px-10">{children}</main>
+      <main id="main" className="mx-auto max-w-[1600px] px-6 py-9 lg:px-8">{children}</main>
     </div>
   </div>;
 }

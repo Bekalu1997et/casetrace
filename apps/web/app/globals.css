@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+.workspace-panel { border: 1px solid var(--border); border-radius: 12px; background: var(--card); overflow-wrap: anywhere; }
+.panel-heading { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 15px; }
+.workspace-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 20px; align-items: start; }
+.status-badge { display: inline-block; align-self: flex-start; height: fit-content; border-radius: 99px; padding: 4px 9px; font-size: 11px; font-weight: 650; text-transform: capitalize; }
+.status-good { color: #21633f; background: #e8f7ef; }
+.status-pending { color: #805313; background: #fff4df; }
+.status-bad { color: #9e2834; background: #fff0f1; }
+.finding-card { padding: 18px; border: 1px solid var(--border); border-radius: 10px; }
+.finding-verified { background: #f5fcf8; border-color: #bfe4cf; }
+.finding-candidate { background: #fffbf3; border-color: #ecd8af; }
+.source-link { display: inline-block; font: 11px ui-monospace, monospace; color: var(--primary); background: white; border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; cursor: pointer; overflow-wrap: anywhere; }
+.action-link { color: white; background: var(--primary); border-radius: 8px; padding: 10px 15px; font-size: 13px; font-weight: 600; }
+.field { background: white; border: 1px solid var(--border); border-radius: 7px; padding: 9px 11px; min-width: 0; max-width: 100%; margin-top: 5px; }
+.notice { background: #fff4df; border: 1px solid #ecd8af; border-radius: 10px; padding: 16px; color: #805313; }
+.clinical-timeline { border-left: 2px solid var(--border); margin-left: 6px; padding-left: 20px; }
+.timeline-event { position: relative; padding: 0 0 25px; }
+.timeline-event::before { content: ''; position: absolute; left: -27px; top: 5px; width: 12px; height: 12px; background: var(--teal); border: 3px solid white; border-radius: 50%; }
+summary { cursor: pointer; }
+@media (min-width: 1280px) { .workspace-grid { grid-template-columns: 185px minmax(0,1fr) minmax(260px,.8fr); } }
+@media print { aside, .no-print, button { display: none !important; } main { max-width: none !important; padding: 0 !important; } .workspace-panel { border-color: #aaa; margin-bottom: 12px; } .finding-card { break-inside: avoid; } body { background: white; color: black; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+@media print { button.source-link { display: inline-block !important; border: 0; padding: 0 5px 0 0; color: black; } .min-h-screen { display: block !important; } .report-view select, .report-view input { display: none; } }
+
 :root {
   --background: #f4f7fb; --foreground: #17243a;
   --card: #ffffff; --card-foreground: #17243a;
