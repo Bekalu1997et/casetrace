@@ -4,11 +4,11 @@ from uuid import UUID
 
 from app.agents import analysis
 from app.schemas.investigation import AgentResult, Candidate, SourceRecord, ToolResult
-from app.tools.registry import ToolRegistry
+from app.tools.ports import ToolExecutor
 
 
 class Specialist:
-    def __init__(self, tools: ToolRegistry, name: str, execution_id: UUID):
+    def __init__(self, tools: ToolExecutor, name: str, execution_id: UUID):
         self.tools, self.name, self.execution_id = tools, name, execution_id
 
     async def call(self, tool: str, **args: object) -> ToolResult:

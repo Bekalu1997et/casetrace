@@ -14,12 +14,17 @@ from app.agents.specialists import (
     RetrievalAgent,
     TimelineAgent,
 )
+from app.clinical.ports import ClinicalSource
 from app.core.config import Settings
+from app.core.provenance import now
 from app.evidence.verification import EvidenceVerifier
-from app.llm.provider import GeminiProvider, LLMProvider
-from app.orchestration.store import InvestigationStore, RunConflict, now
+from app.llm.provider import LLMProvider
+from app.orchestration.ports import InvestigationRuntime
+from app.orchestration.reporting import build_report
+from app.orchestration.state import RunConflict
 from app.schemas.investigation import AgentResult, Candidate, Finding, Report, SourceRecord
 from app.tools.clinical import ClinicalTools
+from app.tools.ports import ScopedToolExecutor
 from app.tools.registry import ToolRegistry
 
 logger = logging.getLogger("casetrace.investigation")
@@ -28,14 +33,14 @@ logger = logging.getLogger("casetrace.investigation")
 class InvestigationEngine:
     def __init__(
         self,
-        store: InvestigationStore,
+        store: InvestigationRuntime,
         settings: Settings,
+        clinical: ClinicalSource,
         provider: LLMProvider | None = None,
     ):
         self.store, self.settings = store, settings
-        self.provider = provider or (
-            GeminiProvider(settings) if settings.llm_provider == "gemini" else None
-        )
+        self.clinical = clinical
+        self.provider = provider
         self.tasks: dict[str, asyncio.Task[None]] = {}
         self.semaphore = asyncio.Semaphore(1)
 
@@ -78,7 +83,7 @@ class InvestigationEngine:
     async def _run(self, public_id: str) -> None:
         state = await self.store.snapshot(public_id)
         patient = state["patient_id"]
-        clinical = ClinicalTools(self.store.database, self.settings.resolved_asset_path)
+        clinical = ClinicalTools(self.clinical)
         registry = ToolRegistry(
             self.store,
             clinical,
@@ -88,6 +93,7 @@ class InvestigationEngine:
             max_per_agent=self.settings.investigation_max_calls_per_agent,
             max_chars=self.settings.investigation_max_context_chars,
         )
+        executor = ScopedToolExecutor(patient, registry.execute)
         limits: list[str] = []
         records: dict[tuple[str, str], SourceRecord] = {}
         proposals: list[Candidate] = []
@@ -119,7 +125,7 @@ class InvestigationEngine:
 
         await self.store.stage(public_id, "record_discovery")
         manifest = await run_agent(
-            "retrieval", lambda id_: RetrievalAgent(registry, "retrieval", id_).run()
+            "retrieval", lambda id_: RetrievalAgent(executor, "retrieval", id_).run()
         )
         if manifest is None:
             raise RuntimeError("RECORD_DISCOVERY_FAILED")
@@ -132,7 +138,7 @@ class InvestigationEngine:
         await self.store.stage(public_id, "record_discovery", True)
         await self.store.stage(public_id, "timeline_reconstruction")
         timeline_output = await run_agent(
-            "timeline", lambda id_: TimelineAgent(registry, "timeline", id_).run()
+            "timeline", lambda id_: TimelineAgent(executor, "timeline", id_).run()
         )
         if timeline_output:
             result, sources = timeline_output
@@ -142,8 +148,8 @@ class InvestigationEngine:
         await self.store.stage(public_id, "timeline_reconstruction", True)
         await self.store.stage(public_id, "specialist_analysis")
         outputs = await asyncio.gather(
-            run_agent("laboratory", lambda id_: LaboratoryAgent(registry, "laboratory", id_).run()),
-            run_agent("medication", lambda id_: MedicationAgent(registry, "medication", id_).run()),
+            run_agent("laboratory", lambda id_: LaboratoryAgent(executor, "laboratory", id_).run()),
+            run_agent("medication", lambda id_: MedicationAgent(executor, "medication", id_).run()),
         )
         for output in outputs:
             if output:
@@ -155,7 +161,7 @@ class InvestigationEngine:
         await self.store.stage(public_id, "contradiction_verification")
 
         async def investigate(id_: Any) -> AgentResult:
-            specialist = ContradictionInvestigator(registry, "contradiction", id_)
+            specialist = ContradictionInvestigator(executor, "contradiction", id_)
             # Target clinical discrepancy candidates, not every medication observation.
             await specialist.retrieve_candidates(
                 [c for c in proposals if c.type == "timeline_contradiction"]
@@ -180,7 +186,7 @@ class InvestigationEngine:
             hypotheses.extend(extra.hypotheses)
             limits.extend(extra.limitations)
         hypotheses.extend(analysis.challenge(proposals))
-        verifier = EvidenceVerifier(clinical, patient)
+        verifier = EvidenceVerifier(self.clinical, patient)
         # Never accept model verdicts as established clinical explanations.
         for hypothesis in hypotheses:
             hypothesis.verdict = "inconclusive"
@@ -261,43 +267,8 @@ class InvestigationEngine:
 
         async def synthesize(_: Any) -> Report:
             findings = await self.store.findings(public_id)
-            verified = [f for f in findings if f.status == "verified"]
-            conflicts = [f for f in verified if f.type == "timeline_contradiction"]
-            mode = self.provider.mode if self.provider else "deterministic_rules"
-            return Report(
-                investigation_id=public_id,
-                status="completed_with_limitations" if limits else "completed",
-                summary={
-                    "headline": f"{len(conflicts)} verified record chronology discrepancies; "
-                    f"{len(verified)} supported observations.",
-                    "description": "Findings describe synthetic source records. "
-                    "Available records do not establish a final diagnosis or causal conclusion.",
-                },
-                timeline=timeline,
-                verified_findings=verified,
-                rejected_findings=[f for f in findings if f.status == "rejected"],
-                unresolved_findings=[f for f in findings if f.status == "unresolved"],
-                hypotheses=hypotheses,
-                limitations=limits
-                + [
-                    "Synthetic research prototype; not for clinical decisions.",
-                    "Narrative parsing is deliberately narrow; unrecognized claims require review.",
-                    "Records outside the imported dataset are unknown.",
-                ]
-                + (
-                    ["No live LLM inference: deterministic rules mode."]
-                    if self.provider is None
-                    else []
-                ),
-                generated_at=now(),
-                execution_mode=mode,
-                execution_config={
-                    "model": self.settings.llm_model if self.provider else "none",
-                    "max_tool_calls": self.settings.investigation_max_tool_calls,
-                    "max_model_requests": 1 if self.provider else 0,
-                    "max_model_retries": self.settings.llm_max_retries,
-                    "parser_policy": "explicit-onset-v1",
-                },
+            return build_report(
+                public_id, findings, timeline, hypotheses, limits, self.settings, self.provider
             )
 
         report = await run_agent("synthesis", synthesize)

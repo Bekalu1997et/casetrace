@@ -7,8 +7,7 @@ from typing import Annotated
 from fastapi import APIRouter, Header, Query, Request
 from fastapi.responses import StreamingResponse
 
-from app.hospital.service import HospitalError
-from app.orchestration.engine import InvestigationEngine
+from app.hospital.errors import HospitalError
 from app.orchestration.store import TERMINAL, InvestigationStore
 from app.schemas.investigation import (
     CreateInvestigation,
@@ -19,6 +18,7 @@ from app.schemas.investigation import (
     InvestigationState,
     Report,
 )
+from app.services.investigations import InvestigationService
 
 router = APIRouter(prefix="/api/investigations", tags=["Investigations"])
 
@@ -33,18 +33,8 @@ async def create(
     request: Request,
     idempotency_key: Annotated[str | None, Header(max_length=100)] = None,
 ) -> CreationResponse:
-    store = store_for(request)
-    public_id, created = await store.create(body, idempotency_key)
-    if created:
-        engine: InvestigationEngine = request.app.state.investigation_engine
-        engine.schedule(public_id)
-    state = await store.snapshot(public_id)
-    return CreationResponse(
-        investigation_id=public_id,
-        status=state["status"],
-        patient_id=state["patient_id"],
-        created_at=state["created_at"],
-    )
+    service: InvestigationService = request.app.state.investigation_service
+    return await service.create(body, idempotency_key)
 
 
 @router.get("/{investigation_id}", response_model=InvestigationState)

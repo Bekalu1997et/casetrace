@@ -6,6 +6,7 @@ from typing import Any, cast
 from pydantic import BaseModel
 
 from app.hospital import schemas as dto
+from app.hospital.errors import HospitalError as HospitalError
 from app.hospital.repository import HospitalRepository
 from app.models import hospital as db
 
@@ -24,15 +25,22 @@ RESOURCES: dict[str, tuple[type[BaseModel], type[Any], str]] = {
 }
 
 
-class HospitalError(Exception):
-    def __init__(self, code: str = "RESOURCE_NOT_FOUND", status: int = 404):
-        self.code = code
-        self.status = status
-
-
 class ClinicalRecordService:
     def __init__(self, repository: HospitalRepository):
         self.repository = repository
+
+    async def patients(
+        self, query: str | None, limit: int, offset: int
+    ) -> tuple[list[dto.PatientResponse], int]:
+        records = await self.repository.patients()
+        if query:
+            records = [
+                p
+                for p in records
+                if query.casefold()
+                in " ".join([p.external_id, p.synthetic_mrn, p.display_name]).casefold()
+            ]
+        return [await self.patient_dto(p) for p in records[offset : offset + limit]], len(records)
 
     async def patient(self, patient_id: str) -> db.Patient:
         patient = await self.repository.get(db.Patient, patient_id)

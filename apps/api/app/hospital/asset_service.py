@@ -1,24 +1,14 @@
 """Read clinical asset metadata, then release the DB before filesystem work."""
 
 import asyncio
-from dataclasses import dataclass
 from pathlib import Path
 
+from app.clinical.assets import AssetDescriptor as AssetDescriptor
 from app.hospital.assets import AssetError, LocalAssetStorage
+from app.hospital.errors import HospitalError
 from app.hospital.repository import HospitalRepository
 from app.hospital.schemas import ImagingAssetResponse
-from app.hospital.service import HospitalError
 from app.models import hospital as db
-
-
-@dataclass(frozen=True)
-class AssetDescriptor:
-    external_id: str
-    case_id: str
-    storage_key: str
-    mime_type: str
-    sha256: str
-    byte_size: int
 
 
 class ClinicalAssetService:
@@ -121,3 +111,11 @@ async def verified_asset_path(root: Path, asset: AssetDescriptor) -> Path:
         return storage.resolve(asset.storage_key, asset.case_id)
     except AssetError as exc:
         raise HospitalError("ASSET_UNAVAILABLE") from exc
+
+
+class LocalAssetReader:
+    def __init__(self, root: Path):
+        self.root = root
+
+    async def verified_path(self, asset: AssetDescriptor) -> Path:
+        return await verified_asset_path(self.root, asset)

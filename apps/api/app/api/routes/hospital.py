@@ -6,12 +6,10 @@ from typing import Annotated, Any, Literal
 from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, field_validator
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.dependencies import get_session
+from app.api.dependencies import asset_service, clinical_service
 from app.hospital import schemas as dto
-from app.hospital.asset_service import AssetDescriptor, ClinicalAssetService, verified_asset_path
-from app.hospital.repository import HospitalRepository
+from app.hospital.asset_service import AssetDescriptor, ClinicalAssetService
 from app.hospital.service import RESOURCES, ClinicalRecordService
 
 router = APIRouter(prefix="/api/hospital/v1", tags=["hospital"])
@@ -43,11 +41,8 @@ class Filters(BaseModel):
         return value
 
 
-def service(session: Annotated[AsyncSession, Depends(get_session)]) -> ClinicalRecordService:
-    return ClinicalRecordService(HospitalRepository(session))
-
-
-Service = Annotated[ClinicalRecordService, Depends(service)]
+Service = Annotated[ClinicalRecordService, Depends(clinical_service)]
+Assets = Annotated[ClinicalAssetService, Depends(asset_service)]
 
 
 def meta(request: Request) -> dto.Meta:
@@ -74,21 +69,8 @@ async def patients(
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> dict[str, Any]:
-    records = await svc.repository.patients()
-    if query:
-        records = [
-            p
-            for p in records
-            if query.casefold()
-            in " ".join([p.external_id, p.synthetic_mrn, p.display_name]).casefold()
-        ]
-    return collection(
-        request,
-        [await svc.patient_dto(p) for p in records[offset : offset + limit]],
-        len(records),
-        limit,
-        offset,
-    )
+    data, total = await svc.patients(query, limit, offset)
+    return collection(request, data, total, limit, offset)
 
 
 @router.get("/patients/{patient_id}", response_model=dto.ResourceResponse[dto.PatientResponse])
@@ -199,7 +181,7 @@ for resource, (schema, _model, _time_field) in RESOURCES.items():
 
 
 async def asset_response(request: Request, asset: AssetDescriptor) -> FileResponse:
-    path = await verified_asset_path(request.app.state.settings.resolved_asset_path, asset)
+    path = await request.app.state.asset_reader.verified_path(asset)
     return FileResponse(
         path,
         media_type=asset.mime_type,
@@ -210,8 +192,8 @@ async def asset_response(request: Request, asset: AssetDescriptor) -> FileRespon
 
 
 @router.get("/documents/{document_id}/asset", response_class=FileResponse)
-async def document_asset(document_id: str, request: Request, svc: Service) -> FileResponse:
-    asset = await ClinicalAssetService(svc.repository).document(document_id)
+async def document_asset(document_id: str, request: Request, assets: Assets) -> FileResponse:
+    asset = await assets.document(document_id)
     return await asset_response(request, asset)
 
 
@@ -222,17 +204,17 @@ async def document_asset(document_id: str, request: Request, svc: Service) -> Fi
 async def imaging_assets(
     study_id: str,
     request: Request,
-    svc: Service,
+    assets: Assets,
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> dict[str, Any]:
-    data, total = await ClinicalAssetService(svc.repository).images(study_id, limit, offset)
+    data, total = await assets.images(study_id, limit, offset)
     return collection(request, data, total, limit, offset)
 
 
 @router.get("/imaging-assets/{asset_id}/content", response_class=FileResponse)
-async def imaging_content(asset_id: str, request: Request, svc: Service) -> FileResponse:
-    asset = await ClinicalAssetService(svc.repository).imaging(asset_id)
+async def imaging_content(asset_id: str, request: Request, assets: Assets) -> FileResponse:
+    asset = await assets.imaging(asset_id)
     return await asset_response(request, asset)
 
 

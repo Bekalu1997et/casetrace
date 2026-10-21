@@ -14,17 +14,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps/api"))
-from fastapi.testclient import TestClient
-
 from app.core.config import Settings, load_settings
 from app.core.database import Database
 from app.evidence.verification import EvidenceVerifier
+from app.hospital.adapter import SimulatedHospitalAdapter
+from app.hospital.asset_service import LocalAssetReader
 from app.hospital.assets import LocalAssetStorage
 from app.hospital.ingestion import ingest
 from app.hospital.validation import validate_case
 from app.main import create_app
 from app.schemas.investigation import Candidate, SourceRef
 from app.tools.clinical import ClinicalTools
+from fastapi.testclient import TestClient
 
 
 def migrate(settings):
@@ -59,7 +60,9 @@ async def seed(settings):
 async def independently_check(settings, report):
     database = Database(settings)
     try:
-        tools = ClinicalTools(database, settings.resolved_asset_path)
+        tools = ClinicalTools(
+            SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+        )
         verifier = EvidenceVerifier(tools, "SYN-001")
         findings, anchors, temporal = [], [], []
         for finding in report["verified_findings"]:

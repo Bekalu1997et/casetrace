@@ -7,9 +7,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "apps/api"))
 
+from app.composition import build_engine  # noqa: E402
 from app.core.config import load_settings  # noqa: E402
 from app.core.database import Database  # noqa: E402
-from app.orchestration.engine import InvestigationEngine  # noqa: E402
 from app.orchestration.store import InvestigationStore  # noqa: E402
 from app.schemas.investigation import CreateInvestigation  # noqa: E402
 
@@ -21,7 +21,7 @@ async def run(patient_id: str, output: Path) -> None:
         await database.initialize()
         store = InvestigationStore(database)
         identifier, _ = await store.create(CreateInvestigation(patient_id=patient_id), None)
-        await InvestigationEngine(store, settings).execute(identifier)
+        await build_engine(store, settings).execute(identifier)
         report = await store.report(identifier)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(report.model_dump_json(indent=2), encoding="utf-8")

@@ -1,13 +1,14 @@
 """Resolve every assertion against hospital records, not model self-confidence."""
 
-from app.agents.analysis import instant, onset_pair
-from app.hospital.service import HospitalError
+from app.clinical.ports import SourceResolver
+from app.clinical.rules import contradictions, instant, onset_pair
+from app.evidence.provenance import anchor_matches
+from app.hospital.errors import HospitalError
 from app.schemas.investigation import Candidate, Check, SourceRecord, Verification
-from app.tools.clinical import ClinicalTools
 
 
 class EvidenceVerifier:
-    def __init__(self, clinical: ClinicalTools, patient_id: str):
+    def __init__(self, clinical: SourceResolver, patient_id: str):
         self.clinical, self.patient_id = clinical, patient_id
 
     async def verify(self, candidate: Candidate) -> tuple[Verification, str]:
@@ -33,18 +34,7 @@ class EvidenceVerifier:
             try:
                 source = await self.clinical.resolve(self.patient_id, anchor.source)
                 records[f"{anchor.source.type}:{anchor.source.id}"] = source
-                valid = (
-                    source.source_version == anchor.source_version
-                    and source.source_hash == anchor.source_hash
-                    and source.data.get("encounter_id") == anchor.encounter_id
-                    and anchor.field in source.data
-                    and source.data[anchor.field] == anchor.expected
-                    and (
-                        anchor.quote is None
-                        or isinstance(source.data[anchor.field], str)
-                        and anchor.quote in source.data[anchor.field]
-                    )
-                )
+                valid = anchor_matches(source, anchor)
                 checks.append(
                     Check(
                         type="source_existence",
@@ -124,8 +114,6 @@ class EvidenceVerifier:
             events = [r for r in rows if r.source.type == "clinical_event"]
             valid = len(notes) == len(events) == 1 and onset_pair(notes[0], events[0])
             if valid:
-                from app.agents.analysis import contradictions
-
                 claim = contradictions(notes, events)[0].claim
                 classification = "VERIFIED_CONTRADICTION"
         checks.append(

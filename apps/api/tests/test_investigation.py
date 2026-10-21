@@ -11,16 +11,18 @@ from sqlalchemy import func, select
 from test_hospital import FIXTURE, migrate
 
 from app.agents.analysis import anchor, contradictions, timeline
+from app.composition import build_engine
 from app.core.config import Settings
 from app.core.database import Database
 from app.evidence.verification import EvidenceVerifier
+from app.hospital.adapter import SimulatedHospitalAdapter
+from app.hospital.asset_service import LocalAssetReader
 from app.hospital.assets import LocalAssetStorage
 from app.hospital.ingestion import ingest
 from app.hospital.service import HospitalError
 from app.hospital.validation import validate_case
 from app.main import create_app
 from app.models import investigation as db
-from app.orchestration.engine import InvestigationEngine
 from app.orchestration.store import InvestigationStore, RunConflict
 from app.schemas.investigation import AgentResult, Candidate, CreateInvestigation, SourceRef
 from app.tools.clinical import ClinicalTools
@@ -56,7 +58,7 @@ async def test_case001_engine_and_post_run_evaluation(tmp_path):
     settings, database, store = await setup_case(tmp_path, True)
     try:
         id_, _ = await store.create(CreateInvestigation(patient_id="SYN-001"), "benchmark")
-        engine = InvestigationEngine(store, settings)
+        engine = build_engine(store, settings)
         await engine.execute(id_)
         state = await store.snapshot(id_)
         assert state["status"] == "completed", state
@@ -87,7 +89,10 @@ async def test_case001_engine_and_post_run_evaluation(tmp_path):
             "investigation.completed",
         } <= {e.type for e in events}
         verifier = EvidenceVerifier(
-            ClinicalTools(database, settings.resolved_asset_path), "SYN-001"
+            ClinicalTools(
+                SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+            ),
+            "SYN-001",
         )
         for finding in report.verified_findings:
             verification, _ = await verifier.verify(finding)
@@ -110,7 +115,7 @@ async def test_control_no_contradiction_and_recovery(tmp_path):
         assert await store.create(request, "once") == (id_, False)
         with pytest.raises(RunConflict):
             await store.transition(id_, "completed", "invalid")
-        engine = InvestigationEngine(store, settings)
+        engine = build_engine(store, settings)
         await asyncio.gather(engine.execute(id_), engine.execute(id_))
         report = await store.report(id_)
         assert not [f for f in report.verified_findings if f.type == "timeline_contradiction"]
@@ -127,7 +132,9 @@ async def test_control_no_contradiction_and_recovery(tmp_path):
 async def test_verification_rejects_invented_values_hashes_and_patients(tmp_path):
     settings, database, store = await setup_case(tmp_path)
     try:
-        tools = ClinicalTools(database, settings.resolved_asset_path)
+        tools = ClinicalTools(
+            SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+        )
         record = await tools.resolve("PAT-CONTROL", SourceRef(type="observation", id="LAB-CONTROL"))
         candidate = Candidate(
             type="clinical_relationship",
@@ -171,7 +178,9 @@ async def test_permissions_budget_and_tool_failures_are_audited(tmp_path):
         agent = await store.agent_start(id_, "timeline")
         tools = ToolRegistry(
             store,
-            ClinicalTools(database, settings.resolved_asset_path),
+            ClinicalTools(
+                SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+            ),
             id_,
             "PAT-CONTROL",
             max_calls=1,
@@ -191,7 +200,9 @@ async def test_permissions_budget_and_tool_failures_are_audited(tmp_path):
 async def test_timeline_precision_and_parser_negative_controls(tmp_path):
     settings, database, _ = await setup_case(tmp_path)
     try:
-        tools = ClinicalTools(database, settings.resolved_asset_path)
+        tools = ClinicalTools(
+            SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+        )
         med = await tools.resolve("PAT-CONTROL", SourceRef(type="medication", id="MED-CONTROL"))
         event = timeline([med])[0]
         assert event.precision == "day" and event.timestamp == "2026-01-02"
@@ -232,7 +243,7 @@ async def test_mock_provider_failure_is_partial_not_fake_success(tmp_path):
 
     try:
         id_, _ = await store.create(CreateInvestigation(patient_id="PAT-CONTROL"), None)
-        await InvestigationEngine(store, settings, BrokenProvider()).execute(id_)
+        await build_engine(store, settings, BrokenProvider()).execute(id_)
         report = await store.report(id_)
         assert report.status == "completed_with_limitations"
         assert report.execution_mode == "mock_test"
@@ -337,7 +348,9 @@ async def test_missing_asset_and_actual_foreign_patient_fail_closed(tmp_path):
             await ingest(
                 session, validate_case(source, LocalAssetStorage(settings.resolved_asset_path))
             )
-        clinical = ClinicalTools(database, settings.resolved_asset_path)
+        clinical = ClinicalTools(
+            SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+        )
         with pytest.raises(HospitalError):
             await clinical.resolve("PAT-CONTROL", SourceRef(type="document", id="DOC-OTHER"))
         original_asset = settings.resolved_asset_path / "cases/CONTROL-001/control.txt"
@@ -353,7 +366,7 @@ async def test_timeout_has_explicit_failed_run_and_audit(tmp_path):
     try:
         settings.investigation_timeout_seconds = 0.01
         id_, _ = await store.create(CreateInvestigation(patient_id="PAT-CONTROL"), None)
-        await InvestigationEngine(store, settings).execute(id_)
+        await build_engine(store, settings).execute(id_)
         assert (await store.snapshot(id_))["status"] == "failed"
         with pytest.raises(HospitalError):
             await store.report(id_)

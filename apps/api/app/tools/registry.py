@@ -4,8 +4,8 @@ import asyncio
 from typing import Any
 from uuid import UUID
 
-from app.hospital.service import HospitalError
-from app.orchestration.store import InvestigationStore
+from app.hospital.errors import HospitalError
+from app.orchestration.ports import ToolAudit
 from app.schemas.investigation import ToolInput, ToolResult
 from app.tools.clinical import TOOL_SPECS, ClinicalTools, dispatch
 
@@ -60,7 +60,7 @@ PERMISSIONS = {
 class ToolRegistry:
     def __init__(
         self,
-        store: InvestigationStore,
+        store: ToolAudit,
         clinical: ClinicalTools,
         public_id: str,
         patient_id: str,

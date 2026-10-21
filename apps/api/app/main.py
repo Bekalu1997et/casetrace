@@ -11,15 +11,26 @@ from sqlalchemy import inspect
 from app.api.routes.health import router
 from app.api.routes.hospital import router as hospital_router
 from app.api.routes.investigations import router as investigation_router
+from app.clinical.assets import AssetReader
+from app.clinical.ports import ClinicalSource
+from app.composition import build_engine
 from app.core.config import Settings, load_settings
 from app.core.database import Database
 from app.core.errors import install_error_handlers, internal_error_response
 from app.core.logging import configure_logging
-from app.orchestration.engine import InvestigationEngine
+from app.hospital.asset_service import LocalAssetReader
+from app.llm.provider import LLMProvider
 from app.orchestration.store import InvestigationStore
+from app.services.investigations import InvestigationService
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    *,
+    clinical: ClinicalSource | None = None,
+    assets: AssetReader | None = None,
+    provider: LLMProvider | None = None,
+) -> FastAPI:
     config = settings or load_settings()
 
     @asynccontextmanager
@@ -30,7 +41,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try:
             await database.initialize()
             store = InvestigationStore(database)
-            engine = InvestigationEngine(store, config)
+            asset_reader = (
+                assets if assets is not None else LocalAssetReader(config.resolved_asset_path)
+            )
+            engine = build_engine(store, config, provider, clinical=clinical, assets=asset_reader)
+            application.state.asset_reader = asset_reader
+            application.state.investigation_service = InvestigationService(store, engine)
             application.state.investigation_store = store
             application.state.investigation_engine = engine
             async with database.engine.connect() as connection:

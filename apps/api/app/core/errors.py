@@ -5,8 +5,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException
 
+from app.hospital.errors import HospitalError
 from app.hospital.schemas import HospitalErrorDetail, HospitalErrorResponse, Meta
-from app.hospital.service import HospitalError
 from app.schemas.errors import ErrorDetail, ErrorResponse
 
 logger = logging.getLogger("casetrace.errors")

@@ -8,6 +8,8 @@ from test_investigation import setup_case
 
 from app.agents.analysis import anchor
 from app.evidence.verification import EvidenceVerifier
+from app.hospital.adapter import SimulatedHospitalAdapter
+from app.hospital.asset_service import LocalAssetReader
 from app.schemas.investigation import Candidate, SourceRef
 from app.tools.clinical import ClinicalTools
 
@@ -23,7 +25,9 @@ from demo_reset import approved_target, reset  # noqa: E402
 async def test_adversarial_evidence(tmp_path, mutation):
     settings, database, _ = await setup_case(tmp_path)
     try:
-        tools = ClinicalTools(database, settings.resolved_asset_path)
+        tools = ClinicalTools(
+            SimulatedHospitalAdapter(database, LocalAssetReader(settings.resolved_asset_path))
+        )
         record = await tools.resolve("PAT-CONTROL", SourceRef(type="observation", id="LAB-CONTROL"))
         field = (
             "unit"
@@ -80,7 +84,7 @@ async def test_reset_preserves_sources_and_clears_linked_audit_rows(tmp_path):
     from demo_reset import clear
     from sqlalchemy import text
 
-    from app.orchestration.engine import InvestigationEngine
+    from app.composition import build_engine
     from app.schemas.investigation import CreateInvestigation
 
     settings, database, store = await setup_case(tmp_path)
@@ -88,7 +92,7 @@ async def test_reset_preserves_sources_and_clears_linked_audit_rows(tmp_path):
         identifier, _ = await store.create(CreateInvestigation(patient_id="PAT-CONTROL"), None)
         with pytest.raises(ValueError, match="Active investigations"):
             await clear(settings)
-        await InvestigationEngine(store, settings).execute(identifier)
+        await build_engine(store, settings).execute(identifier)
         counts = await clear(settings)
         assert counts["investigations"] == 1
         async with database.session() as session:
