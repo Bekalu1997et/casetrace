@@ -40,10 +40,19 @@ function parseRecord(section: RecordSection, value: unknown): ClinicalRecord {
   return record as ClinicalRecord;
 }
 export const hospitalApi = {
-  patients: (offset = 0, signal?: AbortSignal) => request(`${prefix}/patients?offset=${offset}`, value => parseCollection(value, parsePatient), signal),
+  source: (patientId: string, section: RecordSection, id: string, signal?: AbortSignal) => {
+    if (section === "timeline") throw new ApiRequestError("Timeline entries are not original sources.", "INVALID_SOURCE");
+    return request(`${prefix}/${section}/${encodeURIComponent(id)}`, value => {
+      const record = parseRecord(section, object(value).data);
+      if (record.patient_id !== patientId || record.id !== id)
+        throw new ApiRequestError("Source does not belong to this patient.", "SOURCE_SCOPE_MISMATCH");
+      return record;
+    }, signal);
+  },
+  patients: (offset = 0, signal?: AbortSignal, query = "") => request(`${prefix}/patients?offset=${offset}&query=${encodeURIComponent(query)}`, value => parseCollection(value, parsePatient), signal),
   patient: (id: string, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}`, value => parsePatient(object(value).data), signal),
   records: (id: string, section: RecordSection, offset = 0, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}/${section}?offset=${offset}`, value => parseCollection(value, item => parseRecord(section, item)), signal),
-  imagingAssets: (id: string, signal?: AbortSignal) => request(`${prefix}/imaging-studies/${encodeURIComponent(id)}/assets`, value => parseCollection(value, item => stringFields(item, ["id", "imaging_study_id", "asset_type", "mime_type"]) as { id: string; imaging_study_id: string; asset_type: string; mime_type: string }), signal),
+  imagingAssets: (id: string, signal?: AbortSignal, offset = 0) => request(`${prefix}/imaging-studies/${encodeURIComponent(id)}/assets?offset=${offset}`, value => parseCollection(value, item => stringFields(item, ["id", "imaging_study_id", "asset_type", "mime_type"]) as { id: string; imaging_study_id: string; asset_type: string; mime_type: string }), signal),
   documentAsset: async (id: string, signal?: AbortSignal, imaging = false): Promise<string> => {
     const base = process.env.NEXT_PUBLIC_API_URL;
     if (!base) throw new ApiRequestError("API address is not configured.", "CONFIGURATION_ERROR");
@@ -54,4 +63,23 @@ export const hospitalApi = {
     return URL.createObjectURL(await response.blob());
   },
 };
+
+// Resolve asset ownership using existing patient-scoped study and asset listings.
+// This avoids trusting an arbitrary asset ID from a citation or introducing a
+// second metadata endpoint. Bounds prevent an unending malformed pagination loop.
+export async function resolveImagingAsset(patientId: string, assetId: string, signal?: AbortSignal): Promise<ClinicalRecord> {
+  for (let page = 0; page < 100; page++) {
+    const studies = await hospitalApi.records(patientId, "imaging-studies", page * 20, signal);
+    for (const study of studies.data) {
+      for (let assetPage = 0; assetPage < 100; assetPage++) {
+        const assets = await hospitalApi.imagingAssets(study.id, signal, assetPage * 20);
+        const asset = assets.data.find(item => item.id === assetId && item.imaging_study_id === study.id);
+        if (asset) return { ...asset, patient_id: patientId };
+        if (!assets.pagination.has_more) break;
+      }
+    }
+    if (!studies.pagination.has_more) break;
+  }
+  throw new ApiRequestError("Imaging asset is unavailable for this patient.", "SOURCE_NOT_FOUND");
+}
 
