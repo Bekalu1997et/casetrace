@@ -42,6 +42,7 @@ def build_report(
         generated_at=now(),
         execution_mode=mode,
         execution_config={
+            "strategy": settings.investigation_strategy,
             "model": settings.llm_model if provider else "none",
             "max_tool_calls": settings.investigation_max_tool_calls,
             "max_model_requests": 1 if provider else 0,

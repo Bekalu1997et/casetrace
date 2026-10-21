@@ -33,6 +33,20 @@ class InvestigationQueries:
                     )
                 )
             )
+            # Repeated specialist tasks retain all audit rows, with one public role summary.
+            summaries: dict[str, dict[str, Any]] = {}
+            for agent in agents:
+                previous = summaries.get(agent.agent_key)
+                summaries[agent.agent_key] = {
+                    "name": agent.agent_key,
+                    "status": agent.status,
+                    "started_at": previous["started_at"] if previous else agent.started_at,
+                    "completed_at": agent.ended_at,
+                }
+            for agent in agents:
+                if agent.status == "running":
+                    summaries[agent.agent_key]["status"] = "running"
+                    summaries[agent.agent_key]["completed_at"] = None
             return {
                 "id": public_id,
                 "patient_id": run.context["patient_id"],
@@ -49,15 +63,7 @@ class InvestigationQueries:
                     "total_stages": 5,
                     "percent": 20 * run.context["completed_stages"],
                 },
-                "agents": [
-                    {
-                        "name": a.agent_key,
-                        "status": a.status,
-                        "started_at": a.started_at,
-                        "completed_at": a.ended_at,
-                    }
-                    for a in agents
-                ],
+                "agents": list(summaries.values()),
                 "finding_summary": {
                     s: sum(f.status == s for f in findings)
                     for s in ["proposed", "verified", "rejected", "unresolved"]

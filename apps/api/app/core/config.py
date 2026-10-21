@@ -42,6 +42,14 @@ class Settings(BaseSettings):
     investigation_max_tool_calls: int = Field(default=100, ge=1, le=300)
     investigation_max_calls_per_agent: int = Field(default=30, ge=1, le=100)
     investigation_max_context_chars: int = Field(default=100000, ge=1000, le=500000)
+    investigation_strategy: Literal["baseline", "adaptive_rules"] = "baseline"
+    investigation_max_tasks: int = Field(default=40, ge=1, le=100)
+    investigation_max_depth: int = Field(default=2, ge=0, le=5)
+    investigation_max_followup_iterations: int = Field(default=2, ge=0, le=5)
+    investigation_max_concurrency: int = Field(default=2, ge=1, le=4)
+    investigation_task_attempts: int = Field(default=1, ge=1, le=3)
+    investigation_max_candidates: int = Field(default=40, ge=1, le=100)
+    investigation_max_leads: int = Field(default=40, ge=1, le=100)
 
     @field_validator("casetrace_root")
     @classmethod

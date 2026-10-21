@@ -42,8 +42,10 @@ class InvestigationStore:
     async def record(self, public_id: str, event: str, payload: dict[str, Any]) -> None:
         return await self.activity.record(public_id, event, payload)
 
-    async def stage(self, public_id: str, key: str, done: bool = False) -> None:
-        return await self.activity.stage(public_id, key, done)
+    async def stage(
+        self, public_id: str, key: str, done: bool = False, outcome: str = "completed"
+    ) -> None:
+        return await self.activity.stage(public_id, key, done, outcome)
 
     async def context(self, public_id: str, **values: Any) -> None:
         return await self.commands.context(public_id, **values)

@@ -3,7 +3,7 @@
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.core.provenance import now
 from app.models import investigation as db
@@ -19,10 +19,14 @@ class InvestigationActivity:
         async with self.persistence.mutation(public_id, event, payload):
             pass
 
-    async def stage(self, public_id: str, key: str, done: bool = False) -> None:
+    async def stage(
+        self, public_id: str, key: str, done: bool = False, outcome: str = "completed"
+    ) -> None:
+        if outcome not in {"completed", "failed", "skipped"}:
+            raise ValueError("INVALID_STAGE_OUTCOME")
         async with self.persistence.mutation(
             public_id,
-            "stage.completed" if done else "stage.started",
+            f"stage.{outcome}" if done else "stage.started",
             {
                 "stage": key,
             },
@@ -36,7 +40,7 @@ class InvestigationActivity:
                 )
                 if row is None or row.status != "running":
                     raise RunConflict()
-                row.status, row.ended_at = "completed", now()
+                row.status, row.ended_at = outcome, now()
             else:
                 session.add(
                     db.InvestigationStage(
@@ -62,10 +66,20 @@ class InvestigationActivity:
                 "agent_run_id": str(execution_id),
             },
         ) as (session, run):
+            attempt = (
+                await session.scalar(
+                    select(func.max(db.AgentExecution.attempt)).where(
+                        db.AgentExecution.investigation_id == run.id,
+                        db.AgentExecution.agent_key == name,
+                    )
+                )
+                or 0
+            ) + 1
             row = db.AgentExecution(
                 id=execution_id,
                 investigation_id=run.id,
                 agent_key=name,
+                attempt=attempt,
                 status="running",
                 started_at=now(),
             )

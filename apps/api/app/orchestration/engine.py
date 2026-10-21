@@ -16,13 +16,15 @@ from app.agents.specialists import (
 )
 from app.clinical.ports import ClinicalSource
 from app.core.config import Settings
-from app.core.provenance import now
+from app.core.provenance import digest, now
 from app.evidence.verification import EvidenceVerifier
 from app.llm.provider import LLMProvider
 from app.orchestration.ports import InvestigationRuntime
 from app.orchestration.reporting import build_report
 from app.orchestration.state import RunConflict
+from app.orchestration.supervisor import InvestigationSupervisor
 from app.schemas.investigation import AgentResult, Candidate, Finding, Report, SourceRecord
+from app.schemas.planning import InvestigationContext
 from app.tools.clinical import ClinicalTools
 from app.tools.ports import ScopedToolExecutor
 from app.tools.registry import ToolRegistry
@@ -82,6 +84,7 @@ class InvestigationEngine:
 
     async def _run(self, public_id: str) -> None:
         state = await self.store.snapshot(public_id)
+        await self.store.context(public_id, execution_strategy=self.settings.investigation_strategy)
         patient = state["patient_id"]
         clinical = ClinicalTools(self.clinical)
         registry = ToolRegistry(
@@ -123,68 +126,105 @@ class InvestigationEngine:
             await self.store.agent_end(public_id, execution)
             return output
 
-        await self.store.stage(public_id, "record_discovery")
-        manifest = await run_agent(
-            "retrieval", lambda id_: RetrievalAgent(executor, "retrieval", id_).run()
-        )
-        if manifest is None:
-            raise RuntimeError("RECORD_DISCOVERY_FAILED")
-        if len(manifest) <= 1:
-            raise RuntimeError("NO_CLINICAL_EVIDENCE")
-        for record in manifest:
-            if record.source.type in {"imaging_study", "diagnostic_report"}:
-                records[(record.source.type, record.source.id)] = record
-        await self.store.record(public_id, "records.retrieved", {"record_count": len(manifest)})
-        await self.store.stage(public_id, "record_discovery", True)
-        await self.store.stage(public_id, "timeline_reconstruction")
-        timeline_output = await run_agent(
-            "timeline", lambda id_: TimelineAgent(executor, "timeline", id_).run()
-        )
-        if timeline_output:
-            result, sources = timeline_output
-            proposals.extend(result.candidates)
+        planning = None
+        if self.settings.investigation_strategy == "adaptive_rules":
+            supervisor = InvestigationSupervisor(
+                self.store,
+                executor,
+                self.settings,
+                InvestigationContext(
+                    investigation_id=public_id, patient_id=patient, objective=state["objective"]
+                ),
+                remaining_calls=lambda: registry.max_calls - registry.calls,
+            )
+            adaptive, sources, planning = await supervisor.run()
+            proposals.extend(adaptive.candidates)
+            limits.extend(planning.limitations)
             for record in sources:
                 records[(record.source.type, record.source.id)] = record
-        await self.store.stage(public_id, "timeline_reconstruction", True)
-        await self.store.stage(public_id, "specialist_analysis")
-        outputs = await asyncio.gather(
-            run_agent("laboratory", lambda id_: LaboratoryAgent(executor, "laboratory", id_).run()),
-            run_agent("medication", lambda id_: MedicationAgent(executor, "medication", id_).run()),
-        )
-        for output in outputs:
-            if output:
-                result, sources = output
+            if self.provider:
+                provider = self.provider
+                model = await run_agent(
+                    "contradiction",
+                    lambda _: provider.propose(
+                        "contradiction",
+                        {
+                            "objective": state["objective"],
+                            "candidates": [c.model_dump(mode="json") for c in proposals],
+                        },
+                    ),
+                )
+                if model:
+                    proposals.extend(model.candidates)
+                    hypotheses.extend(model.hypotheses)
+                    limits.extend(model.limitations)
+        else:
+            await self.store.stage(public_id, "record_discovery")
+            manifest = await run_agent(
+                "retrieval", lambda id_: RetrievalAgent(executor, "retrieval", id_).run()
+            )
+            if manifest is None:
+                raise RuntimeError("RECORD_DISCOVERY_FAILED")
+            if len(manifest) <= 1:
+                raise RuntimeError("NO_CLINICAL_EVIDENCE")
+            for record in manifest:
+                if record.source.type in {"imaging_study", "diagnostic_report"}:
+                    records[(record.source.type, record.source.id)] = record
+            await self.store.record(public_id, "records.retrieved", {"record_count": len(manifest)})
+            await self.store.stage(public_id, "record_discovery", True)
+            await self.store.stage(public_id, "timeline_reconstruction")
+            timeline_output = await run_agent(
+                "timeline", lambda id_: TimelineAgent(executor, "timeline", id_).run()
+            )
+            if timeline_output:
+                result, sources = timeline_output
                 proposals.extend(result.candidates)
                 for record in sources:
                     records[(record.source.type, record.source.id)] = record
-        await self.store.stage(public_id, "specialist_analysis", True)
-        await self.store.stage(public_id, "contradiction_verification")
-
-        async def investigate(id_: Any) -> AgentResult:
-            specialist = ContradictionInvestigator(executor, "contradiction", id_)
-            # Target clinical discrepancy candidates, not every medication observation.
-            await specialist.retrieve_candidates(
-                [c for c in proposals if c.type == "timeline_contradiction"]
+            await self.store.stage(public_id, "timeline_reconstruction", True)
+            await self.store.stage(public_id, "specialist_analysis")
+            outputs = await asyncio.gather(
+                run_agent(
+                    "laboratory", lambda id_: LaboratoryAgent(executor, "laboratory", id_).run()
+                ),
+                run_agent(
+                    "medication", lambda id_: MedicationAgent(executor, "medication", id_).run()
+                ),
             )
-            result = await specialist.followups()
-            if self.provider:
-                model = await self.provider.propose(
-                    "contradiction",
-                    {
-                        "objective": state["objective"],
-                        "candidates": [c.model_dump(mode="json") for c in proposals],
-                    },
-                )
-                result.candidates.extend(model.candidates)
-                result.hypotheses.extend(model.hypotheses)
-                result.limitations.extend(model.limitations)
-            return result
+            for output in outputs:
+                if output:
+                    result, sources = output
+                    proposals.extend(result.candidates)
+                    for record in sources:
+                        records[(record.source.type, record.source.id)] = record
+            await self.store.stage(public_id, "specialist_analysis", True)
+            await self.store.stage(public_id, "contradiction_verification")
 
-        extra = await run_agent("contradiction", investigate)
-        if extra:
-            proposals.extend(extra.candidates)
-            hypotheses.extend(extra.hypotheses)
-            limits.extend(extra.limitations)
+            async def investigate(id_: Any) -> AgentResult:
+                specialist = ContradictionInvestigator(executor, "contradiction", id_)
+                # Target clinical discrepancy candidates, not every medication observation.
+                await specialist.retrieve_candidates(
+                    [c for c in proposals if c.type == "timeline_contradiction"]
+                )
+                result = await specialist.followups()
+                if self.provider:
+                    model = await self.provider.propose(
+                        "contradiction",
+                        {
+                            "objective": state["objective"],
+                            "candidates": [c.model_dump(mode="json") for c in proposals],
+                        },
+                    )
+                    result.candidates.extend(model.candidates)
+                    result.hypotheses.extend(model.hypotheses)
+                    result.limitations.extend(model.limitations)
+                return result
+
+            extra = await run_agent("contradiction", investigate)
+            if extra:
+                proposals.extend(extra.candidates)
+                hypotheses.extend(extra.hypotheses)
+                limits.extend(extra.limitations)
         hypotheses.extend(analysis.challenge(proposals))
         verifier = EvidenceVerifier(self.clinical, patient)
         # Never accept model verdicts as established clinical explanations.
@@ -208,9 +248,22 @@ class InvestigationEngine:
                         "A model hypothesis contained invalid citations; its evidence was removed."
                     )
                     break
-        for candidate in proposals[:40]:
+        for candidate in proposals[: self.settings.investigation_max_candidates]:
             finding_id = f"FND-{uuid4().hex}"
-            await self.store.record(public_id, "finding.proposed", {"finding_id": finding_id})
+            await self.store.record(
+                public_id,
+                "finding.proposed",
+                {
+                    "finding_id": finding_id,
+                    **(
+                        planning.candidate_origins.get(
+                            digest(candidate.model_dump(mode="json")), {}
+                        )
+                        if planning
+                        else {}
+                    ),
+                },
+            )
             await self.store.record(public_id, "verification.started", {"finding_id": finding_id})
             verification, canonical_claim = await verifier.verify(candidate)
             status: Literal["verified", "rejected", "unresolved"] = {
@@ -253,7 +306,7 @@ class InvestigationEngine:
                     "status": verification.status,
                 },
             )
-        if len(proposals) > 40:
+        if len(proposals) > self.settings.investigation_max_candidates:
             limits.append("Finding budget exhausted; additional proposals were not assessed.")
         timeline = analysis.timeline(list(records.values()))
         await self.store.context(
@@ -274,5 +327,20 @@ class InvestigationEngine:
         report = await run_agent("synthesis", synthesize)
         if report is None:
             raise RuntimeError("REPORT_SYNTHESIS_FAILED")
+        if planning:
+            report.execution_config.update(
+                {
+                    "strategy": "adaptive_rules",
+                    "task_count": len(planning.tasks),
+                    "lead_count": len(planning.leads),
+                    "stop_reason": planning.stop_reason,
+                    "duplicates_suppressed": planning.duplicates_suppressed,
+                    "tool_calls": registry.calls,
+                    "failed_tasks": sum(t.status == "failed" for t in planning.tasks),
+                    "followup_depth": max((t.depth for t in planning.tasks), default=0),
+                }
+            )
+        else:
+            await self.store.context(public_id, execution_strategy="baseline")
         await self.store.stage(public_id, "report_synthesis", True)
         await self.store.finalize(public_id, report)

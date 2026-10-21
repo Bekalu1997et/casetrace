@@ -77,6 +77,67 @@ class InvestigationCommands:
                 raise RunConflict()
             payload["from_state"] = run.status
             if target in {"failed", "cancelled"}:
+                planning = run.context.get("planning")
+                if planning is None:
+                    scheduled = await session.scalar(
+                        select(db.InvestigationEvent)
+                        .where(
+                            db.InvestigationEvent.investigation_id == run.id,
+                            db.InvestigationEvent.event_type == "task.scheduled",
+                        )
+                        .limit(1)
+                    )
+                    if scheduled:
+                        planning = {
+                            "investigation_id": public_id,
+                            "patient_id": run.context["patient_id"],
+                            "objective": run.question,
+                            "tasks": [],
+                            "leads": [],
+                        }
+                if planning:
+                    # Durable task events can be newer than the last context checkpoint.
+                    events = await session.scalars(
+                        select(db.InvestigationEvent)
+                        .where(
+                            db.InvestigationEvent.investigation_id == run.id,
+                            db.InvestigationEvent.event_type.in_(
+                                [
+                                    "task.scheduled",
+                                    "task.completed",
+                                    "task.failed",
+                                    "task.cancelled",
+                                    "task.skipped",
+                                    "task.assigned",
+                                ]
+                            ),
+                        )
+                        .order_by(db.InvestigationEvent.sequence)
+                    )
+                    tasks = {t["id"]: t for t in planning.get("tasks", [])}
+                    for event_row in events:
+                        if event_row.event_type == "task.assigned":
+                            item = tasks.get(event_row.payload["task_id"])
+                            if item:
+                                item["attempts"] = event_row.payload["attempt"]
+                            continue
+                        tasks[event_row.payload["id"]] = event_row.payload
+                    for item in tasks.values():
+                        if item["status"] in {"planned", "ready", "running"}:
+                            item["status"] = "cancelled" if target == "cancelled" else "failed"
+                            item["error"] = reason
+                    for lead in planning.get("leads", []):
+                        if lead["status"] in {"proposed", "approved"}:
+                            lead["status"] = "unresolved"
+                            lead["decision"] = reason
+                    run.context = {
+                        **run.context,
+                        "planning": {
+                            **planning,
+                            "tasks": list(tasks.values()),
+                            "stop_reason": reason,
+                        },
+                    }
                 for model in [db.AgentExecution, db.ToolCall, db.InvestigationStage]:
                     await session.execute(
                         update(model)
