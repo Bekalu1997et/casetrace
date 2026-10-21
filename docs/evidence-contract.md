@@ -12,10 +12,15 @@ UTC. Missing/changed/foreign-patient sources fail closed. Registered document
 assets are integrity checked before accepting document evidence.
 
 A finding carries claim_kind, rule, anchors, alternatives and limitations.
-Deterministic rules verify exact field observations, comparable lab changes,
-and explicit reviewed-result references preceding collection/result availability.
-The latter require exact source-ID mention and review language in the cited note;
-the note's authoring time is checked to avoid treating late entry as contradiction.
+Implemented deterministic rules verify exact field observations, comparable lab
+changes and explicit symptom-onset conflicts against earlier contemporaneous
+clinical events. The onset parser is deliberately narrow and checks event and
+documentation chronology; it does not establish a clinical cause or true onset.
+`review_before_result` remains an accepted proposal rule but has no implemented
+verification branch and therefore remains inconclusive. Its intended future
+implementation must require exact source-ID mention and review language, compare
+result availability and note authoring time, and test delayed-entry controls.
+See [Refactor 01 compatibility decision C-08](refactoring/04-contract-compatibility.md).
 Free-form interpretations/hypotheses remain unresolved even with valid citations.
 Verification statuses are verified/rejected/inconclusive; finding statuses are
 proposed/verified/rejected/unresolved. Every check is persisted with the finding.
@@ -23,8 +28,9 @@ No numerical confidence is generated: strong means all deterministic checks pass
 limited means valid anchors with unresolved interpretation, insufficient means
 missing or invalid evidence. These are evidence labels, not medical probabilities.
 
-This document establishes source lineage only. Finding anchors, scoring,
-verification and investigation evidence DTOs remain Phase 3 decisions.
+The source-lineage section below originated in Phase 2. The implemented Phase 3
+anchor and verification contract is summarized above and in
+[Phase 3 decisions](phase-3-decisions.md); it is no longer an unimplemented gate.
 
 Each imported source preserves its canonical ID, patient/encounter links, dataset
 case/version, source system, source version, original clinical payload and named

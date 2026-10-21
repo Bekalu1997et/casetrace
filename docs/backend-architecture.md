@@ -1,5 +1,10 @@
 # CASETRACE
 
+The [Refactor 01 audit](refactoring/01-current-state-audit.md) maps these requirements
+to actual modules. [Compatibility decisions](refactoring/04-contract-compatibility.md)
+identify superseded route/state/DTO examples; [target architecture](refactoring/03-target-architecture.md)
+defines proposed boundary improvements without requiring a directory-tree rewrite.
+
 The MVP uses async SQLAlchemy 2.x with aiosqlite, managed by uv. Follow [development stack and SQLite operations](development-stack.md) for centralized absolute paths, WAL, per-connection foreign keys/busy timeout, session lifecycle and bounded write transactions. No session is held across LLM/tool waits; one persistence service owns version-guarded state transitions.
 
 ## Backend Architecture & Implementation Specification

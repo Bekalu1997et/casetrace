@@ -15,10 +15,13 @@ while waiting for inference or external operations. Runtime state belongs in
 is preferred; optional Docker needs only API/web with persistent writable
 runtime storage, one API process, and no separate database service.
 
-Development skills are installed in `.skill/<name>/SKILL.md`. Phase 1 application
-manifests, lockfiles and foundation commands now exist; see
-[local development](docs/local-development.md). Domain implementation remains gated
-by the contract audit. Documentation-only alignment must not add product features.
+Development skills are installed in `.skill/<name>/SKILL.md`. Application manifests,
+lockfiles and foundation commands exist; see [local development](docs/local-development.md).
+The original pre-domain contract gate is historical: [Phase 2 contract decisions](docs/CONTRACT_DECISIONS.md)
+and [Phase 3 decisions](docs/phase-3-decisions.md) record the implemented resolutions.
+Remaining gaps and compatibility constraints are tracked in the
+[Refactor 01 audit](docs/refactoring/01-current-state-audit.md). Documentation-only
+alignment must not add product features.
 
 ## 1. Mission
 

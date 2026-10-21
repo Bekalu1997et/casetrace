@@ -6,6 +6,12 @@ The initial demonstration focuses on a timeline contradiction that becomes visib
 
 ## Project status
 
+The [Refactor 01 architecture audit](docs/refactoring/01-current-state-audit.md)
+records the current implementation, executed baseline checks and remaining gaps.
+Its [compatibility decisions](docs/refactoring/04-contract-compatibility.md) reconcile
+historical examples; the [backlog](docs/refactoring/05-refactoring-backlog.md)
+defines the proposed incremental refactoring program.
+
 The foundation and synthetic hospital are implemented. Phase 3 adds a controlled,
 tool-backed investigation worker, source verification, persisted findings/reports,
 REST/SSE APIs and a typed client. Phase 4 connects the browser dashboard, patient

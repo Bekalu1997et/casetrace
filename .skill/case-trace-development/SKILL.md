@@ -14,7 +14,7 @@ Use for feature planning, cross-layer changes, migrations, debugging, code revie
 ## Source-of-truth order
 1. Repository `AGENTS.md` and the user's current request.
 2. `frontend-backend-contract.md`, `case-schema.md`, `agent-tools.md`, and `hospital-api.md` for their respective interfaces.
-3. Backend/frontend architecture specifications and `ui-design/` references.
+3. Backend/frontend architecture specifications and `docs/casetrace-ui-design/` references.
 4. Existing tests and implementation for details not specified elsewhere.
 
 If sources disagree, identify the conflict, prefer explicit contract definitions, and make the smallest documented resolution. Do not silently invent endpoint shapes.

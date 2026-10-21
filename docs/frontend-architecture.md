@@ -1,5 +1,12 @@
 # CASETRACE
 
+For the audited implementation and retained product gaps, see the
+[Refactor 01 matrix](refactoring/02-specification-gap-matrix.md) and
+[contract compatibility decisions](refactoring/04-contract-compatibility.md).
+Historical route/DTO examples below do not add public endpoints. The case library,
+clinical detail views and investigation inventory remain product requirements;
+their absence from the Phase 4 scope does not make them obsolete.
+
 Use pnpm for the single Next.js App Router application. See [development stack](development-stack.md) for toolchain policy and [Phase 4 development](phase-4-development.md) for implemented routes, typed clients, REST/SSE reconciliation, evidence navigation and tests. Later implementation notes supersede historical illustrative routes/DTOs below.
 ## Frontend Architecture & Implementation Specification
 
