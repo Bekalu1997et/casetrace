@@ -1,5 +1,12 @@
 # CASETRACE — SQLite Database Schema
 
+Refactor 05 stores its bounded task graph, leads, candidate creator references and
+strategy in existing context JSON and ordered events; no migration is required.
+Repeated specialist executions allocate per-role attempts inside the shared writer
+lock, preserving run/role/attempt uniqueness. REST summarizes each role once; full
+execution history stays in rows/events. Task/agent/tool IDs correlate audit lineage;
+a dedicated evidence-to-tool foreign key remains future migration work.
+
 Phase 3 migration `0004_investigation` implements investigation persistence using
 the catalog table names. Exact typed anchors are JSON in evidence_refs; finding
 body includes deterministic verification checks, support category and alternatives.

@@ -1,5 +1,96 @@
 # CASETRACE — Multi-Agent Architecture
 
+## Refactor 05 executable architecture
+
+The runtime offers `INVESTIGATION_STRATEGY=baseline` (unchanged default) and
+`adaptive_rules`. Examples below remain conceptual where they differ from this
+implemented contract. No `adaptive_model` strategy is advertised.
+
+Baseline retains discovery → timeline → parallel laboratory/medication →
+contradiction → verification → synthesis. Adaptive execution uses:
+
+```mermaid
+flowchart TD
+  Request[Investigation objective] --> Discovery[Typed discovery task]
+  Discovery --> Planner[Objective and available modalities]
+  Planner --> Specialists[Dependency-aware specialist tasks]
+  Specialists --> Leads[Source-linked evidence gaps]
+  Leads --> Approval[Permissions, scope, association, version and budgets]
+  Approval --> Followup[Approved targeted retrieval]
+  Followup --> Leads
+  Followup --> Reassessment[Established chronology reassessment]
+  Reassessment --> Verifier[Independent deterministic verifier]
+  Verifier --> Report[Persisted report and limitations]
+```
+
+`schemas/planning.py` defines internal `InvestigationTask`, `InvestigativeLead`,
+`RetrievalAction`, `SourceIdentity`, `TaskResult` and `InvestigationContext`.
+`agents/runtime.py:InvestigationAgent` defines identity, supported task types and
+`execute(task) -> TaskResult`. `SpecialistTaskAgent` adapts working specialists
+without changing baseline `run()` contracts. Specialists receive only a scoped
+executor and task-specific references/actions. The supervisor retains a bounded
+source accumulator; it never passes the full chart to each specialist. Existing
+typed timeline/hypotheses/findings remain in investigation context/persistence.
+
+`orchestration/planner.py` chooses work from the five existing objectives and
+discovered categories. Absent laboratory/medication modalities do not schedule
+analysis. Referral review is an explicit discovery/check task because historical
+discovery excludes referrals. Timeline precedes independent laboratory/medication/
+referral work; bounded batches run concurrently. Dependencies must complete;
+unavailable dependencies and cycles produce explicit skips. The supervisor owns
+scheduling, result validation, merging, lead approval and stopping; verification
+and report publication remain separate.
+
+Actual returned evidence triggers these follow-ups:
+
+- Chronology discrepancy → correction-document search; hits become original
+  version/hash-checked documents. A returned correction document can trigger a
+  second task retrieving its associated encounter.
+- Changing compatible measurements → original linked report retrieval. Multiple
+  measurements sharing a report consolidate into one request.
+- Discontinued, held or completed medication → associated encounter retrieval
+  and encounter-scoped document search. Status never proves administration or cause.
+
+Approval checks origin task/agent, returned source identities/versions, authorized
+specialist/tool, validated parameters, patient, source associations, purpose,
+duplicates, depth and budgets. Only implemented narrow follow-up actions are
+allowed. Text cannot widen policy. Equivalent aliases/defaults normalize for
+deduplication; source-version/hash changes create different context fingerprints.
+
+Internal task states: planned, ready, running, completed, failed, skipped, cancelled.
+Lead states: proposed, approved, rejected, completed, unresolved. Completed retrieval
+does not mean clinical interpretation is verified. Empty results, failed tasks and
+budget rejections retain limitations. Events preserve dependencies, parent/lead IDs,
+source versions/hashes, assignment, attempt, outcome and results. Candidate creator
+metadata connects `finding.proposed` to task and agent execution IDs.
+
+| Configuration | Default |
+| --- | --- |
+| `INVESTIGATION_MAX_TASKS` | 40 |
+| `INVESTIGATION_MAX_DEPTH` | 2 |
+| `INVESTIGATION_MAX_FOLLOWUP_ITERATIONS` | 2 |
+| `INVESTIGATION_MAX_CONCURRENCY` | 2 |
+| `INVESTIGATION_TASK_ATTEMPTS` | 1; at most 3, transient reads only |
+| `INVESTIGATION_MAX_CANDIDATES` / `INVESTIGATION_MAX_LEADS` | 40 / 40 |
+| Existing total / per-role tool calls | 100 / 30 |
+| Existing source-context characters / duration | 100000 / 180 seconds |
+
+Per-task call limits apply across retry attempts. Registry global/per-role budgets
+never reset for new tasks. Source accumulation is bounded separately from compact
+task/reference metadata, which is bounded by task/lead/action counts. Existing LLM
+context/output/request/retry limits remain; at most one optional candidate/hypothesis
+proposal request occurs, with bounded HTTP retries. Models do not control tasks/tools.
+
+Stopping distinguishes objectives completed, evidence exhaustion, budget exhaustion
+and partial failure. Critical errors/deadline/cancellation retain failed-run behavior.
+Unfinished work prevents a fully completed report. One process, short guarded writes,
+immutable sources and fail-on-restart remain mandatory. Task events and checkpoints
+support audit; startup fails unfinished tasks instead of resuming them.
+
+Report `execution_config.strategy` records orchestration separately from inference
+`execution_mode`. Adaptive metrics include tasks, leads, calls, failures, depth,
+duplicates and stopping reason. See [implementation report](refactoring/09-multi-agent-refactor-report.md).
+
 SQLite is the MVP persistent store. Follow [development stack](development-stack.md) for independent short-lived sessions, single-writer coordination, atomic state/event commits, compare-and-swap versions and idempotent result persistence. Parallel specialist inference remains supported; agents never retain a database transaction during inference or tool waits.
 
 **File:** `docs/multi-agent-architecture.md`  

@@ -1,5 +1,13 @@
 # CASETRACE — Investigation State Machine
 
+Refactor 05 internal tasks use planned → ready → running → completed/failed/cancelled,
+with skipped for unavailable dependencies, cycles or budgets. These are task states,
+not new public run states. Leads use proposed/approved/rejected/completed/unresolved.
+Adaptive stage outcomes reflect failed/skipped work; baseline behavior is retained.
+Task assignment/attempt/outcome events and context checkpoints are durable. Restart
+reconciles unfinished tasks/leads from committed events, including events newer than
+the last checkpoint. Retry remains a new investigation; no resume/cancel API is added.
+
 Implemented Phase 3 mapping: `partial` -> `completed_with_limitations`,
 candidate/under_review -> proposed, refuted -> rejected, inconclusive -> unresolved.
 See [Phase 3 decisions](phase-3-decisions.md). Run retry creates a new POST.

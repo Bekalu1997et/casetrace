@@ -59,6 +59,14 @@ These may be logical modules within one FastAPI service; do **not** require sepa
 `run.started`, `plan.created`, `tool.started`, `tool.succeeded`, `tool.failed`, `evidence.registered`, `timeline.updated`, `contradiction.detected`, `hypothesis.updated`, `verification.completed`, `report.ready`, `run.failed`. Each includes run ID, monotonically increasing sequence, timestamp, stage, and safe payload; do not leak hidden ground truth or unneeded PHI.
 
 ## Execution constraints
+Refactor 05: baseline remains default. Adaptive execution uses internal
+`schemas/planning.py`, `agents/runtime.py`, `orchestration/planner.py` and
+`orchestration/supervisor.py`. Follow-ups require deterministic approval and a
+scoped executor. Retain source/version/creator IDs in events, per-role budgets across
+tasks, and explicit exhausted/failed limitations. No adaptive model mode exists:
+the provider still proposes only candidates/hypotheses. Read the executable section
+of `docs/multi-agent-architecture.md`.
+
 Refactor 02: use `composition.build_engine` for local composition. The engine
 requires ClinicalSource and InvestigationRuntime capabilities; specialists get
 ToolExecutor only. Persistence commands/activity/findings/queries/recovery share

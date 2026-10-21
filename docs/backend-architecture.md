@@ -1,5 +1,11 @@
 # CASETRACE
 
+Refactor 05 adds typed tasks/leads, specialist adapters, a planning policy and a
+bounded adaptive supervisor beside the default baseline pipeline. See the
+[executable multi-agent architecture](multi-agent-architecture.md) and
+[implementation report](refactoring/09-multi-agent-refactor-report.md). Clinical
+retrieval, verification semantics, provider interface and public endpoints remain.
+
 Refactor 04: the tool registry owns per-tool input schemas, category permissions,
 budgets, deadlines, output/provenance validation and durable audit. Document,
 laboratory and timeline handlers use the existing ClinicalSource DTO boundary.

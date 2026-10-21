@@ -1,5 +1,14 @@
 # CASETRACE — Frontend–Backend Contract
 
+Refactor 05 retains endpoint DTOs/OpenAPI and SSE cursors. Additional activity types:
+`plan.created`, `plan.updated`, `plan.stopped`, `task.scheduled`, `task.started`,
+`task.assigned`, `task.completed`, `task.failed`, `task.attempt_failed`, `task.skipped`,
+`task.cancelled`, `task.rejected`, `lead.identified`, `lead.approved`, `lead.rejected`.
+Payloads contain safe task objectives/actions, source identities/versions, dependencies
+and results, never private deliberation. Stages can emit `stage.skipped`/`stage.failed`.
+REST summarizes repeated agent executions by role; history retains all executions.
+Existing report `execution_config` carries strategy and adaptive metrics.
+
 Phase 3 implementation resolution: [phase-3-decisions.md](phase-3-decisions.md)
 owns the explicit mapping of older illustrative lifecycle names to the public
 enums below. Investigation endpoints are implemented under `/api/investigations`;

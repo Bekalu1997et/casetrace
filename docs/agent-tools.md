@@ -1,5 +1,12 @@
 # CASETRACE Agent Tools
 
+Refactor 05 adaptive specialists use the same registry, role allowlists and
+input/result contracts. Follow-up approval validates returned source versions,
+patient scope and document/encounter associations before scheduling. Global and
+per-role budgets span all tasks. Search hits become original version/hash-checked
+documents before reassessment. No tool or permission is added. See
+[executable runtime architecture](multi-agent-architecture.md).
+
 Phase 3 implementation uses `app/tools/registry.py` as the executable registry.
 It exposes typed schemas, descriptions and explicit role scopes, checks the
 persisted agent/run identity, enforces patient scope and budgets and records
