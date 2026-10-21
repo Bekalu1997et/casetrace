@@ -163,4 +163,14 @@ An evaluator can independently reproduce the CASE-001 finding from permitted hos
 
 ## Phase 5 executable implementation
 
+Refactor 06 adds `scripts/evaluate_reasoning.py`, separate source narratives under
+`apps/api/tests/fixtures/reasoning-narratives.json`, and the offline-only oracle
+`evaluation/reasoning/oracle.json`. Reports state exact numerators/denominators for
+claim tuples (concept/assertion/polarity/certainty/subject), exact source spans,
+temporal precision probes and positive/negative controls. These are authored
+development fixtures, not held-out clinical validation. Existing CASE-001 scorer,
+answer key and canonical sources remain unchanged. System replay now accepts
+`--reasoning legacy|structured`. Actual results are recorded in
+[Refactor 06](refactoring/10-clinical-reasoning-refactor-report.md).
+
 `scripts/evaluate_system.py` runs the migrated/imported CASE-001 application through real FastAPI APIs with isolated SQLite state, freezes reports before offline scoring, and independently checks source anchors and timeline projections. Exact/partial discovery formulas, commands and limitations are documented in [Phase 5 operations](phase-5-development.md). [Measured release results](phase-5-report.md) supersede illustrative metrics above; clinical support and calibration remain pending expert review.

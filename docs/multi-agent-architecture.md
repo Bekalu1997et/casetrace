@@ -1,5 +1,31 @@
 # CASETRACE — Multi-Agent Architecture
 
+## Refactor 06 reasoning integration
+
+Reasoning selection is separate from workflow selection:
+`INVESTIGATION_REASONING=legacy` preserves the narrow onset rule;
+`INVESTIGATION_REASONING=structured` enables typed assertions and explicit
+comparison rules in TimelineAgent and adaptive reassessment. Both paths improve
+contextual citations. Report `execution_config.reasoning` and `parser_policy`
+record the choice. Existing chronology leads still trigger real correction
+searches and original-source retrieval. New linked status/result and medication
+questions consume only already retrieved records and remain unresolved; they do
+not expand the scheduler's approved action families. Hypotheses attach relevant
+first-onset counterevidence rather than positional anchor slices.
+
+Limits: 100 source records, 100,000 characters per narrative, 64 claims per
+source, 4,096 main comparison pairs, 20 chronology candidates, 8 linked-status
+questions and 4 medication questions. Existing investigation candidate/tool/task
+budgets still apply. Budget limitations are propagated; unknown narrative coverage
+is not a claim of comprehensive NLP. Clinical claims/comparisons are transient
+typed analysis objects; persisted findings retain propositions, exact anchors,
+alternatives and limitations. No new clinical storage or unrestricted agents.
+
+`app/llm/claims.py` defines an optional typed extraction capability and validates
+proposals against independently reproduced source rules. It is tested with a
+fake provider; no shipped live adapter implements that capability. Existing
+Gemini candidate/hypothesis generation remains separate and unchanged.
+
 ## Refactor 05 executable architecture
 
 The runtime offers `INVESTIGATION_STRATEGY=baseline` (unchanged default) and

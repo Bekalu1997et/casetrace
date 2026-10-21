@@ -1,5 +1,21 @@
 # Phase 2 source provenance boundary
 
+## Refactor 06 additive reasoning contract
+
+`INVESTIGATION_REASONING=structured` opts into bounded source-claim extraction
+and comparison; `legacy` remains the default. Both workflow strategies retain
+the existing tool and verifier boundaries. Narrative anchors now retain complete
+source statements. Optional `char_start` / `char_end` offsets are paired,
+zero-based, end-exclusive Unicode character offsets into the unmodified field;
+when supplied, its slice must equal `quote`. Old field-only anchors remain valid.
+No PDF page or coordinates are inferred.
+
+Internal clinical claims preserve source identity/version/hash, subject,
+attribution, polarity, certainty, episode and date precision. Comparison verifies
+documented propositions, never true clinical onset or causality. Unknown episodes,
+approximate times and missing follow-up evidence stay explicitly uncertain.
+Unsupported rule families remain inconclusive. This adds no persistence tables.
+
 ## Phase 3 claim anchors and verification
 
 An anchor identifies source_type, source_id, source_version, source_hash,

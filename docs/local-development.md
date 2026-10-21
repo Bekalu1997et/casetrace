@@ -33,6 +33,16 @@ connections; migrations remain an explicit maintenance command, never create_all
 
 ## Settings
 
+Refactor 06: `INVESTIGATION_REASONING=legacy` is the default;
+`INVESTIGATION_REASONING=structured` enables bounded structured extraction and
+comparison independently of `INVESTIGATION_STRATEGY`. Restart the API after
+changing either setting. Offline comparisons can use
+`uv run python ../../scripts/evaluate_system.py --output <new-directory> --repeats 1
+--strategy adaptive_rules --reasoning structured` from `apps/api`.
+`evaluate_reasoning.py --output <file>` evaluates independent synthetic narratives.
+Neither command changes the development database; system replay uses a temporary
+migrated database. See [Refactor 06 report](refactoring/10-clinical-reasoning-refactor-report.md).
+
 The API loads root `.env` independently of the working directory. Process environment
 overrides that file; explicit settings overrides used by tests take precedence.
 

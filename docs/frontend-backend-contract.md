@@ -1,5 +1,13 @@
 # CASETRACE — Frontend–Backend Contract
 
+Refactor 06 adds optional nullable `char_start`/`char_end` to anchors (zero-based,
+end-exclusive Unicode offsets into the original field), and optional default-empty
+`alternatives`/`limitations` to hypotheses. Existing anchor fields, endpoint paths,
+request shapes, required response fields, status enums and SSE cursors remain.
+Clients may ignore these additions. Report execution metadata records `reasoning`.
+Offsets, when supplied, must be paired and their original-field slice must equal
+the exact quote; no PDF page is inferred. See [evidence contract](evidence-contract.md).
+
 Refactor 05 retains endpoint DTOs/OpenAPI and SSE cursors. Additional activity types:
 `plan.created`, `plan.updated`, `plan.stopped`, `task.scheduled`, `task.started`,
 `task.assigned`, `task.completed`, `task.failed`, `task.attempt_failed`, `task.skipped`,

@@ -1,5 +1,14 @@
 # CASETRACE
 
+Refactor 06 adds neutral `app/clinical` claim, concept, temporal, extraction,
+comparison, relationship and hypothesis modules. `INVESTIGATION_REASONING=legacy`
+remains default; `structured` enables the new bounded rules in both workflow
+strategies. Specialists still retrieve through the registry; the verifier
+independently resolves sources and reproduces proposition rules. Narrative
+anchors use contextual statements and optional exact character offsets.
+See [evidence contract](evidence-contract.md) and
+[measured reasoning report](refactoring/10-clinical-reasoning-refactor-report.md).
+
 Refactor 05 adds typed tasks/leads, specialist adapters, a planning policy and a
 bounded adaptive supervisor beside the default baseline pipeline. See the
 [executable multi-agent architecture](multi-agent-architecture.md) and

@@ -85,6 +85,14 @@ These are **examples, not replacements for project schemas**. Do not use example
 8. Persist append-only audit trail and rerun validation against fixture ground truth **only in isolated tests**.
 
 ## Required verification
+
+Refactor 06: neutral clinical extraction/comparison modules preserve structured
+assertion context. Narrative anchors retain full relevant statements. Optional
+paired char_start/char_end offsets must resolve exactly against the original
+field; anchor_matches also checks source identity and rejects search-hit
+representations. Do not normalize text before mapping offsets or infer PDF pages.
+Valid citations alone never verify clinical interpretation. The verifier must
+reproduce the implemented proposition and require decisive passages/time fields.
 Refactor 02: EvidenceVerifier consumes SourceResolver; shared deterministic
 chronology rules live in `app/clinical/rules.py`, exact anchor comparison in
 `app/evidence/provenance.py`, and canonical DTO digests in
