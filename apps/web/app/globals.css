@@ -57,3 +57,16 @@ h2 { font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; }
 .eyebrow { margin-bottom: .5rem; font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
 a:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* Shared navigation: one keyboard-operable toggle, no hidden focusable links. */
+.navigation-toggle { border: 1px solid #66758a; border-radius: 6px; padding: 8px 12px; text-align: left; }
+.workspace-navigation { display: none; }
+.workspace-navigation.navigation-expanded { display: block; }
+.navigation-link { display: block; border-radius: 6px; padding: 10px 12px; margin-bottom: 5px; font-size: 14px; }
+.navigation-link:hover, .navigation-link[aria-current="page"] { background: #ffffff1a; }
+:where(a, button, input, select, summary):focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.shell-sidebar :focus-visible { outline-color: #ffffff; }
+@media (min-width: 1024px) {
+  .app-shell { display: grid; grid-template-columns: 232px minmax(0,1fr); }
+}
+@media print { .app-shell { display: block; } }

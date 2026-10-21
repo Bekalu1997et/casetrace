@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PatientDirectory } from "@/components/patients/patient-directory";
-import { PatientRecord } from "@/components/patients/patient-record";
-import { RecordCard } from "@/components/patients/record-card";
-import { DocumentAsset } from "@/components/documents/document-asset";
+import { PatientDirectory } from "@/features/patients/components/patient-directory";
+import { PatientRecord } from "@/features/patients/components/patient-record";
+import { RecordCard } from "@/features/records/components/record-card";
+import { DocumentAsset } from "@/features/documents/components/document-asset";
 import { hospitalApi, parseCollection, parsePatient } from "@/lib/api/hospital";
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 

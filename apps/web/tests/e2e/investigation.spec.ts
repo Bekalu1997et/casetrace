@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { writeFile } from "node:fs/promises";
 
 test("CASE-001 investigation resolves actual evidence and survives refresh", async ({ page, request }, testInfo) => {
   test.setTimeout(120000);
@@ -37,6 +38,14 @@ test("CASE-001 investigation resolves actual evidence and survives refresh", asy
   await page.getByRole("link", { name: "Open investigation report →" }).click();
   await expect(page.getByRole("heading", { name: "Executive summary" })).toBeVisible();
   const report = await (await request.get(`${process.env.API_TEST_URL ?? "http://localhost:8000"}/api/investigations/${id}/report`)).json();
+  await testInfo.attach("persisted-state.json", { body: JSON.stringify(state, null, 2), contentType: "application/json" });
+  await testInfo.attach("persisted-report.json", { body: JSON.stringify(report, null, 2), contentType: "application/json" });
+  await writeFile(testInfo.outputPath("persisted-report.json"), JSON.stringify(report, null, 2));
+  await writeFile(testInfo.outputPath("persisted-state.json"), JSON.stringify(state, null, 2));
+  if (process.env.REASONING_TEST === "structured") {
+    expect(report.verified_findings.some((finding: { anchors: { char_start?: number | null }[] }) =>
+      finding.anchors.some(anchor => anchor.char_start != null))).toBe(true);
+  }
   await expect(page.getByRole("heading", { name: report.summary.headline })).toBeVisible();
   await page.getByRole("button", { name: / · supports$/ }).first().click();
   await expect(page.getByRole("region", { name: "Report source evidence" })).toBeVisible();

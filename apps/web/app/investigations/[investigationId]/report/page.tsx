@@ -1,4 +1,4 @@
-import { InvestigationReportView } from "@/components/investigations/report";
+import { InvestigationReportView } from "@/features/investigations/components/report";
 export default async function Page({ params, searchParams }: { params: Promise<{ investigationId: string }>; searchParams: Promise<{ source?: string; source_type?: string }> }) {
   const { investigationId } = await params;
   const query = await searchParams;

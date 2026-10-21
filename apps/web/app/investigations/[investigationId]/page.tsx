@@ -1,4 +1,4 @@
-import { InvestigationWorkspace } from "@/components/investigations/workspace";
+import { InvestigationWorkspace } from "@/features/investigations/components/workspace";
 export default async function Page({ params, searchParams }: { params: Promise<{ investigationId: string }>; searchParams: Promise<{ source?: string; source_type?: string }> }) {
   const { investigationId } = await params;
   const query = await searchParams;
