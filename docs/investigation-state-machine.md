@@ -1,5 +1,12 @@
 # CASETRACE — Investigation State Machine
 
+Implemented Phase 3 mapping: `partial` -> `completed_with_limitations`,
+candidate/under_review -> proposed, refuted -> rejected, inconclusive -> unresolved.
+See [Phase 3 decisions](phase-3-decisions.md). Run retry creates a new POST.
+Startup fails interrupted queued/running runs; successful results are never
+invented on recovery. One process-local worker executes each run with a guarded
+claim. No cancellation/resume HTTP endpoint is implemented.
+
 Persistence uses SQLite through the controlled application service described in [development stack](development-stack.md). Commit state changes and durable events atomically, require version/status guards, and enforce unique retry/result keys. Emit SSE after commit; do not share sessions between agents or hold transactions across external work.
 
 **Document:** `docs/investigation-state-machine.md`

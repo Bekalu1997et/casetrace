@@ -1,5 +1,16 @@
 # CASETRACE — SQLite Database Schema
 
+Phase 3 migration `0004_investigation` implements investigation persistence using
+the catalog table names. Exact typed anchors are JSON in evidence_refs; finding
+body includes deterministic verification checks, support category and alternatives.
+The source identity/version/hash/encounter/field remains in each anchor rather than
+duplicated scalar columns. Reports retain typed body_json and unique run/version.
+Stages/agents have unique run/key/attempt; tool_calls persist failure metadata and
+source refs. No separate hypothesis or timeline tables: these are projections in
+the run context and final report. Run status CHECK uses public contract values,
+including completed_with_limitations. Application services enforce subordinate
+status transitions; the MVP does not implement leases or terminal-run resumption.
+
 **Document:** `docs/database-schema.md`
 **Status:** Proposed canonical logical schema; confirm existing IDs/API DTOs before migration  
 **Version:** 1.1 · **Stack:** SQLite, SQLAlchemy 2.x, Alembic, FastAPI

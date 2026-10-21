@@ -1,5 +1,18 @@
 # CASETRACE — Frontend–Backend Contract
 
+Phase 3 implementation resolution: [phase-3-decisions.md](phase-3-decisions.md)
+owns the explicit mapping of older illustrative lifecycle names to the public
+enums below. Investigation endpoints are implemented under `/api/investigations`;
+hospital endpoints retain `/api/hospital/v1`. POST returns 202 and accepts an
+optional `Idempotency-Key`. State adds version, timeline, hypotheses and limitations.
+Events add sequence; `after` and numeric `Last-Event-ID` replay committed events.
+Findings expose typed anchors, claim_kind, alternatives, limitations,
+support_level and verification; `confidence` is not emitted. Anchors use
+`source: {type,id}`, source_version/hash, encounter_id, field, expected, quote and
+relationship; use the centralized hospital route mapper for source navigation.
+Report returns 409 until persisted, then the section 40 shape plus hypotheses and
+execution_mode. The API OpenAPI schemas describe all implemented DTOs.
+
 Stack alignment: SQLite + aiosqlite replaces the server database; uv manages Python and pnpm manages the Next.js application. See [development stack](development-stack.md) for path resolution and planned commands. This change does not alter API routes, payloads, IDs, enums or SSE contracts.
 
 **Version:** 1.0  
