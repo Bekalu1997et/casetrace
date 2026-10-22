@@ -152,3 +152,9 @@ same-version source is `source_conflict`, never silently considered ready/import
 Import output now includes deterministic `import_id` and `source_hash`, preserving
 the original fingerprint algorithm. Changed source versions and historical source
 resolution still require a separately approved amendment policy.
+
+## Refactor 08 hospital browser validation
+
+Web build/dev scripts copy the locked PDF.js worker to public/pdf.worker.min.mjs; this generated file is ignored. Run pnpm.cmd build or pnpm.cmd dev normally. PDF.js loads only when opening an original PDF.
+
+For optional multi-page browser acceptance, migrate a new temporary SQLite file, copy synthetic assets into the same temporary directory's assets folder, and set DATABASE_URL and ASSET_STORAGE_PATH explicitly. From apps/api run `uv run --locked --group case-data python ../../scripts/hospital_workspace_smoke_seed.py <temporary-directory>`. It refuses a database/assets root outside that explicitly supplied directory. It creates a separate administrative PDF control, never changes CASE-001, and uses the normal validation/import pipeline. Set PDF_CONTROL_SMOKE=1 and HOSPITAL_CONTROL_SMOKE=1 only when their fixtures are provisioned; run the existing Playwright suite against the isolated real API. Production case discovery reads imported database metadata; local development additionally checks canonical readiness off-thread.

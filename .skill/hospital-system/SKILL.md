@@ -79,3 +79,7 @@ Every tool returns deterministic fixture-backed results, respects access boundar
 ## Finalized stack
 
 Follow [development stack and SQLite operations](../../docs/development-stack.md) for setup or persistence work: pnpm for Next.js, uv for FastAPI, SQLite + aiosqlite + SQLAlchemy 2.x + Alembic. Commands remain planned until manifests/scripts exist. Preserve tool boundaries, source provenance and evaluator isolation; never hold a database transaction across inference or external waits.
+
+## Refactor 08 public read models
+
+CaseCatalog publishes an explicit neutral allowlist from hospital repositories and local maintenance discovery; production does not read canonical files. It is a pre-investigation browser capability, never an agent tool. Keep imported availability distinct from canonical validation status and do not publish diagnostic payloads or editor/evaluation fields. History uses persisted InvestigationQueries with filters/pagination. Hospital timeline applies encounter ownership; document q search is literal title/text matching before pagination. Existing source DTO hashes and investigation rules remain unchanged.

@@ -1238,3 +1238,9 @@ The frontend is ready for the CASETRACE hackathon when:
 The Hospital Workspace establishes the source of truth. The Investigation Workspace exposes the investigation process. The Evidence Explorer connects the final conclusion to the original records.
 
 Build those three experiences around shared identifiers, consistent data contracts, and real backend state. That is what will make CASETRACE feel like a coherent healthcare AI system rather than a polished collection of mock screens.
+
+## Refactor 08 hospital workspace
+
+Hospital routes now compose case-library, chart-layout, clinical-list, encounter-detail, document-detail and hospital-source features. Patient layout shares cancellable identity/summary reads across clinical routes; section lists load targeted paged resources. Cases/history use lib/api/catalog.ts with runtime validation. The clinical record dictionary remains the evidence fallback; encounter/observation/medication/document/imaging DTO interfaces describe typed API results.
+
+Original PDF.js rendering is lazy on asset-open; its matching worker is generated from the lockfile dependency by prebuild/predev. Only registered verified asset bytes enter object URLs; unmount revokes them. No raw case files, evaluator metadata, cached conclusions, alternate server-state store or new SSE owner are added. Scoped source+finding links re-read persisted anchors and check patient ownership. Document context/metadata are collapsible on smaller screens. See the R08 report for executed validation and limits.

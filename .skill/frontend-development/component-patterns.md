@@ -53,3 +53,7 @@ API adapters remain `lib/api/{hospital,investigations,health}`; transport is
 remain in `types`. `lib/api/use-resource` owns cancellable scoped reads.
 Presentation formatting is `lib/formatters/text`, shared statuses/time/panels in
 `components/shared/presentation`. Architectural tests enforce the dependency DAG.
+
+## Refactor 08 hospital composition
+
+Use patient ChartLayout and dedicated clinical routes; ClinicalList owns paginated tables through useClinicalRecords. RecordLinks/navigation under features/records share original identities with evidence. Case/history reads use the existing transport/useResource lifecycle. Do not create another cache/store. PDF.js is dynamically loaded only after opening an authorized original asset; run prebuild/predev to copy the matching worker. PDF controls use decoded page counts, never inferred text offsets. Use the registered two-page smoke control when testing real page transitions; canonical CASE-001 PDFs are single-page originals.
