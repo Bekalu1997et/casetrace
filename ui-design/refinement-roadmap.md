@@ -22,7 +22,7 @@
 
 ---
 
-## Phase 2 — Design System and Application Shell
+## Phase 2 — Design System and Application Shell ✓ COMPLETE
 
 **Objective:** Establish the visual foundation and improve the global shell before touching any feature screens.
 
@@ -44,7 +44,27 @@
 6. `PrecisionIndicator` component for timestamp precision icons
 7. New CSS classes: `status-active`, `status-neutral`, `status-proposed`
 
-**Dependencies:** Phase 1 (this audit).
+**Status:** Complete. 120 frontend tests pass (36 new). Build succeeds. Browser verification blocked by server start policy — manual checklist provided in `ui-design/design-system.md`.
+
+**Implemented:**
+1. `StatusBadge` extended with distinct tones for all statuses (running→teal, queued→neutral, proposed→blue, cancelled→neutral)
+2. `Time` component formats ISO timestamps as human-readable strings; date-only values preserved without invented time
+3. `WorkspaceBreadcrumbs` builds full path breadcrumb from pathname with decoded labels
+4. `SkeletonLoader` component with card, table, metric, content, and finding variants
+5. `PrecisionIndicator` component for timestamp precision icons
+6. New CSS classes: `status-active`, `status-neutral`, `status-proposed`, `notice-error`, `notice-info`, `notice-neutral`
+7. Navigation section groupings: Clinical Workspace / Investigation
+8. Refined app shell branding and top bar
+9. Improved `EnvironmentBanner` visual treatment
+10. `WarningNotice` and `InfoNotice` feedback components
+
+**Deferred:**
+- Active investigation sidebar shortcut (no reliable lightweight mechanism — see `design-system.md` Task I)
+- Skeleton integration in feature screens (primitives provided; integration is Phase 3–5)
+- Two-column workbench layout at 1024–1279px (Phase 5)
+
+**Departure from roadmap:**
+- Breadcrumb uses "Patients" (not "Patient records") for the `/patients` segment to avoid duplicate link text with the sidebar nav item.
 
 **Technical risks:**
 - `Time` formatting: `Intl.DateTimeFormat` output varies by locale. Pin to `en-US` with explicit timezone display.

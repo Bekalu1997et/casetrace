@@ -1,41 +1,158 @@
 @import "tailwindcss";
 
+/* ─── Layout primitives ─────────────────────────────────────────────────────── */
 .workspace-panel { border: 1px solid var(--border); border-radius: 12px; background: var(--card); overflow-wrap: anywhere; }
-.panel-heading { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 15px; }
+.panel-heading { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 600; color: var(--foreground); }
 .workspace-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 20px; align-items: start; }
-.status-badge { display: inline-block; align-self: flex-start; height: fit-content; border-radius: 99px; padding: 4px 9px; font-size: 11px; font-weight: 650; text-transform: capitalize; }
-.status-good { color: #21633f; background: #e8f7ef; }
-.status-pending { color: #805313; background: #fff4df; }
-.status-bad { color: #9e2834; background: #fff0f1; }
+
+/* ─── Status badges ─────────────────────────────────────────────────────────── */
+.status-badge { display: inline-block; align-self: flex-start; height: fit-content; border-radius: 99px; padding: 3px 9px; font-size: 11px; font-weight: 650; text-transform: capitalize; letter-spacing: 0.01em; }
+/* Good: verified, completed, supported */
+.status-good { color: #1a5c3a; background: #e4f5ec; border: 1px solid #b8dfc9; }
+/* Bad: failed, rejected */
+.status-bad { color: #8c2130; background: #fdeef0; border: 1px solid #f0c0c5; }
+/* Pending/warning: unresolved, proposed (amber), completed_with_limitations */
+.status-pending { color: #7a4a0a; background: #fef3e2; border: 1px solid #f0d49a; }
+/* Active/running: teal */
+.status-active { color: #0e6b65; background: #e4f5f4; border: 1px solid #9fd4d0; }
+/* Neutral: queued, cancelled, skipped, unknown */
+.status-neutral { color: #4a5568; background: #f0f2f5; border: 1px solid #d8dde6; }
+/* Proposed: soft blue */
+.status-proposed { color: #1e4a8a; background: #edf3ff; border: 1px solid #c0d3f5; }
+
+/* ─── Finding cards ──────────────────────────────────────────────────────────── */
 .finding-card { padding: 18px; border: 1px solid var(--border); border-radius: 10px; }
 .finding-verified { background: #f5fcf8; border-color: #bfe4cf; }
 .finding-candidate { background: #fffbf3; border-color: #ecd8af; }
-.source-link { display: inline-block; font: 11px ui-monospace, monospace; color: var(--primary); background: white; border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; cursor: pointer; overflow-wrap: anywhere; }
-.action-link { color: white; background: var(--primary); border-radius: 8px; padding: 10px 15px; font-size: 13px; font-weight: 600; }
+.finding-rejected { background: #fff4f4; border-color: #edc3c6; }
+.finding-unresolved { background: #fffaf0; border-color: #e8d7ab; }
+.finding-proposed { background: #f4f7ff; border-color: #cdd9ef; }
+
+/* ─── Source and action links ───────────────────────────────────────────────── */
+.source-link { display: inline-block; font: 11px ui-monospace, monospace; color: var(--primary); background: white; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; cursor: pointer; overflow-wrap: anywhere; transition: background 0.1s, border-color 0.1s; }
+.source-link:hover { background: var(--secondary); border-color: var(--primary); }
+.action-link { color: white; background: var(--primary); border-radius: 8px; padding: 10px 15px; font-size: 13px; font-weight: 600; display: inline-block; transition: background 0.1s; }
+.action-link:hover { background: #1e4490; }
+
+/* ─── Form fields ───────────────────────────────────────────────────────────── */
 .field { background: white; border: 1px solid var(--border); border-radius: 7px; padding: 9px 11px; min-width: 0; max-width: 100%; margin-top: 5px; }
-.notice { background: #fff4df; border: 1px solid #ecd8af; border-radius: 10px; padding: 16px; color: #805313; }
+.field:focus { outline: 2px solid var(--primary); outline-offset: 0; }
+
+/* ─── Notices ───────────────────────────────────────────────────────────────── */
+.notice { background: #fef3e2; border: 1px solid #f0d49a; border-radius: 10px; padding: 16px; color: #7a4a0a; }
+.notice-error { background: #fdeef0; border: 1px solid #f0c0c5; border-radius: 10px; padding: 16px; color: #8c2130; }
+.notice-info { background: #edf3ff; border: 1px solid #c0d3f5; border-radius: 10px; padding: 16px; color: #1e4a8a; }
+.notice-neutral { background: #f7f9fc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; color: var(--muted-foreground); }
+
+/* ─── Clinical timeline ─────────────────────────────────────────────────────── */
 .clinical-timeline { border-left: 2px solid var(--border); margin-left: 6px; padding-left: 20px; }
 .timeline-event { position: relative; padding: 0 0 25px; }
-.timeline-event::before { content: ''; position: absolute; left: -27px; top: 5px; width: 12px; height: 12px; background: var(--teal); border: 3px solid white; border-radius: 50%; }
-summary { cursor: pointer; }
-@media (min-width: 1280px) { .workspace-grid { grid-template-columns: 185px minmax(0,1fr) minmax(260px,.8fr); } }
-@media print { aside, .no-print, button { display: none !important; } main { max-width: none !important; padding: 0 !important; } .workspace-panel { border-color: #aaa; margin-bottom: 12px; } .finding-card { break-inside: avoid; } body { background: white; color: black; } }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
-@media print { button.source-link { display: inline-block !important; border: 0; padding: 0 5px 0 0; color: black; } .min-h-screen { display: block !important; } .report-view select, .report-view input { display: none; } }
+.timeline-event::before { content: ''; position: absolute; left: -27px; top: 5px; width: 12px; height: 12px; background: var(--teal); border: 3px solid white; border-radius: 50%; box-shadow: 0 0 0 1px var(--teal); }
 
-:root {
-  --background: #f4f7fb; --foreground: #17243a;
-  --card: #ffffff; --card-foreground: #17243a;
-  --popover: #ffffff; --popover-foreground: #17243a;
-  --primary: #2856a6; --primary-foreground: #ffffff;
-  --secondary: #edf3ff; --secondary-foreground: #1d4388;
-  --muted: #edf3ff; --muted-foreground: #66758a;
-  --accent: #e8f7f5; --accent-foreground: #168a83;
-  --destructive: #b53b46; --border: #dfe6ef; --input: #dfe6ef;
-  --ring: #2856a6; --teal: #168a83; --success: #217a55;
-  --warning: #a86612; --sidebar: #101d32; --sidebar-foreground: #dbe5f5;
-  --radius: 0.75rem;
+/* ─── Skeleton loading ──────────────────────────────────────────────────────── */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
 }
+.skeleton { background: #e8edf5; border-radius: 6px; animation: skeleton-pulse 1.6s ease-in-out infinite; }
+.skeleton-text { height: 14px; border-radius: 4px; }
+.skeleton-heading { height: 20px; border-radius: 4px; }
+.skeleton-card { border: 1px solid var(--border); border-radius: 10px; padding: 18px; background: white; }
+.skeleton-row { height: 44px; border-radius: 4px; margin-bottom: 1px; }
+
+/* ─── Navigation ────────────────────────────────────────────────────────────── */
+summary { cursor: pointer; }
+.navigation-toggle { border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 8px 12px; text-align: left; color: var(--sidebar-foreground); font-size: 13px; background: transparent; transition: background 0.1s; }
+.navigation-toggle:hover { background: rgba(255,255,255,0.08); }
+.workspace-navigation { display: none; }
+.workspace-navigation.navigation-expanded { display: block; }
+.nav-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 14px 12px 6px; }
+.navigation-link { display: flex; align-items: center; gap: 8px; border-radius: 7px; padding: 9px 12px; margin-bottom: 2px; font-size: 13.5px; color: rgba(219,229,245,0.85); transition: background 0.1s, color 0.1s; }
+.navigation-link:hover { background: rgba(255,255,255,0.1); color: #ffffff; }
+.navigation-link[aria-current="page"] { background: rgba(255,255,255,0.14); color: #ffffff; font-weight: 600; }
+.navigation-link-icon { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+.navigation-link[aria-current="page"] .navigation-link-icon { opacity: 1; }
+
+/* ─── Shell layout ──────────────────────────────────────────────────────────── */
+:where(a, button, input, select, summary):focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.shell-sidebar :focus-visible { outline-color: #ffffff; }
+@media (min-width: 1024px) {
+  .app-shell { display: grid; grid-template-columns: 232px minmax(0,1fr); }
+}
+@media print { .app-shell { display: block; } }
+
+/* ─── Hospital records ──────────────────────────────────────────────────────── */
+.hospital-card { border:1px solid var(--border); border-radius:12px; background:white; padding:22px; min-width:0; overflow-wrap:anywhere; }
+.hospital-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+.hospital-metrics>div { background:white; border:1px solid var(--border); border-radius:10px; padding:18px; }
+.hospital-metrics dt { color:var(--muted-foreground); font-size:12px; text-transform:capitalize; }
+.hospital-metrics dd { font-size:27px; font-weight:650; margin-top:10px; overflow-wrap:anywhere; }
+.hospital-filters { display:flex; align-items:end; flex-wrap:wrap; gap:14px; font-size:12px; padding-bottom:16px; }
+.hospital-filters label { max-width:100%; }
+.clinical-tabs { display:flex; gap:4px; overflow:auto; border-bottom:1px solid var(--border); }
+.clinical-tabs a { padding:12px 16px; white-space:nowrap; color:var(--muted-foreground); border-bottom:2px solid transparent; font-size:13px; transition: color 0.1s, border-color 0.1s; }
+.clinical-tabs a[aria-current] { border-color:var(--teal); color:var(--teal); font-weight:650; }
+.clinical-table-scroll { max-width:100%; overflow:auto; }
+.clinical-table { width:100%; border-collapse:collapse; text-align:left; font-size:12px; }
+.clinical-table th { background:#f7f9fc; color:var(--muted-foreground); font-weight:600; text-transform:capitalize; }
+.clinical-table :is(th,td) { padding:13px 15px; border-bottom:1px solid var(--border); vertical-align:top; min-width:110px; max-width:330px; overflow-wrap:anywhere; }
+.clinical-table tbody tr:hover { background:#f9fcfc; }
+.clinical-table td:first-child { min-width:210px; }
+button:disabled { opacity:.5; cursor:not-allowed; }
+.document-workspace { display:grid; grid-template-columns:minmax(0,1fr); gap:20px; align-items:start; }
+@media(min-width:1280px) { .document-workspace { grid-template-columns:180px minmax(0,1fr) 230px; } }
+@media(max-width:640px) { .hospital-card { padding:15px; } .hospital-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+/* ─── Investigation workbench ───────────────────────────────────────────────── */
+.panel-toggle { font-size:12px; font-weight:650; color:var(--teal); padding:8px 0; }
+.workflow-rail { border-left:2px solid var(--border); padding-left:12px; margin-top:12px; }
+.workflow-rail li { padding:0 0 20px; display:flex; flex-wrap:wrap; gap:8px; }
+.workflow-rail li p { width:100%; }
+.audit-card { border:1px solid var(--border); border-radius:8px; padding:14px; background:#fafcfe; overflow-wrap:anywhere; }
+.audit-card summary { font-size:12px; line-height:1.8; }
+.audit-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-top:16px; font-size:12px; }
+.audit-fields dt { color:var(--muted-foreground); text-transform:capitalize; margin-bottom:4px; }
+.evidence-explorer { display:grid; grid-template-columns:minmax(0,1fr); gap:20px; align-items:start; }
+.evidence-explorer>* { min-width:0; }
+@media(min-width:1280px) { .workspace-grid { grid-template-columns:190px minmax(0,1fr) minmax(280px,.8fr); } .evidence-explorer { grid-template-columns:280px minmax(0,1fr); } }
+@media(max-width:1279px) { .workbench-context,.workbench-evidence { border:1px solid var(--border); background:white; border-radius:10px; padding:12px; } }
+
+/* ─── Design tokens ─────────────────────────────────────────────────────────── */
+:root {
+  /* Foundation */
+  --background: #f4f7fb;
+  --foreground: #17243a;
+  --card: #ffffff;
+  --card-foreground: #17243a;
+  --popover: #ffffff;
+  --popover-foreground: #17243a;
+  --muted: #edf3ff;
+  --muted-foreground: #66758a;
+  --border: #dfe6ef;
+  --input: #dfe6ef;
+  --ring: #2856a6;
+  --radius: 0.75rem;
+
+  /* Actions */
+  --primary: #2856a6;
+  --primary-foreground: #ffffff;
+  --secondary: #edf3ff;
+  --secondary-foreground: #1d4388;
+  --accent: #e8f7f5;
+  --accent-foreground: #168a83;
+  --destructive: #b53b46;
+
+  /* Semantic status */
+  --teal: #168a83;
+  --success: #217a55;
+  --warning: #a86612;
+
+  /* Navigation */
+  --sidebar: #101d32;
+  --sidebar-foreground: #dbe5f5;
+  --sidebar-border: rgba(255,255,255,0.1);
+}
+
 @theme inline {
   --color-background: var(--background); --color-foreground: var(--foreground);
   --color-card: var(--card); --color-card-foreground: var(--card-foreground);
@@ -51,65 +168,43 @@ summary { cursor: pointer; }
   --radius-sm: calc(var(--radius) - 4px); --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
 }
-body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--background); color: var(--foreground); }
+
+/* ─── Typography ────────────────────────────────────────────────────────────── */
+body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--background); color: var(--foreground); font-size: 14px; line-height: 1.6; }
 h1 { font-size: clamp(1.65rem, 3vw, 2rem); font-weight: 650; letter-spacing: -.035em; line-height: 1.2; }
 h2 { font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; }
+h3 { font-size: 0.95rem; font-weight: 600; }
 .eyebrow { margin-bottom: .5rem; font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+.text-mono { font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace; font-size: 12px; }
+.text-tabular { font-variant-numeric: tabular-nums; }
+
+/* ─── Focus ─────────────────────────────────────────────────────────────────── */
 a:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
-/* Shared navigation: one keyboard-operable toggle, no hidden focusable links. */
-.navigation-toggle { border: 1px solid #66758a; border-radius: 6px; padding: 8px 12px; text-align: left; }
-.workspace-navigation { display: none; }
-.workspace-navigation.navigation-expanded { display: block; }
-.navigation-link { display: block; border-radius: 6px; padding: 10px 12px; margin-bottom: 5px; font-size: 14px; }
-.navigation-link:hover, .navigation-link[aria-current="page"] { background: #ffffff1a; }
-:where(a, button, input, select, summary):focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
-.shell-sidebar :focus-visible { outline-color: #ffffff; }
-@media (min-width: 1024px) {
-  .app-shell { display: grid; grid-template-columns: 232px minmax(0,1fr); }
+/* ─── Reduced motion ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
-@media print { .app-shell { display: block; } }
 
-/* Hospital records: prototype density with readable source values. */
-.hospital-card { border:1px solid var(--border); border-radius:12px; background:white; padding:22px; min-width:0; overflow-wrap:anywhere; }
-.hospital-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
-.hospital-metrics>div { background:white; border:1px solid var(--border); border-radius:10px; padding:18px; }
-.hospital-metrics dt { color:var(--muted-foreground); font-size:12px; text-transform:capitalize; }
-.hospital-metrics dd { font-size:27px; font-weight:650; margin-top:10px; overflow-wrap:anywhere; }
-.hospital-filters { display:flex; align-items:end; flex-wrap:wrap; gap:14px; font-size:12px; padding-bottom:16px; }
-.hospital-filters label { max-width:100%; }
-.clinical-tabs { display:flex; gap:4px; overflow:auto; border-bottom:1px solid var(--border); }
-.clinical-tabs a { padding:12px 16px; white-space:nowrap; color:var(--muted-foreground); border-bottom:2px solid transparent; font-size:13px; }
-.clinical-tabs a[aria-current] { border-color:var(--teal); color:var(--teal); font-weight:650; }
-.clinical-table-scroll { max-width:100%; overflow:auto; }
-.clinical-table { width:100%; border-collapse:collapse; text-align:left; font-size:12px; }
-.clinical-table th { background:#f7f9fc; color:var(--muted-foreground); font-weight:600; text-transform:capitalize; }
-.clinical-table :is(th,td) { padding:13px 15px; border-bottom:1px solid var(--border); vertical-align:top; min-width:110px; max-width:330px; overflow-wrap:anywhere; }
-.clinical-table tbody tr:hover { background:#f9fcfc; }
-button:disabled { opacity:.5; cursor:not-allowed; }
-.document-workspace { display:grid; grid-template-columns:minmax(0,1fr); gap:20px; }
-@media(min-width:1280px) { .document-workspace {grid-template-columns:180px minmax(0,1fr) 230px;} }
-@media(max-width:640px) { .hospital-card {padding:15px;} .hospital-metrics {grid-template-columns:repeat(2,minmax(0,1fr));} }
-
-.clinical-table td:first-child {min-width:210px;}
-
-.document-workspace {align-items:start;}
-
-/* Investigation workbench: source-first panels with native keyboard disclosure. */
-.panel-toggle {font-size:12px; font-weight:650; color:var(--teal); padding:8px 0;}
-.workflow-rail {border-left:2px solid var(--border); padding-left:12px; margin-top:12px;}
-.workflow-rail li {padding:0 0 20px; display:flex; flex-wrap:wrap; gap:8px;}
-.workflow-rail li p {width:100%;}
-.audit-card {border:1px solid var(--border); border-radius:8px; padding:14px; background:#fafcfe; overflow-wrap:anywhere;}
-.audit-card summary {font-size:12px; line-height:1.8;}
-.audit-fields {display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-top:16px; font-size:12px;}
-.audit-fields dt {color:var(--muted-foreground); text-transform:capitalize; margin-bottom:4px;}
-.evidence-explorer {display:grid; grid-template-columns:minmax(0,1fr); gap:20px; align-items:start;}
-.evidence-explorer>* {min-width:0;}
-.finding-rejected {background:#fff4f4; border-color:#edc3c6;}
-.finding-unresolved {background:#fffaf0; border-color:#e8d7ab;}
-.finding-proposed {background:#f4f7ff; border-color:#cdd9ef;}
-@media(min-width:1280px) {.workspace-grid {grid-template-columns:190px minmax(0,1fr) minmax(280px,.8fr);} .evidence-explorer {grid-template-columns:280px minmax(0,1fr);} }
-@media(max-width:1279px) {.workbench-context,.workbench-evidence {border:1px solid var(--border); background:white; border-radius:10px; padding:12px;} }
-@media print {@page {size:A4; margin:15mm;} .report-view {font-size:10pt;} .report-view h1 {font-size:20pt;} .report-view h2 {break-after:avoid;} .report-view .audit-card {break-inside:avoid;} .report-view .finding-card {break-inside:auto;} .report-view .panel-heading {break-after:avoid;} .report-view a {color:#17243a;} .report-view .clinical-timeline {margin-top:12px;} .report-view .clinical-table-scroll {overflow:visible;} .report-view .clinical-table :is(th,td) {min-width:0; max-width:none; padding:6px; overflow-wrap:anywhere;} }
+/* ─── Print ─────────────────────────────────────────────────────────────────── */
+@media print {
+  aside, .no-print, button { display: none !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  .workspace-panel { border-color: #aaa; margin-bottom: 12px; }
+  .finding-card { break-inside: avoid; }
+  body { background: white; color: black; }
+  button.source-link { display: inline-block !important; border: 0; padding: 0 5px 0 0; color: black; }
+  .min-h-screen { display: block !important; }
+  .report-view select, .report-view input { display: none; }
+  @page { size: A4; margin: 15mm; }
+  .report-view { font-size: 10pt; }
+  .report-view h1 { font-size: 20pt; }
+  .report-view h2 { break-after: avoid; }
+  .report-view .audit-card { break-inside: avoid; }
+  .report-view .finding-card { break-inside: auto; }
+  .report-view .panel-heading { break-after: avoid; }
+  .report-view a { color: #17243a; }
+  .report-view .clinical-timeline { margin-top: 12px; }
+  .report-view .clinical-table-scroll { overflow: visible; }
+  .report-view .clinical-table :is(th,td) { min-width: 0; max-width: none; padding: 6px; overflow-wrap: anywhere; }
+}
