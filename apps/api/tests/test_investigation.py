@@ -71,7 +71,7 @@ async def test_case001_engine_and_post_run_evaluation(tmp_path, reasoning):
         assert all(f.verification.status == "verified" for f in report.verified_findings)
         # Evaluator-only access happens strictly after the runtime finalized its persisted output.
         key = json.loads((ROOT / "evaluation/CASE-001/answer-key.json").read_text(encoding="utf-8"))
-        assert key["dataset_version"] == "1.0"
+        assert key["dataset_version"] == "1.1"
         required = {s for f in key["expected_findings"] for s in f["required_source_ids"]}
         cited = {a.source.id for f in report.verified_findings for a in f.anchors}
         assert required <= cited
