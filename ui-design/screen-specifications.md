@@ -130,6 +130,12 @@
 - Record date range (earliest to latest encounter)
 - "Start Investigation" button
 
+**Phase 04 contract alignment:** The implementation uses the authoritative latest
+encounter value and explicitly labels earliest encounter as unavailable because the
+current patient summary contract does not expose it. It does not derive a date range
+from a partial or unsorted record page. Compact previews retain patient-scoped source
+links and provide route links to full sections where those routes exist.
+
 **Tab: Overview**
 ```
 ┌──────────────────────────────────────────────────────────────┐

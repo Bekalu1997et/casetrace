@@ -21,9 +21,20 @@ export function PatientDirectory({ embedded = false, onTotal }: { embedded?: boo
     {state.error && <ErrorState onRetry={state.retry}>{state.error}</ErrorState>}
     {state.data && <><p className="text-sm text-muted-foreground">{state.data.pagination.total} patients available</p>
       {state.data.data.length === 0 ? <EmptyState>No synthetic patients imported. Import a validated canonical case to populate this directory.</EmptyState>
-        : <ul className="divide-y divide-border rounded-lg border border-border bg-card">{state.data.data.map(patient => <li key={patient.id} className="p-5">
-          <Link className="font-semibold text-teal underline" href={`/patients/${encodeURIComponent(patient.id)}`}>{patient.display_name}</Link>
-          <p className="mt-1 text-sm text-muted-foreground">{patient.synthetic_identifier} · {patient.id} · {patient.case_id}</p>
+        : <ul className="divide-y divide-border rounded-lg border border-border bg-card">{state.data.data.map(patient => <li key={patient.id} className="flex flex-wrap items-start justify-between gap-4 p-5">
+          <div>
+            <Link className="font-semibold text-teal underline" href={`/patients/${encodeURIComponent(patient.id)}`}>{patient.display_name}</Link>
+            <dl className="mt-2 grid gap-x-5 gap-y-1 text-sm text-muted-foreground sm:grid-cols-3">
+              <div><dt className="sr-only">Synthetic identifier</dt><dd>{patient.synthetic_identifier}</dd></div>
+              <div><dt className="sr-only">Patient ID</dt><dd>Patient ID: {patient.id}</dd></div>
+              <div><dt className="sr-only">Case ID</dt><dd>Case: {patient.case_id}</dd></div>
+            </dl>
+            <p className="mt-2 text-xs text-muted-foreground">Encounter totals and latest dates are not part of the directory contract.</p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-3">
+            <Link className="source-link" href={`/patients/${encodeURIComponent(patient.id)}`}>Open chart</Link>
+            <Link className="text-sm text-primary underline" href="/investigations/new">Start investigation</Link>
+          </div>
         </li>)}</ul>}
       <div className="flex gap-3"><Button variant="outline" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - 20))}>Previous patients</Button>
         <Button variant="outline" disabled={!state.data.pagination.has_more} onClick={() => setOffset(offset + 20)}>Next patients</Button></div></>}

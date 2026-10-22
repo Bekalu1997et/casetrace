@@ -74,9 +74,11 @@ function formatTimestamp(value: string): string {
   }
 }
 
-export function Time({ value }: { value: string | null }) {
+export function Time({ value, compact = false }: { value: string | null; compact?: boolean }) {
   if (!value) return <span className="text-muted-foreground text-xs">Not documented</span>;
-  const display = formatTimestamp(value);
+  const display = compact && /^\d{4}-\d{2}-\d{2}/.test(value)
+    ? DATE_FMT.format(new Date(`${value.slice(0, 10)}T00:00:00Z`))
+    : formatTimestamp(value);
   return (
     <time dateTime={value} className="text-tabular text-xs">
       {display}

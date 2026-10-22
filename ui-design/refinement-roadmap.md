@@ -171,11 +171,19 @@
 - Two-phase loading: use `useEffect` with a dependency on primary section load completion. Must not break existing `useResource` cancellation.
 
 **Acceptance criteria:**
-- Patient header shows full record date range
+- Patient header shows the authoritative latest encounter date and explicitly documents that earliest encounter is unavailable in the current summary contract
 - Timeline events show precision icons
 - Document viewer has populated left panel for documents with an encounter
 - Clinical notes with standard sections render with visual hierarchy
 - `pnpm typecheck`, `pnpm lint`, `pnpm test` pass
+
+**Implementation status:** Substantially implemented. The directory, patient chart shell,
+clinical tables, encounter detail, document workspace, source links, and deterministic
+clinical-note presentation were refined without changing hospital API contracts. Per-row
+encounter totals/latest dates and an earliest encounter date remain deferred because the
+directory and patient summary contracts do not expose those fields authoritatively.
+Validation and remaining limitations are recorded in
+`ui-design/reports/phase-04-patient-record-refinement.md`.
 
 ---
 
