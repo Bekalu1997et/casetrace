@@ -104,7 +104,7 @@ def validate(root):
             with Image.open(path) as image:
                 image.load()
                 require(
-                    image.format == "PNG"
+                    image.format.lower() == entry["mime_type"].split("/")[-1]
                     and image.size == (record["metadata"]["width"], record["metadata"]["height"]),
                     "invalid image dimensions/type",
                 )

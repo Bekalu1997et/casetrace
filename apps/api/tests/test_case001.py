@@ -39,7 +39,7 @@ def file_hashes(root):
 def test_case001_integrity_and_reproduction(tmp_path):
     report = validate(ROOT)
     assert report["status"] == "valid"
-    assert report["assets"] == 26
+    assert report["assets"] == 25
     assert report["pdf_pages_rendered"] >= 23
     generate(tmp_path)
     validate(tmp_path)
@@ -59,7 +59,7 @@ def test_case001_integrity_and_reproduction(tmp_path):
     for left, right in zip(original["assets"], recreated["assets"], strict=True):
         old_path = ROOT / "data/assets" / left["storage_path"]
         new_path = tmp_path / "data/assets" / right["storage_path"]
-        if left["mime_type"] == "image/png":
+        if left["mime_type"].startswith("image/"):
             image_ids.append(left["id"])
             with Image.open(old_path) as old, Image.open(new_path) as new:
                 assert (old.mode, old.size, old.tobytes()) == (new.mode, new.size, new.tobytes())
@@ -194,5 +194,17 @@ async def test_case001_import_api_isolation_and_rollback(tmp_path):
             response = client.get(f"{prefix}/imaging-assets/{asset.id}/content")
             assert response.status_code == 200
             assert hashlib.sha256(response.content).hexdigest() == validated.assets[asset.id].sha256
+        for study_id, asset_id in [
+            ("IMG-001-01", "IMG-ASSET-001-01"),
+            ("IMG-001-02", "IMG-ASSET-001-02"),
+        ]:
+            assets = client.get(f"{prefix}/imaging-studies/{study_id}/assets")
+            assert assets.status_code == 200
+            assert [item["id"] for item in assets.json()["data"]] == [asset_id]
+            assert assets.json()["data"][0]["mime_type"] == "image/jpeg"
+        report_only = client.get(f"{prefix}/imaging-studies/IMG-001-03/assets")
+        assert report_only.status_code == 200
+        assert report_only.json()["data"] == []
+        assert client.get(f"{prefix}/imaging-studies/IMG-001-03/report").status_code == 200
         assert client.get(f"{prefix}/documents/answer-key/asset").status_code == 404
         assert client.get("/evaluation/CASE-001/answer-key.json").status_code == 404

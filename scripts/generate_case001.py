@@ -8,11 +8,11 @@ Run from apps/api: uv run --group case-data python ../../scripts/generate_case00
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 from xml.sax.saxutils import escape
 
 import pymupdf
-from PIL import Image, ImageDraw, ImageFont
 from reportlab import rl_config
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
@@ -32,6 +32,33 @@ DATES = [
     "2026-07-08",
     "2026-07-22",
 ]
+CURATED_IMAGING = {
+    "IMG-001-01": {
+        "source_path": "cases/CASE-001/imaging/IMG-001-01.jpg",
+        "asset_type": "reference_radiograph",
+        "mime_type": "image/jpeg",
+        "width": 2926,
+        "height": 2706,
+        "panel": "Figure 1a (initial/admission radiograph)",
+    },
+    "IMG-001-02": {
+        "source_path": "cases/CASE-001/imaging/IMG-001-02.jpg",
+        "asset_type": "reference_radiograph",
+        "mime_type": "image/jpeg",
+        "width": 784,
+        "height": 732,
+        "panel": "Figure 1b (six-week follow-up radiograph)",
+    },
+}
+SOURCE_PUBLICATION = {
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10959314/",
+    "title": "Recurrent pneumonia as the presenting manifestation of lung adenocarcinoma",
+    "figure": "Figure 1",
+    "creator": "Rao VJ, Chavan RN, Pawar RG, Soni P, Pagare PS",
+    "license": "CC BY-NC-SA 4.0 (as indicated by the publication record)",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "modification": "Panel crop supplied as a curated reference asset; not an examination of the simulated patient.",
+}
 
 
 def instant(day, clock="09:00"):
@@ -59,10 +86,10 @@ def sha(path):
 def build_case():
     case = {
         "case_id": "CASE-001",
-        "version": "1.0",
+        "version": "1.1",
         "status": "ready",
         "created_at": "2026-10-21T09:00:00+03:00",
-        "updated_at": "2026-10-21T09:00:00+03:00",
+        "updated_at": "2026-10-22T14:00:00+03:00",
         "patient": {
             "id": PATIENT,
             "synthetic_identifier": "MRN-SYN-000001",
@@ -307,7 +334,7 @@ def build_case():
             "Chest radiograph report",
             "Exam: PA and lateral chest radiograph.\nIndication: Persistent cough.\nTechnique: Standard two-view study (fictional report).\n"
             + finding
-            + "\nAny attached diagram is an educational location schematic, not a diagnostic image.",
+            + "\nAny attached image is an externally sourced reference radiograph, not an examination of this simulated patient.",
             "10:00",
             instant(DATES[visit - 1], "12:00"),
         )
@@ -336,16 +363,22 @@ def build_case():
                 "conclusion": finding,
             }
         )
-        case["imaging_assets"].append(
-            {
-                "id": f"IMG-ASSET-001-{index:02}",
-                "imaging_study_id": study,
-                "asset_type": "educational_illustration",
-                "mime_type": "image/png",
-                "storage_path": f"cases/CASE-001/imaging/{study}.png",
-                "metadata": {"width": 1100, "height": 800, "synthetic_label": LABEL},
-            }
-        )
+        curated = CURATED_IMAGING.get(study)
+        if curated:
+            case["imaging_assets"].append(
+                {
+                    "id": f"IMG-ASSET-001-{index:02}",
+                    "imaging_study_id": study,
+                    "asset_type": curated["asset_type"],
+                    "mime_type": curated["mime_type"],
+                    "storage_path": curated["source_path"],
+                    "metadata": {
+                        "width": curated["width"],
+                        "height": curated["height"],
+                        "synthetic_label": LABEL,
+                    },
+                }
+            )
 
     document(
         21,
@@ -639,57 +672,10 @@ def render_pdf(path, case, doc):
     ).build(body, onFirstPage=footer, onLaterPages=footer)
 
 
-def render_diagram(path, study):
-    """Code-drawn educational diagram; no medical image synthesis or diagnostic pixels."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    image = Image.new("RGB", (1100, 800), "#f3f7fa")
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.load_default(size=24)
-    small = ImageFont.load_default(size=20)
-    draw.text((35, 25), "SYNTHETIC - NOT FOR CLINICAL USE", fill="#9c2535", font=font)
-    draw.text(
-        (35, 70),
-        f"{study['id']} | {PATIENT} | {study['performed_at'][:10]}",
-        fill="#17354a",
-        font=small,
-    )
-    draw.text(
-        (35, 112),
-        "EDUCATIONAL LOCATION DIAGRAM - NOT AN X-RAY",
-        fill="#17354a",
-        font=font,
-    )
-    draw.rounded_rectangle(
-        (240, 190, 505, 640), radius=90, fill="#c9dde7", outline="#345b70", width=5
-    )
-    draw.rounded_rectangle(
-        (555, 190, 820, 640), radius=90, fill="#c9dde7", outline="#345b70", width=5
-    )
-    draw.text((260, 210), "Patient RIGHT", fill="#17354a", font=small)
-    draw.text((580, 210), "Patient LEFT", fill="#17354a", font=small)
-    draw.ellipse((300, 510, 455, 605), fill="#e6ae62", outline="#8d5b24", width=4)
-    draw.line((455, 560, 865, 560), fill="#8d5b24", width=3)
-    draw.text((840, 585), "Right basal", fill="#17354a", font=small)
-    draw.text((840, 615), "report region", fill="#17354a", font=small)
-    draw.text(
-        (35, 690),
-        "Diagram illustrates report location only. Shape/size are not measured.",
-        fill="#17354a",
-        font=small,
-    )
-    draw.text(
-        (35, 735),
-        "No diagnostic image acquired or synthesized. Read the linked report.",
-        fill="#9c2535",
-        font=small,
-    )
-    image.save(path)
-
-
 def evaluation(case, manifest):
     return {
         "case_id": "CASE-001",
-        "dataset_version": "1.0",
+        "dataset_version": "1.1",
         "synthetic_label": LABEL,
         "blueprint": {
             "background": "Fictional 47-year-old man, never smoker, reflux symptoms and newly confirmed hypertension.",
@@ -785,24 +771,29 @@ def evaluation(case, manifest):
             "Outcome after July 22",
         ],
         "source_checksums": {r["id"]: r["sha256"] for r in manifest["assets"]},
+        "source_publication": SOURCE_PUBLICATION,
         "clinical_review": "Pending independent expert review; automated consistency checks do not establish clinical accuracy.",
     }
 
 
 def generate(root):
     case = build_case()
-    source = root / "data/cases/CASE-001/case.json"
+    case_source = root / "data/cases/CASE-001/case.json"
     asset_root = root / "data/assets"
     for doc in case["documents"]:
         render_pdf(asset_root / doc["storage_path"], case, doc)
-    for study, asset in zip(case["imaging_studies"], case["imaging_assets"], strict=True):
-        render_diagram(asset_root / asset["storage_path"], study)
-    dump(source, case)
+    for asset in case["imaging_assets"]:
+        destination = asset_root / asset["storage_path"]
+        curated_source = ROOT / "data/assets" / asset["storage_path"]
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if curated_source.resolve() != destination.resolve():
+            shutil.copy2(curated_source, destination)
+    dump(case_source, case)
     manifest = {
         "case_id": "CASE-001",
-        "version": "1.0",
+        "version": "1.1",
         "synthetic_label": LABEL,
-        "case_sha256": sha(source),
+        "case_sha256": sha(case_source),
         "generator": "scripts/generate_case001.py",
         "counts": {k: len(v) for k, v in case.items() if isinstance(v, list)},
         "assets": [],
@@ -827,7 +818,14 @@ def generate(root):
             ]
         else:
             details["imaging_study_id"] = record["imaging_study_id"]
-            details["generation_method"] = "Pillow code-drawn educational location diagram"
+            curated = CURATED_IMAGING[record["imaging_study_id"]]
+            details["width"] = curated["width"]
+            details["height"] = curated["height"]
+            details["asset_type"] = curated["asset_type"]
+            details["provenance"] = {
+                **SOURCE_PUBLICATION,
+                "panel": curated["panel"],
+            }
         manifest["assets"].append(
             {
                 "id": record["id"],
@@ -838,7 +836,7 @@ def generate(root):
                 **details,
             }
         )
-    dump(source.parent / "manifest.json", manifest)
+    dump(case_source.parent / "manifest.json", manifest)
     dump(root / "evaluation/CASE-001/answer-key.json", evaluation(case, manifest))
     return manifest
 

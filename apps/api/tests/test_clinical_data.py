@@ -198,12 +198,12 @@ def test_real_case_no_evaluator_diagnostics():
     validated = validate_case(
         ROOT / "data/cases/CASE-001/case.json", LocalAssetStorage(ROOT / "data/assets")
     )
-    assert validated.report.valid and validated.report.assets_checked == 26
+    assert validated.report.valid and validated.report.assets_checked == 25
     assert validated.report.counts["observations"] == 25
     assert not any(d.code == "MANIFEST_ABSENT" for d in validated.report.diagnostics)
-    # Frozen pre-refactor identity, independent of import time or database path.
+    # Frozen CASE-001 identity, independent of import time or database path.
     assert import_fingerprint(validated) == (
-        "efd631aa419fa7d93c5abad31dc14217b1ca155100d8ae1b4cc2e032841933d4"
+        "525a68de941f171d844b011ac8174cc68b9a31e5eed5ebb238911cf15d9f1896"
     )
 
 
@@ -274,6 +274,6 @@ def test_cli_json_and_text(canonical):
         )
         assert result.returncode == 0, result.stderr
         if mode == "json":
-            assert json.loads(result.stdout)["assets_checked"] == 26
+            assert json.loads(result.stdout)["assets_checked"] == 25
         else:
             assert "CASE-001: valid" in result.stdout and "Records:" in result.stdout
