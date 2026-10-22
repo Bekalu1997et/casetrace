@@ -1,5 +1,16 @@
 # Phase 2 source provenance boundary
 
+## Phase 2.2 typed relationship evidence
+
+Candidates/findings may include an optional `relationship` envelope composed of
+the existing ClinicalClaim assertions, evidence roles, named temporal ordering
+and unresolved questions. The additive `clinical_relationship` rule resolves
+hospital originals, reconstructs assertions and independently regenerates narrow
+record-level propositions. Candidate prose cannot establish verification.
+Unsupported ingestion/causal/diagnostic intents are rejected; broader clinical
+interpretation remains inconclusive. Existing anchor fields and fingerprints
+remain unchanged. See [relationship architecture](architecture/clinical-relationship-reasoning.md).
+
 ## Refactor 06 additive reasoning contract
 
 `INVESTIGATION_REASONING=structured` opts into bounded source-claim extraction

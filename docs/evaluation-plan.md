@@ -1,5 +1,11 @@
 # CASETRACE — Evaluation Plan
 
+Phase 2.1 adds a separate offline [multi-domain discovery specification](evaluation/multi-domain-discovery-spec.md)
+and [frozen baseline comparison](evaluation/phase2-01-evaluator-report.md).
+The legacy scorer and original answer keys remain unchanged. Source coverage
+cannot establish a consolidated clinical discovery; unassessed semantic meaning
+requires qualified review.
+
 Phase 3 now provides `scripts/run_investigation.py` for runtime execution and
 `scripts/evaluate_investigation.py` for separate post-finalization evaluation.
 See [executed results](phase-3-report.md) and [commands](phase-3-development.md).

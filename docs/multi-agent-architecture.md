@@ -1,5 +1,17 @@
 # CASETRACE — Multi-Agent Architecture
 
+## Phase 2.2 relationship architecture
+
+The existing engine adds bounded relationship assembly in structured reasoning
+mode using original records already returned by permitted tools. The default
+legacy reasoning path is retained. Automatic assembly currently covers only
+recorded medication/referral state differences; the existing timeline discovery
+path remains. Typed relationship candidates use the same independent verifier,
+finding persistence, report builder and durable event writer. No specialist
+permissions, scheduler or retrieval workflow is added. Broader relationship
+types represent unresolved questions until specific verification rules exist.
+See [relationship architecture](architecture/clinical-relationship-reasoning.md).
+
 ## Refactor 06 reasoning integration
 
 Reasoning selection is separate from workflow selection:

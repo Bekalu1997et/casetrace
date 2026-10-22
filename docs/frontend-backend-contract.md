@@ -1,5 +1,22 @@
 # CASETRACE — Frontend–Backend Contract
 
+## Phase 2.2 additive relationship contract
+
+Candidate/Finding adds optional nullable `relationship` (schema_version 1.0):
+relationship_type, constituent ClinicalClaim assertions, supporting/contradicting
+assertion IDs, named temporal ordering, unresolved questions and conclusion_kind.
+Absent envelopes retain prior behavior. Rule `clinical_relationship` uses existing
+finding types and statuses. Existing claim/anchors/alternatives/limitations and
+all endpoint paths remain. Reports preserve the envelope in their findings.
+SourceRef and Anchor retain their public names and serialized fields.
+
+New SSE activity types are `assertions.extracted`, `relationship.assembled`,
+`relationship.proposed` and `relationship.verification_completed`. Payloads carry
+bounded IDs/counts/source versions and status, excluding notes and proposed prose.
+Unknown event tolerance and REST reconciliation remain required. No frontend
+relationship visualization or new route is introduced. See
+[relationship architecture](architecture/clinical-relationship-reasoning.md).
+
 ## Refactor 09 read-only audit contracts
 
 `GET /api/investigations/{id}/tools?limit=20&offset=0` returns

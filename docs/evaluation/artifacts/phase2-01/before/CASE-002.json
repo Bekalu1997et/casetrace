@@ -1,0 +1,241 @@
+{
+  "case_id": "CASE-002",
+  "frozen_phase": "before",
+  "legacy": {
+    "case_id": "CASE-002",
+    "dataset_version": "1.0",
+    "execution_mode": "deterministic_rules",
+    "completed": true,
+    "record_contradictions_detected": 0,
+    "expected_discovery_detected": false,
+    "expected_discoveries_detected": 0,
+    "expected_discoveries_total": 2,
+    "partial_discoveries": 0,
+    "discovery_grade": "failure",
+    "verified_findings": 15,
+    "verified_anchors": 144,
+    "failed_verification_checks_in_verified_findings": 0,
+    "required_sources_cited": [
+      "DOC-002-06",
+      "DOC-002-11"
+    ],
+    "required_sources_missing": [
+      "DOC-002-02",
+      "DOC-002-03",
+      "DOC-002-07",
+      "DOC-002-10",
+      "DOC-002-13",
+      "DOC-002-14",
+      "DOC-002-16",
+      "DOC-002-18"
+    ],
+    "required_source_coverage": "2/10",
+    "unresolved_findings": 0,
+    "limitations": [
+      "Detection is record-level, not a clinical diagnosis.",
+      "Coverage is across all verified findings, not necessarily one consolidated finding.",
+      "No semantic clinical quality or diagnostic probability metric is claimed.",
+      "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+    ]
+  },
+  "multi_domain": {
+    "spec_version": "1.0",
+    "case_id": "CASE-002",
+    "discoveries": [
+      {
+        "finding_key": "medication-reconciliation-discrepancy-1",
+        "domain": "medication_reconciliation_discrepancy",
+        "priority": "primary",
+        "outcome": "partial",
+        "reason": "Relevant evidence exists; full expected relationship is not established",
+        "required_source_roles": {
+          "prescribing_context": [
+            "DOC-002-03",
+            "DOC-002-06"
+          ],
+          "later_reconciliation_or_report": [
+            "DOC-002-07",
+            "DOC-002-11"
+          ],
+          "uncertainty_context": [
+            "DOC-002-14"
+          ]
+        },
+        "source_existence": [
+          "DOC-002-03",
+          "DOC-002-06",
+          "DOC-002-07",
+          "DOC-002-11",
+          "DOC-002-14"
+        ],
+        "source_retrieval": [
+          "DOC-002-03",
+          "DOC-002-06",
+          "DOC-002-07",
+          "DOC-002-11",
+          "DOC-002-14"
+        ],
+        "cited_sources": [
+          "DOC-002-06",
+          "DOC-002-11"
+        ],
+        "verified_citation_sources": [
+          "DOC-002-06",
+          "DOC-002-11"
+        ],
+        "missing_valid_citations": [
+          "DOC-002-03",
+          "DOC-002-07",
+          "DOC-002-14"
+        ],
+        "groups": [
+          {
+            "finding_ids": [
+              "FND-df867565f321441fbedd19a3d5399f3d"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          },
+          {
+            "finding_ids": [
+              "FND-488b59016b19414f96ad877439531e19"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          }
+        ],
+        "semantic_decisions": {
+          "relationship": "review",
+          "claim_correctness": "review",
+          "counterevidence": "review",
+          "causality": "review",
+          "uncertainty": "review",
+          "missing_evidence": "review",
+          "false_positives": "review"
+        },
+        "review_required": [
+          "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+          "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+        ],
+        "review_rationale": null,
+        "expected_claim": "The February prescribing record discontinued lisinopril and ordered losartan, but later emergency and primary-care records retain or report lisinopril exposure with uncertain timing; the records establish a documentation discrepancy, not confirmed ingestion.",
+        "counterevidence_rubric": "The patient could not confirm the last dose, and no administration or dispensing record proves ingestion.",
+        "false_positive_rubric": [
+          {
+            "claim": "Definitive medication-induced kidney injury",
+            "source_ids": [
+              "DOC-002-14"
+            ],
+            "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+          },
+          {
+            "claim": "Confirmed lisinopril ingestion after discontinuation",
+            "source_ids": [
+              "DOC-002-11"
+            ],
+            "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+          }
+        ],
+        "factual_observations": [
+          "FND-df867565f321441fbedd19a3d5399f3d",
+          "FND-488b59016b19414f96ad877439531e19"
+        ]
+      },
+      {
+        "finding_key": "renal-trend-1",
+        "domain": "longitudinal_laboratory_concern",
+        "priority": "secondary",
+        "outcome": "missed",
+        "reason": "No finding cites a required source",
+        "required_source_roles": {
+          "baseline_panel": [
+            "DOC-002-02"
+          ],
+          "illness_and_recovery_panels": [
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ]
+        },
+        "source_existence": [
+          "DOC-002-02",
+          "DOC-002-10",
+          "DOC-002-13",
+          "DOC-002-16",
+          "DOC-002-18"
+        ],
+        "source_retrieval": [
+          "DOC-002-02",
+          "DOC-002-10",
+          "DOC-002-13",
+          "DOC-002-16",
+          "DOC-002-18"
+        ],
+        "cited_sources": [],
+        "verified_citation_sources": [],
+        "missing_valid_citations": [
+          "DOC-002-02",
+          "DOC-002-10",
+          "DOC-002-13",
+          "DOC-002-16",
+          "DOC-002-18"
+        ],
+        "groups": [],
+        "semantic_decisions": {
+          "relationship": "review",
+          "claim_correctness": "review",
+          "counterevidence": "review",
+          "causality": "review",
+          "uncertainty": "review",
+          "missing_evidence": "review",
+          "false_positives": "review"
+        },
+        "review_required": [
+          "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+          "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+        ],
+        "review_rationale": null,
+        "expected_claim": "Creatinine rose from 1.18 mg/dL at baseline to 1.68 mg/dL during the diarrheal illness, then partially improved to 1.27 mg/dL; potassium was transiently elevated and later normalized.",
+        "counterevidence_rubric": "The renal trend overlaps with poor intake, diarrhea, and reported NSAID exposure; causation is not established.",
+        "false_positive_rubric": [
+          {
+            "claim": "Definitive medication-induced kidney injury",
+            "source_ids": [
+              "DOC-002-14"
+            ],
+            "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+          },
+          {
+            "claim": "Confirmed lisinopril ingestion after discontinuation",
+            "source_ids": [
+              "DOC-002-11"
+            ],
+            "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+          }
+        ],
+        "factual_observations": []
+      }
+    ],
+    "primary_discovery_success": false,
+    "clinical_accuracy_claimed": false,
+    "input_hashes": {
+      "report": "0e33505dee3c11afea98276f30f552c13f3ed0ae03872e345e7963105c7eb2cf",
+      "key": "9b75fce35ba7e66c123032c59a7734d0db17e1b016b0af24619ed98128c5672b",
+      "spec": "c99f7bab58cde0186d5cb067c636736e11024ad7d3690a747bab43b91ac82218",
+      "case": "bb76fa11c4b225932deb36089de1f6f66f9307ad3190707b785949a0691dd938",
+      "review": null,
+      "tools": "acaa6842bee634491a25727e5e998845b372787e216acb302ecd2ee6fc926edc"
+    },
+    "reviewer": null,
+    "limitations": [
+      "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+      "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+      "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+      "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+      "No semantic keyword matching; unreviewed meaning remains unassessed."
+    ]
+  }
+}

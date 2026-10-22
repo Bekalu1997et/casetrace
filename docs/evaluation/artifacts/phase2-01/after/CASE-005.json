@@ -1,0 +1,140 @@
+{
+  "case_id": "CASE-005",
+  "frozen_phase": "after",
+  "legacy": {
+    "case_id": "CASE-005",
+    "dataset_version": "1.0",
+    "execution_mode": "deterministic_rules",
+    "completed": true,
+    "record_contradictions_detected": 0,
+    "expected_discovery_detected": false,
+    "expected_discoveries_detected": 0,
+    "expected_discoveries_total": 1,
+    "partial_discoveries": 0,
+    "discovery_grade": "failure",
+    "verified_findings": 8,
+    "verified_anchors": 76,
+    "failed_verification_checks_in_verified_findings": 0,
+    "required_sources_cited": [
+      "DOC-005-05"
+    ],
+    "required_sources_missing": [
+      "DOC-005-08",
+      "DOC-005-10"
+    ],
+    "required_source_coverage": "1/3",
+    "unresolved_findings": 0,
+    "limitations": [
+      "Detection is record-level, not a clinical diagnosis.",
+      "Coverage is across all verified findings, not necessarily one consolidated finding.",
+      "No semantic clinical quality or diagnostic probability metric is claimed.",
+      "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+    ]
+  },
+  "multi_domain": {
+    "spec_version": "1.0",
+    "case_id": "CASE-005",
+    "discoveries": [
+      {
+        "finding_key": "case-005-primary",
+        "domain": "medication_reconciliation_discrepancy",
+        "priority": "primary",
+        "outcome": "partial",
+        "reason": "Relevant evidence exists; full expected relationship is not established",
+        "required_source_roles": {
+          "key_required_context_pending_role_review": [
+            "DOC-005-05",
+            "DOC-005-08",
+            "DOC-005-10"
+          ]
+        },
+        "source_existence": [
+          "DOC-005-05",
+          "DOC-005-08",
+          "DOC-005-10"
+        ],
+        "source_retrieval": [
+          "DOC-005-05",
+          "DOC-005-08",
+          "DOC-005-10"
+        ],
+        "cited_sources": [
+          "DOC-005-05"
+        ],
+        "verified_citation_sources": [
+          "DOC-005-05"
+        ],
+        "missing_valid_citations": [
+          "DOC-005-08",
+          "DOC-005-10"
+        ],
+        "groups": [
+          {
+            "finding_ids": [
+              "FND-387c551e69474d958275eee772641e18"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          },
+          {
+            "finding_ids": [
+              "FND-acc2a643de364002b95601c95bb258b4"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          }
+        ],
+        "semantic_decisions": {
+          "relationship": "review",
+          "claim_correctness": "review",
+          "counterevidence": "review",
+          "causality": "review",
+          "uncertainty": "review",
+          "missing_evidence": "review",
+          "false_positives": "review"
+        },
+        "review_required": [
+          "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+          "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key.",
+          "Key uses generic Objective testing anchor; specific decisive source roles and interpretation require human review before exact scoring."
+        ],
+        "review_rationale": null,
+        "expected_claim": "Records across encounters show conflicting hold and restart documentation; objective evidence supports further investigation while preserving uncertainty.",
+        "counterevidence_rubric": "The record does not establish a definitive alternative diagnosis or causal attribution.",
+        "false_positive_rubric": [
+          {
+            "claim": "Definitive causal diagnosis",
+            "source_ids": [
+              "DOC-005-08"
+            ],
+            "reason": "The records support an unresolved question rather than a definitive diagnosis."
+          }
+        ],
+        "factual_observations": [
+          "FND-387c551e69474d958275eee772641e18",
+          "FND-acc2a643de364002b95601c95bb258b4"
+        ]
+      }
+    ],
+    "primary_discovery_success": false,
+    "clinical_accuracy_claimed": false,
+    "input_hashes": {
+      "report": "b3166e31c6dfed24398e0c8faa53deaa0cd0dde730f8b3ad75244c9d686d5cac",
+      "key": "8d2c181f2f38fdc735bdab37287166f9ada12fc88d639b4c26a649081b6a8008",
+      "spec": "b9ed5d96cdd0d4a3c6e3d02c7075f36b161c5607cf2149ae489b9e19d9df331e",
+      "case": "c5665e1a7770e259699415d33f152aed91c1aff107f63cff3fab292d7d122bf0",
+      "review": null,
+      "tools": "8fd75be56a8a7dc221ea875f42af4145ef6eb39395dcadba1517b8cc7482ac05"
+    },
+    "reviewer": null,
+    "limitations": [
+      "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+      "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+      "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+      "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+      "No semantic keyword matching; unreviewed meaning remains unassessed."
+    ]
+  }
+}

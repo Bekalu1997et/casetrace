@@ -1,5 +1,12 @@
 # CASETRACE Agent Tools
 
+Phase 2.2 relationship assembly consumes the existing provenance-bearing original
+tool records. It adds no tool or permission. Constituent assertions preserve
+source IDs/version/hash/encounter and named times; independent verification
+resolves originals through the existing SourceResolver boundary. Search hits do
+not supply factual assertions. See
+[relationship architecture](architecture/clinical-relationship-reasoning.md).
+
 Refactor 05 adaptive specialists use the same registry, role allowlists and
 input/result contracts. Follow-up approval validates returned source versions,
 patient scope and document/encounter associations before scheduling. Global and

@@ -1,0 +1,211 @@
+{
+  "case_id": "CASE-001",
+  "frozen_phase": "after",
+  "legacy": {
+    "case_id": "CASE-001",
+    "dataset_version": "1.1",
+    "execution_mode": "deterministic_rules",
+    "completed": true,
+    "record_contradictions_detected": 1,
+    "expected_discovery_detected": true,
+    "expected_discoveries_detected": 1,
+    "expected_discoveries_total": 1,
+    "partial_discoveries": 0,
+    "discovery_grade": "exact",
+    "verified_findings": 17,
+    "verified_anchors": 205,
+    "failed_verification_checks_in_verified_findings": 0,
+    "required_sources_cited": [
+      "DOC-001-01",
+      "DOC-001-03",
+      "DOC-001-05",
+      "DOC-001-08",
+      "DOC-001-22",
+      "MED-001-02"
+    ],
+    "required_sources_missing": [],
+    "required_source_coverage": "6/6",
+    "unresolved_findings": 0,
+    "limitations": [
+      "Detection is record-level, not a clinical diagnosis.",
+      "Coverage is across all verified findings, not necessarily one consolidated finding.",
+      "No semantic clinical quality or diagnostic probability metric is claimed.",
+      "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+    ]
+  },
+  "multi_domain": {
+    "spec_version": "1.0",
+    "case_id": "CASE-001",
+    "discoveries": [
+      {
+        "finding_key": "timeline-contradiction-1",
+        "domain": "timeline_contradiction",
+        "priority": "primary",
+        "outcome": "partial",
+        "reason": "Relevant evidence exists; full expected relationship is not established",
+        "required_source_roles": {
+          "earlier_symptom_record": [
+            "DOC-001-01",
+            "DOC-001-08",
+            "DOC-001-03"
+          ],
+          "later_first_onset_history": [
+            "DOC-001-05"
+          ],
+          "prescription_context": [
+            "DOC-001-22",
+            "MED-001-02"
+          ]
+        },
+        "source_existence": [
+          "DOC-001-01",
+          "DOC-001-03",
+          "DOC-001-05",
+          "DOC-001-08",
+          "DOC-001-22",
+          "MED-001-02"
+        ],
+        "source_retrieval": [
+          "DOC-001-01",
+          "DOC-001-03",
+          "DOC-001-05",
+          "DOC-001-08",
+          "DOC-001-22",
+          "MED-001-02"
+        ],
+        "cited_sources": [
+          "DOC-001-01",
+          "DOC-001-03",
+          "DOC-001-05",
+          "DOC-001-08",
+          "DOC-001-22",
+          "MED-001-02"
+        ],
+        "verified_citation_sources": [
+          "DOC-001-01",
+          "DOC-001-03",
+          "DOC-001-05",
+          "DOC-001-08",
+          "DOC-001-22",
+          "MED-001-02"
+        ],
+        "missing_valid_citations": [],
+        "groups": [
+          {
+            "finding_ids": [
+              "FND-42632af9887e42938669cae07b6247c2"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          },
+          {
+            "finding_ids": [
+              "FND-9a5e0013817b4bfc8012f88c828fd879"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          },
+          {
+            "finding_ids": [
+              "FND-0e907f44a8f946d18724fb8026351986"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          },
+          {
+            "finding_ids": [
+              "FND-4a67b766fa614fd9a8835c7f91aeddef"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          },
+          {
+            "finding_ids": [
+              "FND-0c1683ccf852414d8eb2858b3725658e"
+            ],
+            "required_sources_connected": false,
+            "all_anchors_valid": true,
+            "key_anchors_matched": false
+          }
+        ],
+        "semantic_decisions": {
+          "relationship": "review",
+          "claim_correctness": "review",
+          "counterevidence": "review",
+          "causality": "review",
+          "uncertainty": "review",
+          "missing_evidence": "review",
+          "false_positives": "review"
+        },
+        "review_required": [
+          "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+          "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+        ],
+        "review_rationale": null,
+        "expected_claim": "June consultation states cough first began May 26 with none before; contemporaneous January 8 and March 19 records establish earlier cough, including before lisinopril was prescribed.",
+        "counterevidence_rubric": "June note may reflect erroneous or incomplete history; no proven deliberate action. January and March documentation are contemporaneous, not late July entries. No documented full resolution between visits.",
+        "false_positive_rubric": [
+          {
+            "claim": "Repeat April radiograph was never performed",
+            "source_ids": [
+              "DOC-001-09",
+              "DOC-001-10",
+              "DOC-001-19",
+              "IMG-001-02"
+            ],
+            "reason": "Scheduling task reviewed at 11:00 before report finalized at 12:00; imaging performed at 10:00. Status lag is not evidence of absent care."
+          },
+          {
+            "claim": "Lisinopril definitively caused or cannot contribute to cough",
+            "source_ids": [
+              "DOC-001-01",
+              "DOC-001-22",
+              "DOC-001-07",
+              "DOC-001-12"
+            ],
+            "reason": "Earlier cough challenges sole-onset attribution; contribution remains uncertain. Two-week withdrawal interval is inconclusive."
+          },
+          {
+            "claim": "GERD or anxiety alone explains deterioration, or opacity establishes cancer/infection",
+            "source_ids": [
+              "DOC-001-02",
+              "DOC-001-05",
+              "DOC-001-07",
+              "DOC-001-20",
+              "LAB-001-18"
+            ],
+            "reason": "Reflux improved but cough persisted; opacity and inflammatory markers nonspecific. CT, spirometry and pathology unavailable."
+          }
+        ],
+        "factual_observations": [
+          "FND-42632af9887e42938669cae07b6247c2",
+          "FND-0e907f44a8f946d18724fb8026351986",
+          "FND-4a67b766fa614fd9a8835c7f91aeddef",
+          "FND-0c1683ccf852414d8eb2858b3725658e"
+        ]
+      }
+    ],
+    "primary_discovery_success": false,
+    "clinical_accuracy_claimed": false,
+    "input_hashes": {
+      "report": "5d2ac42f43ceab39ba64696e1dad9c3ea58e26957c4a592cd80a31d090a7af3b",
+      "key": "931770e68655957dadbcf99fd809c47ee02b085220cc7b68c829f3e91a9c31e5",
+      "spec": "095335597b8893ddd84d2cb5baf5a9bfe7a3a4c925f5922afee4517757e36f7f",
+      "case": "0828dc818969dbdd3fa51c87dda14800abe255ef442164c1e9fa044c2ae3a9a7",
+      "review": null,
+      "tools": "1fc5f4af4c1f6dd2698b15f101205e345d07436d46d20da6db1adefd8bd6e338"
+    },
+    "reviewer": null,
+    "limitations": [
+      "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+      "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+      "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+      "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+      "No semantic keyword matching; unreviewed meaning remains unassessed."
+    ]
+  }
+}
