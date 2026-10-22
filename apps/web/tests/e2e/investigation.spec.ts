@@ -9,8 +9,8 @@ test("CASE-001 investigation resolves actual evidence and survives refresh", asy
   await page.getByLabel("Search patients").fill("Daniel");
   await page.getByRole("link", { name: "Daniel M. (synthetic)" }).click();
   await expect(page.getByRole("heading", { name: "Daniel M. (synthetic)" })).toBeVisible();
-  await page.getByRole("button", { name: "Laboratory", exact: true }).click();
-  await expect(page.getByRole("heading", { name: /LAB-/ }).first()).toBeVisible();
+  await page.getByRole("link", { name: "Laboratory", exact: true }).click();
+  await expect(page.getByRole("link", { name: /^LAB-/ }).first()).toBeVisible();
   await page.getByRole("button", { name: "Start investigation", exact: true }).click();
   await page.getByRole("button", { name: "Begin investigation", exact: true }).click();
   await expect(page).toHaveURL(/\/investigations\/INV-/);

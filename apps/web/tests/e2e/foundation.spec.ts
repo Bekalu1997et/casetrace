@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("browser reaches the real backend and retry works", async ({ page }, testInfo) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Clinical investigation workspace" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hospital Overview" })).toBeVisible();
   await expect(page.getByText("API connected", { exact: true })).toBeVisible();
   await expect(page.getByText(/Database connected/)).toBeVisible();
   await page.keyboard.press("Tab");
@@ -28,7 +28,7 @@ test("browser reaches the real backend and retry works", async ({ page }, testIn
   await expect(page).toHaveURL(/\/patients$/);
   await expect(page.getByRole("navigation", { name: "Main navigation" })).toBeHidden();
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Clinical investigation workspace" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hospital Overview" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath("foundation-mobile.png"), fullPage: true });
 });
