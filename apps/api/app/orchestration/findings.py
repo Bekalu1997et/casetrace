@@ -24,6 +24,11 @@ class FindingRepository:
                 {
                     "rule": finding.rule,
                     "anchors": [a.model_dump(mode="json") for a in finding.anchors],
+                    **(
+                        {"relationship": finding.relationship.model_dump(mode="json")}
+                        if finding.relationship
+                        else {}
+                    ),
                 }
             )
             existing = await session.scalar(

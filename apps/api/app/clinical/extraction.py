@@ -65,6 +65,10 @@ def structured_claims(record: SourceRecord) -> list[ClinicalClaim]:
             value=data[field],
             unit=data.get("unit"),
             recorded_status=data.get("status"),
+            origin="observation" if kind == "observation" else "order",
+            source_status=data.get("status"),
+            event_time_field=time_field,
+            documentation_time_field="reported_at" if kind == "observation" else None,
             time=ClaimTime(
                 start=day,
                 end=day,
@@ -237,6 +241,23 @@ def extract_claims(record: SourceRecord) -> list[ClinicalClaim]:
                     if new
                     else "unspecified",
                     section=section,
+                    origin="patient_report"
+                    if re.search(
+                        r"\bpatient\s+(?:reports?|describes?|states?|denies)\b", clause, re.I
+                    )
+                    else "clinician_interpretation"
+                    if assertion == "impression"
+                    else "clinician_record",
+                    source_status=record.data.get("status"),
+                    event_time_field="occurred_at"
+                    if record.source.type == "clinical_event"
+                    else "event_at",
+                    documentation_time_field="documented_at"
+                    if record.source.type == "clinical_event"
+                    else "authored_at",
+                    timestamps={
+                        key: value for key, value in record.data.items() if key.endswith("_at")
+                    },
                     limitations=[
                         "Rule-based vocabulary and assertion scope are intentionally limited."
                     ]

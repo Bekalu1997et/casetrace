@@ -6,6 +6,7 @@ from app.clinical.reasoning import structured_contradictions
 from app.clinical.rules import contradictions, instant, onset_pair
 from app.clinical.series import record_series
 from app.evidence.provenance import anchor_matches
+from app.evidence.relationships import verify_relationship
 from app.hospital.errors import HospitalError
 from app.schemas.investigation import Candidate, Check, SourceRecord, Verification
 
@@ -16,6 +17,8 @@ class EvidenceVerifier:
         self.reasoning = reasoning
 
     async def verify(self, candidate: Candidate) -> tuple[Verification, str]:
+        if candidate.relationship is not None or candidate.rule == "clinical_relationship":
+            return await verify_relationship(self.clinical, self.patient_id, candidate)
         checks = []
         records: dict[str, SourceRecord] = {}
         identities = [(a.source.type, a.source.id, a.field) for a in candidate.anchors]

@@ -15,6 +15,11 @@ from app.agents.specialists import (
     TimelineAgent,
 )
 from app.clinical.ports import ClinicalSource
+from app.clinical.relationship_synthesis import (
+    RELATIONSHIP_ALTERNATIVES,
+    RELATIONSHIP_LIMITATIONS,
+    synthesize_relationships,
+)
 from app.clinical.relationships import investigative_relationships, medication_associations
 from app.core.config import Settings
 from app.core.provenance import digest, now
@@ -234,6 +239,42 @@ class InvestigationEngine:
             sources = list(records.values())
             proposals.extend(investigative_relationships(sources))
             proposals.extend(medication_associations(sources))
+            relationships = [
+                c
+                for c in synthesize_relationships(sources, states_only=True)
+                if c.relationship
+                and c.relationship.relationship_type == "recorded_state_difference"
+            ]
+            await self.store.record(
+                public_id,
+                "assertions.extracted",
+                {
+                    "assertion_count": len(
+                        {
+                            a.id
+                            for c in relationships
+                            if c.relationship
+                            for a in c.relationship.assertions
+                        }
+                    ),
+                    "relationship_count": len(relationships),
+                },
+            )
+            for relationship in relationships:
+                assert relationship.relationship is not None
+                await self.store.record(
+                    public_id,
+                    "relationship.assembled",
+                    {
+                        "relationship_type": relationship.relationship.relationship_type,
+                        "assertion_ids": [a.id for a in relationship.relationship.assertions],
+                        "source_refs": [
+                            {**a.anchor.source.model_dump(), "version": a.anchor.source_version}
+                            for a in relationship.relationship.assertions
+                        ],
+                    },
+                )
+            proposals.extend(relationships)
         hypotheses.extend(analysis.challenge(proposals))
         verifier = EvidenceVerifier(self.clinical, patient, self.settings.investigation_reasoning)
         # Never accept model verdicts as established clinical explanations.
@@ -259,6 +300,16 @@ class InvestigationEngine:
                     break
         for candidate in proposals[: self.settings.investigation_max_candidates]:
             finding_id = f"FND-{uuid4().hex}"
+            if candidate.relationship:
+                await self.store.record(
+                    public_id,
+                    "relationship.proposed",
+                    {
+                        "finding_id": finding_id,
+                        "relationship_type": candidate.relationship.relationship_type,
+                        "assertion_ids": [a.id for a in candidate.relationship.assertions],
+                    },
+                )
             await self.store.record(
                 public_id,
                 "finding.proposed",
@@ -289,10 +340,19 @@ class InvestigationEngine:
                 **{
                     **candidate.model_dump(),
                     "claim": canonical_claim,
+                    **(
+                        {
+                            "alternatives": RELATIONSHIP_ALTERNATIVES,
+                            "limitations": RELATIONSHIP_LIMITATIONS,
+                        }
+                        if candidate.relationship and status == "verified"
+                        else {}
+                    ),
                     "title": {
                         "field_observation": "Verified source fields",
                         "lab_change": "Recorded laboratory change",
                         "onset_conflict": "Conflicting documented symptom chronology",
+                        "clinical_relationship": "Recorded clinical relationship",
                     }.get(candidate.rule, candidate.title)
                     if status == "verified"
                     else candidate.title,
@@ -310,6 +370,17 @@ class InvestigationEngine:
                 verified_at=now() if status == "verified" else None,
             )
             await self.store.save_finding(public_id, finding)
+            if candidate.relationship:
+                await self.store.record(
+                    public_id,
+                    "relationship.verification_completed",
+                    {
+                        "finding_id": finding_id,
+                        "status": verification.status,
+                        "relationship_type": candidate.relationship.relationship_type,
+                        "assertion_count": len(candidate.relationship.assertions),
+                    },
+                )
             await self.store.record(
                 public_id,
                 "verification.completed",

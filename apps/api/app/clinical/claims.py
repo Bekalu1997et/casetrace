@@ -6,7 +6,7 @@ from typing import Literal
 from pydantic import Field
 
 from app.hospital.schemas import ClinicalModel
-from app.schemas.investigation import Anchor
+from app.schemas.provenance import Anchor
 
 
 class ClaimTime(ClinicalModel):
@@ -50,6 +50,17 @@ class ClinicalClaim(ClinicalModel):
     unit: str | None = None
     recorded_status: str | None = None
     timestamps: dict[str, str | None] = Field(default_factory=dict)
+    origin: Literal[
+        "order",
+        "observation",
+        "patient_report",
+        "clinician_record",
+        "clinician_interpretation",
+        "unknown",
+    ] = "unknown"
+    source_status: str | None = None
+    event_time_field: str | None = None
+    documentation_time_field: str | None = None
     extraction_method: Literal["rules_v1", "model_proposal"] = "rules_v1"
     limitations: list[str] = Field(default_factory=list)
 

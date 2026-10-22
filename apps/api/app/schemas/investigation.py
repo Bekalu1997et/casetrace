@@ -3,26 +3,22 @@
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field
 
+from app.clinical.relationship_models import RelationshipEvidence
 from app.hospital.schemas import ClinicalModel, Identifier
+from app.schemas.provenance import (
+    Anchor as Anchor,
+)
+from app.schemas.provenance import (
+    SourceRef as SourceRef,
+)
+from app.schemas.provenance import (
+    SourceType as SourceType,
+)
 
 RunStatus = Literal[
     "queued", "running", "completed", "completed_with_limitations", "failed", "cancelled"
-]
-SourceType = Literal[
-    "patient",
-    "encounter",
-    "clinical_event",
-    "observation",
-    "medication",
-    "document",
-    "imaging_study",
-    "imaging_asset",
-    "referral",
-    "diagnostic_report",
-    "diagnosis",
-    "symptom",
 ]
 
 
@@ -54,11 +50,6 @@ class InvestigationHistory(ClinicalModel):
     total: int
     limit: int
     offset: int
-
-
-class SourceRef(ClinicalModel):
-    type: SourceType
-    id: Identifier
 
 
 class SourceRecord(ClinicalModel):
@@ -99,29 +90,6 @@ class ToolResult(ClinicalModel):
     timeline: list["TimelineEvent"] = Field(default_factory=list)
 
 
-class Anchor(ClinicalModel):
-    source: SourceRef
-    source_version: int = Field(ge=1)
-    source_hash: str = Field(min_length=64, max_length=64)
-    encounter_id: str | None = None
-    field: str = Field(min_length=1, max_length=100)
-    expected: Any
-    quote: str | None = Field(default=None, max_length=2000)
-    char_start: int | None = Field(default=None, ge=0)
-    char_end: int | None = Field(default=None, ge=1)
-    relationship: Literal["supports", "contradicts", "contextualizes", "derived_from"] = "supports"
-
-    @model_validator(mode="after")
-    def paired_offsets(self) -> "Anchor":
-        if (self.char_start is None) != (self.char_end is None):
-            raise ValueError("Source offsets must be paired")
-        if self.char_start is not None and (
-            self.quote is None or self.char_end is None or self.char_end <= self.char_start
-        ):
-            raise ValueError("Source offsets require a nonempty exact quote")
-        return self
-
-
 class Candidate(ClinicalModel):
     type: Literal[
         "timeline_contradiction",
@@ -138,6 +106,7 @@ class Candidate(ClinicalModel):
         "field_observation",
         "lab_change",
         "record_series",
+        "clinical_relationship",
         "review_before_result",
         "onset_conflict",
         "interpretation",
@@ -145,6 +114,7 @@ class Candidate(ClinicalModel):
     anchors: list[Anchor] = Field(min_length=1, max_length=20)
     alternatives: list[str] = Field(default_factory=list, max_length=10)
     limitations: list[str] = Field(default_factory=list, max_length=10)
+    relationship: RelationshipEvidence | None = None
 
 
 class Hypothesis(ClinicalModel):
