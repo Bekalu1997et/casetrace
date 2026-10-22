@@ -2,17 +2,70 @@
 
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.hospital.errors import HospitalError
 from app.models import investigation as db
+from app.models.hospital import CaseDataset, Patient
 from app.orchestration.persistence import InvestigationPersistence
-from app.schemas.investigation import ActivityEvent, Finding, Report
+from app.schemas.investigation import (
+    ActivityEvent,
+    Finding,
+    InvestigationHistory,
+    InvestigationHistoryItem,
+    Report,
+)
 
 
 class InvestigationQueries:
     def __init__(self, persistence: InvestigationPersistence):
         self.persistence = persistence
+
+    async def history(
+        self,
+        patient_id: str | None,
+        case_id: str | None,
+        status: str | None,
+        limit: int,
+        offset: int,
+    ) -> InvestigationHistory:
+        async with self.persistence.database.session() as session:
+            query = (
+                select(db.Investigation, Patient.external_id, CaseDataset.case_id)
+                .join(Patient, Patient.id == db.Investigation.patient_id)
+                .join(CaseDataset, CaseDataset.id == db.Investigation.dataset_id)
+            )
+            if patient_id:
+                query = query.where(Patient.external_id == patient_id)
+            if case_id:
+                query = query.where(CaseDataset.case_id == case_id)
+            if status:
+                query = query.where(db.Investigation.status == status)
+            total = await session.scalar(select(func.count()).select_from(query.subquery()))
+            rows = await session.execute(
+                query.order_by(db.Investigation.created_at.desc(), db.Investigation.external_id)
+                .limit(limit)
+                .offset(offset)
+            )
+            return InvestigationHistory(
+                items=[
+                    InvestigationHistoryItem(
+                        id=run.external_id,
+                        patient_id=patient,
+                        case_id=case,
+                        objective=run.question,
+                        status=run.status,
+                        created_at=run.created_at,
+                        started_at=run.started_at,
+                        completed_at=run.ended_at,
+                        current_stage=run.context.get("current_stage"),
+                    )
+                    for run, patient, case in rows
+                ],
+                total=total or 0,
+                limit=limit,
+                offset=offset,
+            )
 
     async def snapshot(self, public_id: str) -> dict[str, Any]:
         async with self.persistence.database.session() as session:

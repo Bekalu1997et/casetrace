@@ -15,8 +15,10 @@ from app.schemas.investigation import (
     EventPage,
     Finding,
     FindingPage,
+    InvestigationHistory,
     InvestigationState,
     Report,
+    RunStatus,
 )
 from app.services.investigations import InvestigationService
 
@@ -25,6 +27,18 @@ router = APIRouter(prefix="/api/investigations", tags=["Investigations"])
 
 def store_for(request: Request) -> InvestigationStore:
     return request.app.state.investigation_store  # type: ignore[no-any-return]
+
+
+@router.get("", response_model=InvestigationHistory)
+async def history(
+    request: Request,
+    patient_id: str | None = None,
+    case_id: str | None = None,
+    status: RunStatus | None = None,
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+) -> InvestigationHistory:
+    return await store_for(request).queries.history(patient_id, case_id, status, limit, offset)
 
 
 @router.post("", response_model=CreationResponse, status_code=202)

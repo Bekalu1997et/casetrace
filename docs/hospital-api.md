@@ -1,5 +1,25 @@
 # CASETRACE — Hospital API Contract
 
+## Refactor 08 additive discovery contract
+
+`GET /api/hospital/v1/cases` returns the existing collection envelope with
+`case_id`, nullable `version`, `patient_id`, `display_name`, `latest_encounter_at`,
+`status`, `imported` (persisted patient exists), nullable `dataset_status`, `counts` (canonical category names), and `modalities` (registered document
+MIME types and imaging modalities). Stable case-ID ordering; limit 1–100, offset,
+exact case_id/status/modality filters. `GET /cases/{case_id}` returns the resource
+envelope; locally absent requested cases return status `not_present`, production
+unknown cases return 404. Only actual canonical directories are listed.
+
+Imported identities/counts/modalities come from hospital repositories. In local
+development/test, maintenance discovery additionally reports `available_not_imported`,
+`invalid`, `missing_assets`, `source_conflict`, or `not_present`. Production never
+reads canonical inputs. Missing maintenance files do not make persisted records
+unavailable. A conflict/invalid source disables launching from the catalog while
+the existing imported patient chart remains accessible. Read sessions close before
+off-thread validation/hashing. No validator diagnostics, filenames, manifest fields,
+editor annotations, summaries, answer labels or evaluator fields are published.
+No migration, clinical DTO change, tool permission change or ingestion occurs.
+
 MVP persistence is SQLite via SQLAlchemy 2.x asyncio and aiosqlite. Clinical tools retain their service/repository boundary. Follow [development stack](development-stack.md) for short read sessions, connection settings, portable types and maintenance-only seeding; no database session is passed to agents.
 
 **File:** `docs/hospital-api.md`  
@@ -2483,3 +2503,10 @@ invalid, missing_assets, available_not_imported, imported and source_conflict.
 Imported means the canonical clinical/asset fingerprint matches persisted state.
 This is not a public case-library endpoint. A runtime case catalog still needs
 an approved metadata publication contract; raw case files are not runtime inputs.
+
+Refactor 08 also adds optional `q` (1?200 characters) to document collections:
+literal case-insensitive title/text matching, combined with encounter/type/clinical
+date filters before pagination. Other collections reject nonempty q with 422.
+Hospital timeline now applies its declared encounter_id filter to each source's
+encounter association (including encounter records themselves). Existing unfiltered
+ordering, timestamp projection and source DTOs remain unchanged.

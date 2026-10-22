@@ -2774,3 +2774,9 @@ primary time_precision (instant). Original resource/source hashes and all existi
 fields are unchanged. Date-only and absent primary times remain in the original
 resource endpoints. See hospital-api.md for exact behavior. Case discovery is
 maintenance-only; a public case-library metadata contract remains deferred.
+
+## Refactor 08 hospital navigation and history
+
+Hospital routes add `/cases`, `/cases/[caseId]`, patient timeline/encounters/labs/medications/documents/imaging subroutes, encounter detail, document detail and patient-scoped source inspection. Existing URLs and source/source_type query keys remain supported. Patient layout shares identity/summary reads. Lists use existing pagination, filters and cancellation; original sources retain ownership checks.
+
+`GET /api/investigations` adds read-only history: `{items,total,limit,offset}` with limit 1?100, offset >=0, optional exact patient_id/case_id/status. Items contain id, patient_id, case_id, objective, status, created_at, nullable started_at/completed_at/current_stage. Persisted rows are ordered created_at descending with ID ties. Status uses existing RunStatus. No tool/event payloads or evaluation fields are included. Existing POST and detail routes are unchanged. Case discovery follows the additive contract in hospital-api.md.

@@ -45,6 +45,14 @@ def discover_case(
         "case_id": case.case_id,
         "version": case.version,
         "patient_id": case.patient.id,
+        "display_name": case.patient.display_name,
+        "dataset_status": case.status,
+        "modalities": sorted(
+            {d.mime_type for d in case.documents} | {s.modality for s in case.imaging_studies}
+        ),
+        "latest_encounter_at": max(e.started_at for e in case.encounters).isoformat()
+        if case.encounters
+        else None,
         "status": status,
         "source_hash": fingerprint,
         "counts": validated.report.counts if validated.report else {},

@@ -37,6 +37,25 @@ class CreateInvestigation(ClinicalModel):
     ] = "full_record_investigation"
 
 
+class InvestigationHistoryItem(ClinicalModel):
+    id: str
+    patient_id: str
+    case_id: str
+    objective: str
+    status: RunStatus
+    created_at: datetime
+    started_at: datetime | None
+    completed_at: datetime | None
+    current_stage: str | None = None
+
+
+class InvestigationHistory(ClinicalModel):
+    items: list[InvestigationHistoryItem]
+    total: int
+    limit: int
+    offset: int
+
+
 class SourceRef(ClinicalModel):
     type: SourceType
     id: Identifier

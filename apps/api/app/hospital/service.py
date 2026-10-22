@@ -99,6 +99,7 @@ class ClinicalRecordService:
                 "_time_field",
                 "_sort",
                 "_casefold",
+                "q",
             }:
                 continue
             data = [
@@ -111,6 +112,17 @@ class ClinicalRecordService:
                     and isinstance(value, str)
                     else getattr(item, key, None) == value
                 )
+            ]
+
+        query = filters.get("q")
+        if query:
+            if resource != "documents":
+                raise HospitalError("VALIDATION_ERROR", 422)
+            data = [
+                item
+                for item in data
+                if query.casefold()
+                in f"{getattr(item, 'title', '')} {getattr(item, 'text_content', '')}".casefold()
             ]
 
         def in_range(item: BaseModel) -> bool:
@@ -265,6 +277,8 @@ class ClinicalRecordService:
     async def timeline(
         self, patient_id: str, filters: dict[str, Any]
     ) -> tuple[list[dto.TimelineEntry], int]:
+        if filters.get("q"):
+            raise HospitalError("VALIDATION_ERROR", 422)
         patient = await self.patient(patient_id)
         entries = []
         types = {
@@ -336,6 +350,7 @@ class ClinicalRecordService:
             if (not start or e.timestamp >= start)
             and (not end or e.timestamp <= end)
             and (not event_types or e.event_type in event_types.split(","))
+            and (not filters.get("encounter_id") or e.encounter_id == filters["encounter_id"])
         ]
         entries.sort(key=lambda e: e.id)
         entries.sort(key=lambda e: e.timestamp, reverse=filters.get("sort") == "desc")

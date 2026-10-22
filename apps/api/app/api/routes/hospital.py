@@ -10,6 +10,8 @@ from pydantic import BaseModel, ConfigDict, field_validator
 from app.api.dependencies import asset_service, clinical_service
 from app.hospital import schemas as dto
 from app.hospital.asset_service import AssetDescriptor, ClinicalAssetService
+from app.hospital.catalog import CaseCatalog, CaseOverview
+from app.hospital.errors import HospitalError
 from app.hospital.service import RESOURCES, ClinicalRecordService
 
 router = APIRouter(prefix="/api/hospital/v1", tags=["hospital"])
@@ -29,6 +31,7 @@ class Filters(BaseModel):
     test_name: str | None = None
     medication_name: str | None = None
     document_type: str | None = None
+    q: str | None = Query(default=None, min_length=1, max_length=200)
     event_type: str | None = None
     event_types: str | None = None
     sort: Literal["asc", "desc"] = "asc"
@@ -59,6 +62,33 @@ def collection(
         ),
         "meta": meta(request),
     }
+
+
+@router.get("/cases", response_model=dto.CollectionResponse[CaseOverview])
+async def cases(
+    request: Request,
+    svc: Service,
+    case_id: dto.Identifier | None = None,
+    status: str | None = None,
+    modality: str | None = None,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> dict[str, Any]:
+    items = await CaseCatalog(svc, request.app.state.settings).items(case_id)
+    items = [
+        item
+        for item in items
+        if (not status or item.status == status) and (not modality or modality in item.modalities)
+    ]
+    return collection(request, items[offset : offset + limit], len(items), limit, offset)
+
+
+@router.get("/cases/{case_id}", response_model=dto.ResourceResponse[CaseOverview])
+async def case_overview(case_id: dto.Identifier, request: Request, svc: Service) -> dict[str, Any]:
+    items = await CaseCatalog(svc, request.app.state.settings).items(case_id)
+    if not items:
+        raise HospitalError()
+    return {"data": items[0], "meta": meta(request)}
 
 
 @router.get("/patients", response_model=dto.CollectionResponse[dto.PatientResponse])
