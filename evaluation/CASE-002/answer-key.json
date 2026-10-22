@@ -1,0 +1,125 @@
+{
+  "case_id": "CASE-002",
+  "dataset_version": "1.0",
+  "synthetic_label": "SYNTHETIC - NOT FOR CLINICAL USE",
+  "expected_findings": [
+    {
+      "finding_key": "medication-reconciliation-discrepancy-1",
+      "type": "medication_reconciliation_discrepancy",
+      "required_source_ids": [
+        "DOC-002-03",
+        "DOC-002-06",
+        "DOC-002-07",
+        "DOC-002-11",
+        "DOC-002-14"
+      ],
+      "expected_claim": "The February prescribing record discontinued lisinopril and ordered losartan, but later emergency and primary-care records retain or report lisinopril exposure with uncertain timing; the records establish a documentation discrepancy, not confirmed ingestion.",
+      "acceptable_outcomes": [
+        "verified",
+        "unresolved"
+      ],
+      "alternatives_to_check": [
+        "documentation_delay",
+        "patient_report_uncertain",
+        "outside_pharmacy_list_stale"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-002-06",
+          "field": "text_content",
+          "quote": "Lisinopril 20 mg tablet is discontinued in the electronic order list"
+        },
+        {
+          "source_id": "DOC-002-07",
+          "field": "text_content",
+          "quote": "Discharge medication list imported from an outside pharmacy includes lisinopril 20 mg daily"
+        },
+        {
+          "source_id": "DOC-002-11",
+          "field": "text_content",
+          "quote": "Patient brought an old bottle labeled lisinopril 20 mg"
+        }
+      ],
+      "counterevidence": "The patient could not confirm the last dose, and no administration or dispensing record proves ingestion."
+    },
+    {
+      "finding_key": "renal-trend-1",
+      "type": "laboratory_trend",
+      "required_source_ids": [
+        "DOC-002-02",
+        "DOC-002-10",
+        "DOC-002-13",
+        "DOC-002-16",
+        "DOC-002-18"
+      ],
+      "expected_claim": "Creatinine rose from 1.18 mg/dL at baseline to 1.68 mg/dL during the diarrheal illness, then partially improved to 1.27 mg/dL; potassium was transiently elevated and later normalized.",
+      "acceptable_outcomes": [
+        "verified"
+      ],
+      "alternatives_to_check": [
+        "volume_depletion",
+        "NSAID_exposure",
+        "renin_angiotensin_exposure"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-002-02",
+          "field": "text_content",
+          "quote": "Creatinine 1.18 mg/dL"
+        },
+        {
+          "source_id": "DOC-002-10",
+          "field": "text_content",
+          "quote": "Creatinine 1.55 mg/dL"
+        },
+        {
+          "source_id": "DOC-002-18",
+          "field": "text_content",
+          "quote": "Creatinine 1.27 mg/dL"
+        }
+      ],
+      "counterevidence": "The renal trend overlaps with poor intake, diarrhea, and reported NSAID exposure; causation is not established."
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "claim": "Definitive medication-induced kidney injury",
+      "source_ids": [
+        "DOC-002-14"
+      ],
+      "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+    },
+    {
+      "claim": "Confirmed lisinopril ingestion after discontinuation",
+      "source_ids": [
+        "DOC-002-11"
+      ],
+      "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+    }
+  ],
+  "evaluation_criteria": [
+    "Find the cross-record medication discrepancy.",
+    "Verify the structured renal laboratory trend.",
+    "Separate order, reconciliation, patient report, and ingestion.",
+    "Represent volume depletion and NSAID exposure as competing contributors.",
+    "Cite source IDs and preserve uncertainty."
+  ],
+  "acceptable_uncertainty": [
+    "The exact last lisinopril dose is unknown.",
+    "Dispensing and administration are not available.",
+    "Causality between any medicine and renal change is unproven."
+  ],
+  "source_checksums": {
+    "DOC-002-02": "1c1ea5d6ff9bff45c73631001bb2aff07483cc9a8feeee53ff5f3d7409ae41b6",
+    "DOC-002-03": "78a57811807d508475e38d1cb3ef8dd4245968df27e646dbca72120f0ad3562d",
+    "DOC-002-06": "b87e2d2bc72611bc75ad3cb91a7159eb90b044c0260138777b78d50ffbc9f0df",
+    "DOC-002-07": "1b1b852de57e1526b521c92329b1a1eb8a8799d95f186a86414b9c88699fef01",
+    "DOC-002-10": "0f6e5f2983cd902813c0cb105fef5116446017ac9d53a996d3cbd0dadff145e6",
+    "DOC-002-11": "811d6a23560734c7480b7cd0f78449c4c383d2a35b94fa9097c975315fb9e276",
+    "DOC-002-13": "34c46be535486aac9dd408762a77dd09194bb881aa0fd3cff3be29715a3a6abd",
+    "DOC-002-14": "835e1e46b41789413a321f2216dc7efe60c40beb751d058dde61374e5b80100f",
+    "DOC-002-16": "3a09dab0d4ac3626c3c3de585c243a858aa865f81858684c5f2629d8f5188d4a",
+    "DOC-002-18": "7305409c011e40729c61ae101750e324ad1190ae992e46f9ae270c52a5abd434"
+  },
+  "clinical_review": "Synthetic data consistency review only; no independent medical expert validation was performed."
+}
