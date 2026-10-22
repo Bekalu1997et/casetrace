@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "case_id": "CASE-002",
+  "dataset_version": "1.0",
+  "key_sha256": "9b75fce35ba7e66c123032c59a7734d0db17e1b016b0af24619ed98128c5672b",
+  "discoveries": [
+    {
+      "finding_key": "medication-reconciliation-discrepancy-1",
+      "domain": "medication_reconciliation_discrepancy",
+      "priority": "primary",
+      "source_roles": {
+        "prescribing_context": [
+          "DOC-002-03",
+          "DOC-002-06"
+        ],
+        "later_reconciliation_or_report": [
+          "DOC-002-07",
+          "DOC-002-11"
+        ],
+        "uncertainty_context": [
+          "DOC-002-14"
+        ]
+      },
+      "review_required": [
+        "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+        "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+      ]
+    },
+    {
+      "finding_key": "renal-trend-1",
+      "domain": "longitudinal_laboratory_concern",
+      "priority": "secondary",
+      "source_roles": {
+        "baseline_panel": [
+          "DOC-002-02"
+        ],
+        "illness_and_recovery_panels": [
+          "DOC-002-10",
+          "DOC-002-13",
+          "DOC-002-16",
+          "DOC-002-18"
+        ]
+      },
+      "review_required": [
+        "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+        "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+      ]
+    }
+  ]
+}

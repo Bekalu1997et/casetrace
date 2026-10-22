@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "Discovery": {
+      "additionalProperties": false,
+      "properties": {
+        "finding_key": {
+          "title": "Finding Key",
+          "type": "string"
+        },
+        "domain": {
+          "enum": [
+            "timeline_contradiction",
+            "medication_reconciliation_discrepancy",
+            "result_to_follow_up_discrepancy",
+            "diagnostic_hypothesis_challenge",
+            "longitudinal_laboratory_concern"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "priority": {
+          "enum": [
+            "primary",
+            "secondary"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "source_roles": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Source Roles",
+          "type": "object"
+        },
+        "review_required": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Review Required",
+          "type": "array"
+        }
+      },
+      "required": [
+        "finding_key",
+        "domain",
+        "priority",
+        "source_roles",
+        "review_required"
+      ],
+      "title": "Discovery",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": "1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "dataset_version": {
+      "title": "Dataset Version",
+      "type": "string"
+    },
+    "key_sha256": {
+      "title": "Key Sha256",
+      "type": "string"
+    },
+    "discoveries": {
+      "items": {
+        "$ref": "#/$defs/Discovery"
+      },
+      "minItems": 1,
+      "title": "Discoveries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version",
+    "case_id",
+    "dataset_version",
+    "key_sha256",
+    "discoveries"
+  ],
+  "title": "Specification",
+  "type": "object"
+}
