@@ -1,0 +1,70 @@
+{
+  "case_id": "CASE-006",
+  "dataset_version": "1.0",
+  "synthetic_label": "SYNTHETIC - NOT FOR CLINICAL USE",
+  "expected_findings": [
+    {
+      "finding_key": "case-006-primary",
+      "type": "repeated_abnormal_glucose",
+      "required_source_ids": [
+        "DOC-006-05",
+        "DOC-006-08",
+        "DOC-006-10"
+      ],
+      "expected_claim": "Records across encounters show incomplete metabolic follow-up; objective evidence supports further investigation while preserving uncertainty.",
+      "acceptable_outcomes": [
+        "verified",
+        "unresolved"
+      ],
+      "alternatives_to_check": [
+        "documentation_delay",
+        "alternative_explanation"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-006-05",
+          "field": "text_content",
+          "quote": "Objective testing"
+        }
+      ],
+      "counterevidence": "The record does not establish a definitive alternative diagnosis or causal attribution."
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "claim": "Definitive causal diagnosis",
+      "source_ids": [
+        "DOC-006-08"
+      ],
+      "reason": "The records support an unresolved question rather than a definitive diagnosis."
+    }
+  ],
+  "evaluation_criteria": [
+    "Retrieve records across encounters.",
+    "Compare objective evidence with the working explanation.",
+    "Preserve uncertainty and cite source IDs."
+  ],
+  "acceptable_uncertainty": [
+    "Actual exposure or diagnosis may remain unresolved."
+  ],
+  "source_checksums": {
+    "DOC-006-01": "15d130727b7923ebd854168bebaa33b0cd8f687ef2a10917c023e2882e13c722",
+    "DOC-006-02": "35d15da0f0725458221563fa904b30a969e3bdb5abaed5d60b7482a44ab62c3d",
+    "DOC-006-03": "6199e8c2cc273fdd96e27724ee5eb9c8ffaee965b7e82b89cc6067da3a8879a9",
+    "DOC-006-04": "953a5da3bd5d1e9e7c3f3d297a44b55fcaafef95982b555c7c481917f7790af3",
+    "DOC-006-05": "8396d616768766925eb40447c252ecad3a413941ef8df81c6539589946d48419",
+    "DOC-006-06": "5516bb1acf84ca715c43980b39287e2722645706d617f45e9bb0084f179d1762",
+    "DOC-006-07": "1e160f468d564deabf84a64b5efd7c5b470eb37ad8c429101a321e9d22fd0145",
+    "DOC-006-08": "47c1500cb47e3c0828089aaf968b42f5e5604705b2cf93e5f500986002588afb",
+    "DOC-006-09": "bb57080fe1bc573623e34a6a48c3db30945da08b6d59676f2683fe2788ad792c",
+    "DOC-006-10": "63081fa72cc0953fb4f90b0b132e90a8b42f2194e02fff95be9334266300f540",
+    "DOC-006-11": "b98b9ed217c9027daa976737d239119a1fd76015c3538f70e1cbd83a6646f5c6",
+    "DOC-006-12": "36a620be6d619cd8c85eb676bd03c92107067f3b8f3c148c75182b67b58ae579",
+    "DOC-006-13": "c8f3eb4db74906c074f6038ae219ae52c84fb9d76bebf8aec7051c94f6fa769d",
+    "DOC-006-14": "7770ec48fa96082fea7c23166cf0aae1d7fa473d2b389e62b9cd0d2cccdcbaf3",
+    "DOC-006-15": "3e8fdeda3105dd0ac8385ff4d29221e3ec731df172f27ba49cfe0a5c210bf4fa",
+    "DOC-006-16": "89df54a256652bee33b9fcea206bebcb7e2a6c9de9f4d3b3c5cb97cacb436b75",
+    "DOC-006-17": "dcbb52e3dc33ffb03d03eed921f10730f53c5d841141357f66f61176c36b618f",
+    "DOC-006-18": "3f6dc590fa5edd8578351bcbd66b48c5879d82a1a469a565ecc4cf1f4e98da71"
+  }
+}
