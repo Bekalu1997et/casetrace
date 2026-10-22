@@ -82,9 +82,31 @@
 
 ---
 
-## Phase 3 — Case Library and Clinical Dashboard
+## Phase 3 — Case Library and Clinical Dashboard ✓ COMPLETE
 
 **Objective:** Improve the overview dashboard and case library to make the demo entry point clear and informative.
+
+**Status:** Complete. 145 frontend tests pass (25 new). Build succeeds.
+
+**Implemented:**
+1. Dashboard "Start Investigation" CTA links to `/investigations/new`
+2. Featured case prefers CASE-001 (imported); falls back to first imported case; shows empty state when none available
+3. Dashboard metrics use server `pagination.total`; derived counts only shown when `!has_more`
+4. Case cards: `StatusBadge`, formatted `Time`, modality badges, record counts, chart link without display_name requirement
+5. Status filter applies immediately; case ID search on submit; clear filters button
+6. Pagination range display ("Showing X–Y of N cases"); offset resets on filter change
+7. Distinct filtered vs. unfiltered empty states
+8. Case detail: record inventory grid, non-imported warning, investigation history
+9. Skeleton loading for metrics, featured case, case grid, case detail
+10. All design system components applied throughout
+
+**Deferred:**
+- `earliest_encounter_at` in case cards (not in contract)
+- Clinical modality category mapping (backend returns raw strings)
+- Patient preselection on `/investigations/new`
+- CASE-001 visual priority in library (server-controlled ordering)
+
+**See:** `ui-design/reports/phase-03-clinical-entry-refinement.md`
 
 **Affected routes:** `/`, `/cases`, `/cases/[caseId]`
 
