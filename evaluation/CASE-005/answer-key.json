@@ -1,0 +1,71 @@
+{
+  "case_id": "CASE-005",
+  "dataset_version": "1.0",
+  "synthetic_label": "SYNTHETIC - NOT FOR CLINICAL USE",
+  "expected_findings": [
+    {
+      "finding_key": "case-005-primary",
+      "type": "anticoagulation_interruption",
+      "required_source_ids": [
+        "DOC-005-05",
+        "DOC-005-08",
+        "DOC-005-10"
+      ],
+      "expected_claim": "Records across encounters show conflicting hold and restart documentation; objective evidence supports further investigation while preserving uncertainty.",
+      "acceptable_outcomes": [
+        "verified",
+        "unresolved"
+      ],
+      "alternatives_to_check": [
+        "documentation_delay",
+        "alternative_explanation"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-005-05",
+          "field": "text_content",
+          "quote": "Objective testing"
+        }
+      ],
+      "counterevidence": "The record does not establish a definitive alternative diagnosis or causal attribution."
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "claim": "Definitive causal diagnosis",
+      "source_ids": [
+        "DOC-005-08"
+      ],
+      "reason": "The records support an unresolved question rather than a definitive diagnosis."
+    }
+  ],
+  "evaluation_criteria": [
+    "Retrieve records across encounters.",
+    "Compare objective evidence with the working explanation.",
+    "Preserve uncertainty and cite source IDs."
+  ],
+  "acceptable_uncertainty": [
+    "Actual exposure or diagnosis may remain unresolved."
+  ],
+  "source_checksums": {
+    "DOC-005-01": "eb16b2f931576a66980ca5c2f5dc462a52449af84913d28dfff991ba409f4029",
+    "DOC-005-02": "f72ef041f9ede0e6810b4bab96feb2deff44078a0ca79aab478ea3eedd6a5499",
+    "DOC-005-03": "dbac16bc6c77f806acf5aba31fe7b665828f494078bf552c8650cb4804df75b5",
+    "DOC-005-04": "af42a63f4d04d84910ea775915d041d48f4cf90c464bc43f1e36ac15a7ac3092",
+    "DOC-005-05": "0d5e83e0ef324da41bf4e72b169e0e444b52635f594216f647e2dd8d6c00a302",
+    "DOC-005-06": "ef34db3441d1f13f22a5d7c0da24d770f398b46cc1295e1e53434fcad34df622",
+    "DOC-005-07": "25c6250a1f1c1ca08964307f75a5fbcbe20f39c31058cf17b219c842a4e0fcc0",
+    "DOC-005-08": "f4b5c9dab9641a737f291e4f816f94dd7b7cb3f5b48943d4155093581089855c",
+    "DOC-005-09": "16cfc2da8aa0d9639b92e3a635340bc32b8af3ab5d8d194b19c9bff1c4a1f4cc",
+    "DOC-005-10": "b2c9a216b2d02f6580367f58eb92bc71a102bf4973cb5f112da69d8e0b98116a",
+    "DOC-005-11": "b84e70eb5368a4dd4df0b4c1b6960c931dff91740cf8c806cfe2978afb8c5baf",
+    "DOC-005-12": "892bfc3500db632b35380582ef47ea5261c51ae93f50475eb43d499792b3af70",
+    "DOC-005-13": "3b21658320b3878e00eb13cbd5b491e5c2e75f79b07fb24991167f03443834df",
+    "DOC-005-14": "eeb7e4216db43e46d61c4e159733a80ba7d1a78a76c7c6475566f73ca342fe92",
+    "DOC-005-15": "c543485e07e3c8d7f60b9b876e768ccd5109481b6a69b2c3dae8db42b68bdb6f",
+    "DOC-005-16": "31772bd5932160caa780e202823156f365cd61c32cb388318a03eebe5746bf26",
+    "DOC-005-17": "522b4ec9ec784880f6083d71c46386c44ffc1afdb46b4b4bd59ad3ab414c954a",
+    "DOC-005-18": "bcb6a62fe09472381a07291d677cd588fcd86af557451fac9e0a8b30caae06da",
+    "DOC-005-19": "158510ee715d6fdc9582136340fc931ce0b2f873ec7b637c150b1ea2b8d49032"
+  }
+}
