@@ -8,6 +8,7 @@ from app.hospital.errors import HospitalError
 from app.models import investigation as db
 from app.models.hospital import CaseDataset, Patient
 from app.orchestration.persistence import InvestigationPersistence
+from app.schemas.audit import ToolAudit, ToolAuditPage
 from app.schemas.investigation import (
     ActivityEvent,
     Finding,
@@ -20,6 +21,71 @@ from app.schemas.investigation import (
 class InvestigationQueries:
     def __init__(self, persistence: InvestigationPersistence):
         self.persistence = persistence
+
+    async def tools(self, public_id: str, limit: int, offset: int) -> ToolAuditPage:
+        allowed = {
+            "filter_fingerprint",
+            "patient_id",
+            "encounter_id",
+            "document_id",
+            "observation_id",
+            "medication_id",
+            "record_id",
+            "study_id",
+            "report_id",
+            "source_id",
+            "source_type",
+            "test_code",
+            "from_date",
+            "to_date",
+            "timestamp_field",
+            "category",
+            "status",
+            "limit",
+            "offset",
+        }
+        async with self.persistence.database.session() as session:
+            run = await self.persistence.find(session, public_id)
+            query = (
+                select(db.ToolCall, db.AgentExecution)
+                .join(db.AgentExecution, db.ToolCall.agent_execution_id == db.AgentExecution.id)
+                .where(
+                    db.ToolCall.investigation_id == run.id,
+                    db.AgentExecution.investigation_id == run.id,
+                )
+            )
+            total = await session.scalar(select(func.count()).select_from(query.subquery()))
+            rows = await session.execute(
+                query.order_by(db.ToolCall.started_at, db.ToolCall.id).limit(limit).offset(offset)
+            )
+            return ToolAuditPage(
+                investigation_id=public_id,
+                total=total or 0,
+                limit=limit,
+                offset=offset,
+                items=[
+                    ToolAudit(
+                        id=str(call.id),
+                        agent_run_id=str(agent.id),
+                        agent=agent.agent_key,
+                        attempt=agent.attempt,
+                        tool=call.tool_name,
+                        status=call.status,
+                        arguments={
+                            k: v
+                            for k, v in call.sanitized_args.items()
+                            if k in allowed
+                            and (v is None or isinstance(v, (str, int, float, bool)))
+                        },
+                        source_refs=call.result_refs,
+                        started_at=call.started_at,
+                        completed_at=call.completed_at,
+                        duration_ms=call.duration_ms,
+                        error_code=call.error_code,
+                    )
+                    for call, agent in rows
+                ],
+            )
 
     async def history(
         self,

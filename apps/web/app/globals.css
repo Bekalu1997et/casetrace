@@ -95,3 +95,21 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 .clinical-table td:first-child {min-width:210px;}
 
 .document-workspace {align-items:start;}
+
+/* Investigation workbench: source-first panels with native keyboard disclosure. */
+.panel-toggle {font-size:12px; font-weight:650; color:var(--teal); padding:8px 0;}
+.workflow-rail {border-left:2px solid var(--border); padding-left:12px; margin-top:12px;}
+.workflow-rail li {padding:0 0 20px; display:flex; flex-wrap:wrap; gap:8px;}
+.workflow-rail li p {width:100%;}
+.audit-card {border:1px solid var(--border); border-radius:8px; padding:14px; background:#fafcfe; overflow-wrap:anywhere;}
+.audit-card summary {font-size:12px; line-height:1.8;}
+.audit-fields {display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-top:16px; font-size:12px;}
+.audit-fields dt {color:var(--muted-foreground); text-transform:capitalize; margin-bottom:4px;}
+.evidence-explorer {display:grid; grid-template-columns:minmax(0,1fr); gap:20px; align-items:start;}
+.evidence-explorer>* {min-width:0;}
+.finding-rejected {background:#fff4f4; border-color:#edc3c6;}
+.finding-unresolved {background:#fffaf0; border-color:#e8d7ab;}
+.finding-proposed {background:#f4f7ff; border-color:#cdd9ef;}
+@media(min-width:1280px) {.workspace-grid {grid-template-columns:190px minmax(0,1fr) minmax(280px,.8fr);} .evidence-explorer {grid-template-columns:280px minmax(0,1fr);} }
+@media(max-width:1279px) {.workbench-context,.workbench-evidence {border:1px solid var(--border); background:white; border-radius:10px; padding:12px;} }
+@media print {@page {size:A4; margin:15mm;} .report-view {font-size:10pt;} .report-view h1 {font-size:20pt;} .report-view h2 {break-after:avoid;} .report-view .audit-card {break-inside:avoid;} .report-view .finding-card {break-inside:auto;} .report-view .panel-heading {break-after:avoid;} .report-view a {color:#17243a;} .report-view .clinical-timeline {margin-top:12px;} .report-view .clinical-table-scroll {overflow:visible;} .report-view .clinical-table :is(th,td) {min-width:0; max-width:none; padding:6px; overflow-wrap:anywhere;} }

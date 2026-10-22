@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 export function FindingCard({ finding, onOpen, onCompare, patientId }: {
   finding: Finding; patientId?: string; onOpen: (anchor: Anchor) => void; onCompare?: (finding: Finding) => void;
 }) {
-  return <article className={`finding-card ${finding.status === "verified" ? "finding-verified" : "finding-candidate"}`}>
+  return <article className={`finding-card finding-${finding.status}`}>
     <div className="flex flex-wrap gap-2"><StatusBadge status={finding.status} /><span className="text-xs text-muted-foreground">{humanize(finding.claim_kind)} · {finding.support_level} evidence</span></div>
     <h3 className="mt-3 font-semibold">{finding.title}</h3><p className="mt-2 text-sm leading-6">{finding.claim}</p>
     <p className="mt-2 text-xs text-muted-foreground">Verification: {humanize(finding.verification.classification)}</p>
+    <Link className="source-link mt-3 no-print" href={`/investigations/${encodeURIComponent(finding.investigation_id)}/evidence?finding=${encodeURIComponent(finding.id)}`}>Inspect finding evidence</Link>
     <div className="mt-3 flex flex-wrap gap-2">{finding.anchors.map((anchor, index) => <button className="source-link" key={`${anchor.source.id}:${anchor.field}:${index}`} onClick={() => onOpen(anchor)}>{anchor.source.id} · {anchor.relationship}</button>)}</div>
     {patientId && <div className="mt-3 flex flex-wrap gap-2">{[...new Map(finding.anchors.map(anchor => [anchor.source.id,anchor])).values()].map(anchor => <Link className="source-link" key={anchor.source.id} href={hospitalSourceHref(patientId,anchor.source,finding.investigation_id,finding.id)}>Hospital source {anchor.source.id}</Link>)}</div>}
     {onCompare && finding.anchors.length > 1 && <Button variant="outline" className="mt-3" onClick={() => onCompare(finding)}>Compare source records</Button>}

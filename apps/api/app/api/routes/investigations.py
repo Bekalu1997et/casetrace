@@ -9,6 +9,7 @@ from fastapi.responses import StreamingResponse
 
 from app.hospital.errors import HospitalError
 from app.orchestration.store import TERMINAL, InvestigationStore
+from app.schemas.audit import ToolAuditPage
 from app.schemas.investigation import (
     CreateInvestigation,
     CreationResponse,
@@ -65,6 +66,16 @@ async def events(
 ) -> EventPage:
     items = await store_for(request).events(investigation_id, after, limit)
     return EventPage(items=items, total=len(items))
+
+
+@router.get("/{investigation_id}/tools", response_model=ToolAuditPage)
+async def tools(
+    investigation_id: str,
+    request: Request,
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+) -> ToolAuditPage:
+    return await store_for(request).queries.tools(investigation_id, limit, offset)
 
 
 @router.get("/{investigation_id}/findings", response_model=FindingPage)

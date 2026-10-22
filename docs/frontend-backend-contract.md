@@ -1,5 +1,18 @@
 # CASETRACE — Frontend–Backend Contract
 
+## Refactor 09 read-only audit contracts
+
+`GET /api/investigations/{id}/tools?limit=20&offset=0` returns
+`{investigation_id, items, total, limit, offset}` ordered by start time then ID.
+Items expose persisted tool ID, agent execution ID/name/attempt, tool name/status,
+allowlisted scalar arguments, source references, start/completion timestamps,
+duration_ms and error_code. Full result payloads are not retained or returned.
+Unknown argument keys and nested values are omitted. Missing runs use the shared
+404 error. Limits are 1–100; offsets are nonnegative. No execution or schema changes.
+
+Task/lead inspection uses existing ordered persisted events; no private planning
+context is exposed. Source verification remains distinct from clinical validity.
+
 Refactor 06 adds optional nullable `char_start`/`char_end` to anchors (zero-based,
 end-exclusive Unicode offsets into the original field), and optional default-empty
 `alternatives`/`limitations` to hypotheses. Existing anchor fields, endpoint paths,

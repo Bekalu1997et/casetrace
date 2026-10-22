@@ -9,17 +9,18 @@ import { RecordCard } from "@/features/records/components/record-card";
 import { SourceHighlight } from "./source-highlight";
 import { useSource } from "../hooks/use-source";
 import { type SourceSelection } from "../navigation";
-export function SourcePanel({ patientId, source, anchor, anchors }: SourceSelection & { patientId: string }) {
+export function SourcePanel({ patientId, source, anchor, anchors, investigationId, findingId }: SourceSelection & { patientId: string; investigationId?: string; findingId?: string }) {
   const { section, state } = useSource(patientId, source);
   return <section aria-label={`Original source ${source.id}`} className="min-w-0 space-y-3">
     <p className="eyebrow">Original hospital source · {source.type}</p>
     {!state.data && !state.error && <LoadingState>Retrieving source {source.id}…</LoadingState>}
     {state.error && <ErrorState onRetry={state.retry} retryLabel="Retry source">Source unavailable: {state.error}</ErrorState>}
     {state.data && <>
-      <Link className="source-link" href={hospitalSourceHref(patientId, source)}>Open in hospital workspace</Link>
+      <Link className="source-link" href={hospitalSourceHref(patientId, source, investigationId, findingId)}>Open in hospital workspace</Link>
       {section && <RecordLinks patientId={patientId} record={state.data} section={section} />}
       {(anchors ?? (anchor ? [anchor] : [])).map((anchor, index) => <div key={index} className="rounded-lg border border-primary/25 bg-secondary p-4 text-sm space-y-2">
         <p className="font-semibold">Cited field: {anchor.field.replaceAll("_", " ")}</p>
+        <p className="text-xs">Relationship: {anchor.relationship} · Encounter: {anchor.encounter_id ?? "Not recorded"}</p>
         <p className="whitespace-pre-wrap break-words"><SourceHighlight value={state.data?.[anchor.field]} anchor={anchor} /></p>
         {JSON.stringify(state.data?.[anchor.field]) !== JSON.stringify(anchor.expected) && <p role="alert" className="text-destructive">The current field differs from the investigation anchor. This source may have changed; the earlier verification does not verify the current value.</p>}
         {anchor.quote && <blockquote className="border-l-2 border-primary pl-3">Cited excerpt: “{anchor.quote}”</blockquote>}

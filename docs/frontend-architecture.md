@@ -14,6 +14,28 @@ No new library, backend endpoint or clinical screen is required.
 
 # CASETRACE
 
+## Refactor 09 investigation composition
+
+`/investigations` uses the existing paginated history API; `/investigations/new`
+selects imported patients and reuses the patient-chart idempotent launch control.
+The workbench retains `useInvestigation` as its single REST/SSE owner. Workflow
+and recent activity derive from committed events; repeated agent executions are
+displayed separately from role summaries. Task/lead inspection shows safe event
+fields and links follow-up outcomes through persisted task IDs.
+
+`lib/api/tool-audit.ts` validates the additive paginated `/tools` read model.
+ToolInspector owns a cancellable, version-scoped read only while the activity
+view is mounted. It displays retained audit metadata, never reconstructed results.
+ClinicalContext reads the existing inventory summary without loading the chart.
+
+`/investigations/[id]/evidence` owns finding/relationship selection and reuses
+SourcePanel, source grouping and exact Unicode highlights. It reconstructs anchors
+from persisted finding membership; identifier-only comparison parameters restore
+multiple source selections after refresh. Hospital-source return links include
+workbench, explorer and report. Reports consolidate a unique type+ID source index.
+No query library, new execution engine, clinical conclusions or runtime fixtures
+were introduced. See [implementation and acceptance gaps](refactoring/13-investigation-workspace-refactor-report.md).
+
 For the audited implementation and retained product gaps, see the
 [Refactor 01 matrix](refactoring/02-specification-gap-matrix.md) and
 [contract compatibility decisions](refactoring/04-contract-compatibility.md).

@@ -11,6 +11,7 @@ import { AgentActivity } from "@/features/investigations/components/agent-activi
 import { Hypotheses } from "@/features/investigations/components/hypotheses";
 import { investigationsApi } from "@/lib/api/investigations";
 import { hospitalApi, resolveImagingAsset } from "@/lib/api/hospital";
+import { catalogApi } from "@/lib/api/catalog";
 import { mergeEvents, readInvestigationStream } from "@/lib/sse/investigation-stream";
 import type { Anchor, Finding, Investigation, InvestigationEvent, TimelineEvent } from "@/types/investigation";
 
@@ -130,6 +131,7 @@ it("displays safe tool metadata without rendering arbitrary event payloads", () 
 });
 
 it("reconciles after disconnect and stops reconnecting when REST reports terminal state", async () => {
+  vi.spyOn(catalogApi, "summary").mockResolvedValue({ patient_id: state.patient_id, encounter_count: 0, document_count: 0, observation_count: 0, medication_count: 0, imaging_study_count: 0, latest_encounter_at: null });
   const get = vi.spyOn(investigationsApi, "get").mockResolvedValueOnce({ ...state, status: "running" }).mockResolvedValueOnce({ ...state, status: "running" }).mockResolvedValue(state);
   vi.spyOn(investigationsApi, "findings").mockResolvedValue({ items: [], total: 0 });
   vi.spyOn(investigationsApi, "events").mockResolvedValue({ items: [], total: 0 });
