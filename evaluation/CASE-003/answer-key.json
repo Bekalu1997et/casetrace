@@ -1,0 +1,85 @@
+{
+  "case_id": "CASE-003",
+  "dataset_version": "1.0",
+  "synthetic_label": "SYNTHETIC - NOT FOR CLINICAL USE",
+  "expected_findings": [
+    {
+      "finding_key": "pathology-follow-up-gap",
+      "type": "abnormal_pathology_follow_up_gap",
+      "required_source_ids": [
+        "DOC-003-05",
+        "DOC-003-07",
+        "DOC-003-08",
+        "DOC-003-09",
+        "DOC-003-10",
+        "DOC-003-14"
+      ],
+      "expected_claim": "The gastric biopsy was finalized with an abnormal finding requiring follow-up, while routing/closure records do not establish patient discussion or timely completed follow-up.",
+      "acceptable_outcomes": [
+        "verified",
+        "unresolved"
+      ],
+      "alternatives_to_check": [
+        "result_delivered_but_not_acknowledged",
+        "administrative_closure_not_clinical_follow_up"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-003-07",
+          "field": "text_content",
+          "quote": "Final diagnosis: gastric intestinal metaplasia"
+        },
+        {
+          "source_id": "DOC-003-09",
+          "field": "text_content",
+          "quote": "marked reviewed/closed in the administrative queue"
+        },
+        {
+          "source_id": "DOC-003-14",
+          "field": "text_content",
+          "quote": "The record cannot establish when the patient first learned"
+        }
+      ],
+      "counterevidence": "Routing and administrative closure show workflow activity but do not prove that communication did not occur."
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "claim": "Clinician negligence or malpractice",
+      "source_ids": [
+        "DOC-003-08",
+        "DOC-003-09"
+      ],
+      "reason": "The record cannot establish whether an undocumented review or communication occurred."
+    }
+  ],
+  "evaluation_criteria": [
+    "Identify the abnormal pathology and final date.",
+    "Separate routing, acknowledgment, patient discussion, and completed follow-up.",
+    "Preserve uncertainty and avoid malpractice claims."
+  ],
+  "acceptable_uncertainty": [
+    "Patient communication is not established.",
+    "Administrative closure is not proof of clinical follow-up."
+  ],
+  "source_checksums": {
+    "DOC-003-01": "acfb3239dac150eb75f20fe88e960ec358fe9c4ed597c71fec92a5a35eed84c0",
+    "DOC-003-02": "62fb102a5804a27b237c6eb730e9b235825a09a24c6022aae9be7ab411333cc1",
+    "DOC-003-03": "599caa497f238720e4c1fc5ff4780e9bf91ee51e6c2effff6e2d4d64bbca35f2",
+    "DOC-003-04": "dd68ec9296c89715a34ba30e072bdd6b7172975ad6c7e9b9fd2607a32d17413c",
+    "DOC-003-05": "194659ebed3959af43341384de4e825bade1e555d68c38b2b1de1f6b72f4c606",
+    "DOC-003-06": "eed10f7ebcb01b57e2672b1608823d2d5c36c0184fefa072d2468ca6888e610b",
+    "DOC-003-07": "af629a39d0f56fe06cee192d0ad726a157d07c360dcc637b3b5a356ffb8fb2d3",
+    "DOC-003-08": "55dbdeb3cfd582bc26ab765cfc3295dd1ed08507df3fcf98c295f621289baf69",
+    "DOC-003-09": "232b88493eaf68d85db7640592d8d5dd5465b94eb168a845d1d1426b1db8fb12",
+    "DOC-003-10": "22d792b128d8798af9003c73ca285a2b8a58d4c4d0e45c13c775194037543bc3",
+    "DOC-003-11": "fde8f735042f52e66e15624dbd13a0658f3402b3ab552d5fd3a2d4a21d65d0d2",
+    "DOC-003-12": "0a3e2b9980699542ebf02343eab3718806ad0bb15d35a7516eb5ce4d4c46f535",
+    "DOC-003-13": "d71906e70b6bb2fcca89f454ca4fc8322e29989506912eb3a17c52bda5bb035c",
+    "DOC-003-14": "3fdedf4de289894f8c3ab52fa6171073139ac518715e29c46b4c4bab4f686b12",
+    "DOC-003-15": "704b9f8f85e9028624cfb778562aa15335af6d5b69eeca3b6a94452648a50ded",
+    "DOC-003-16": "7d21e94110d615fe5adc91d616e9fb4e936809cdef6efe20644d4ac48fa4ebf3",
+    "DOC-003-17": "991231b6b29a2a83fc2f4b1d488c40f44dd450b4e5b3fc46c79d11b949bb8ed1",
+    "DOC-003-18": "119fb05c1590382c82da92c532df5cbb1607ec1194b8adf57050fe0c7bfddd6c"
+  }
+}
