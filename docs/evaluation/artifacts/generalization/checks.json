@@ -1,0 +1,13 @@
+{
+  "ruff": {"status": "passed", "working_directory": "apps/api", "command": "uv run --locked ruff check app tests ../../scripts/audit_investigations.py"},
+  "format": {"status": "passed", "files": 109, "command": "uv run --locked ruff format --check app tests ../../scripts/audit_investigations.py"},
+  "mypy": {"status": "passed", "source_files": 94},
+  "backend_full": {"passed": 294, "skipped": 1, "failed": 0, "seconds": 254.8, "note": "Final cap-propagation test was added after collection and passed in targeted checks."},
+  "backend_final_targeted": {"passed": 17, "failed": 0, "scope": "series, frozen cohort audit, persisted audit event/redaction"},
+  "case001_regression": {"passed": 2, "failed": 0, "reasoning_modes": ["legacy", "structured"]},
+  "frontend": {"passed": 84, "test_files": 9, "failed": 0},
+  "frozen_inputs": {"files": 138, "unchanged": true},
+  "migrations": {"status": "passed", "scope": "fresh isolated cohort replay and backend migration tests"},
+  "skip_reason": "Windows symlink creation denied without Developer Mode or symlink privilege.",
+  "external_provider": {"status": "unavailable", "error": "MODEL_HTTP_404", "fallback": false}
+}

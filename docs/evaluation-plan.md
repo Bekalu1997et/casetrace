@@ -174,3 +174,15 @@ answer key and canonical sources remain unchanged. System replay now accepts
 [Refactor 06](refactoring/10-clinical-reasoning-refactor-report.md).
 
 `scripts/evaluate_system.py` runs the migrated/imported CASE-001 application through real FastAPI APIs with isolated SQLite state, freezes reports before offline scoring, and independently checks source anchors and timeline projections. Exact/partial discovery formulas, commands and limitations are documented in [Phase 5 operations](phase-5-development.md). [Measured release results](phase-5-report.md) supersede illustrative metrics above; clinical support and calibration remain pending expert review.
+
+## Six-case development audit
+
+Run `uv run --project apps/api --locked python scripts/audit_investigations.py
+--output docs/evaluation/artifacts/generalization --phase before` before engine
+changes, then the same command with `--phase after`. Each phase refuses an
+existing output; a new audit needs a new directory. Frozen hashes include the
+scorer, answer keys and clinical assets. Post-run scoring uses the unchanged
+CASE-001-oriented scorer, whose discovery grade requires timeline contradictions
+and does not provide separate primary/secondary semantic adjudication.
+Source coverage and independently reverified findings are reported separately.
+These are development-cohort results, not held-out clinical validation.

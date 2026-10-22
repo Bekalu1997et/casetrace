@@ -16,7 +16,12 @@ seed behavior.
 ## Integrity and isolation
 
 - Every case has a case-scoped patient and source-ID namespace.
-- Runtime imports contain clinical records only; answer keys remain under
+- Runtime imports contain allowlisted clinical records only; answer keys remain under
+  `evaluation/CASE-003/answer-key.json` through `evaluation/CASE-006/answer-key.json`.
+  `hospital/validation.py` strips editor/evaluator sections before typed clinical
+  import; tools resolve only imported patient-scoped sources. Docker excludes
+  canonical cases and evaluation directories. Local filesystem permissions are
+  not an OS sandbox; no stronger isolation is claimed.
 - Deterministic replay completed for all four cases. Discovery failed for each
   current baseline because the engine did not consolidate the expected
   cross-record finding; no answer key or prompt was changed to force success.
@@ -39,3 +44,14 @@ did not consolidate any expected primary discovery. The cases are dataset
 ready, and the failed discovery outcomes are preserved as useful baselines.
 The synthetic records have received deterministic consistency validation only
 and have not received independent medical-expert review.
+
+## Post-improvement development evaluation
+
+| Case | Before coverage | After coverage | Frozen discovery grade |
+| --- | --- | --- | --- |
+| CASE-003 | 1/6 | 1/6 | failure |
+| CASE-004 | 1/3 | 1/3 | failure |
+| CASE-005 | 1/3 | 1/3 | failure |
+| CASE-006 | 1/3 | 3/3 | failure |
+
+All canonical, manifest, asset, answer-key and scorer hashes remained unchanged. Full coverage for CASE-006 does not establish semantic discovery. See [improvement report](../evaluation/CASE-002-to-006-investigation-improvement-report.md). CASE-007–010 remain untouched and unevaluated.
