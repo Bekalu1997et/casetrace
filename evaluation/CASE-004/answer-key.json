@@ -1,0 +1,70 @@
+{
+  "case_id": "CASE-004",
+  "dataset_version": "1.0",
+  "synthetic_label": "SYNTHETIC - NOT FOR CLINICAL USE",
+  "expected_findings": [
+    {
+      "finding_key": "case-004-primary",
+      "type": "paroxysmal_palpitations",
+      "required_source_ids": [
+        "DOC-004-05",
+        "DOC-004-08",
+        "DOC-004-10"
+      ],
+      "expected_claim": "Records across encounters show documented rhythm abnormality; objective evidence supports further investigation while preserving uncertainty.",
+      "acceptable_outcomes": [
+        "verified",
+        "unresolved"
+      ],
+      "alternatives_to_check": [
+        "documentation_delay",
+        "alternative_explanation"
+      ],
+      "anchors": [
+        {
+          "source_id": "DOC-004-05",
+          "field": "text_content",
+          "quote": "Objective testing"
+        }
+      ],
+      "counterevidence": "The record does not establish a definitive alternative diagnosis or causal attribution."
+    }
+  ],
+  "expected_non_findings": [
+    {
+      "claim": "Definitive causal diagnosis",
+      "source_ids": [
+        "DOC-004-08"
+      ],
+      "reason": "The records support an unresolved question rather than a definitive diagnosis."
+    }
+  ],
+  "evaluation_criteria": [
+    "Retrieve records across encounters.",
+    "Compare objective evidence with the working explanation.",
+    "Preserve uncertainty and cite source IDs."
+  ],
+  "acceptable_uncertainty": [
+    "Actual exposure or diagnosis may remain unresolved."
+  ],
+  "source_checksums": {
+    "DOC-004-01": "359c04b00c603c44eecb0fa9eba22727c61bf406b533c7e7a7fef2f4277e65ca",
+    "DOC-004-02": "ce5cdb25c3cf54c034aab4af8990c70934bf610af76314c12226d3d8aa11792a",
+    "DOC-004-03": "b03bd1c0eb2e383ba2e8cd109cf67375d391c0035996aa09e6ab86afa46ccbd5",
+    "DOC-004-04": "e981fe93c29efbcf0be5b6e017c00d7c65363834777399c88144d27bab39d353",
+    "DOC-004-05": "90a4fd16fbafbc83b3823353076c3808c20816e0af037a544378952deeed516c",
+    "DOC-004-06": "c1e702c49372fea91389d2f473f9ce2aa879b98adf91f11d287b809b9b2347bc",
+    "DOC-004-07": "d0823ceed9ecd5183409da53915d109443e6e3b8bdc3850c340a452ef85cd553",
+    "DOC-004-08": "01cd0bc0f93387c88dde850b2d3dbd9908ba5f119d25d369f270553fee0cc027",
+    "DOC-004-09": "483c97cc5dd23e69022410a344b9962750fb1bce3d1ded8c6233a7d028c2a542",
+    "DOC-004-10": "9d08e462c7750be4996ad81acd20e54a222954163c4dddd222e7c4f48c874709",
+    "DOC-004-11": "e8c68e6a9ef03498676e559f6fb47da373a112c36d796e78b46960311f2688ba",
+    "DOC-004-12": "367b8ab7cf7344afc9b68866fbaed22a61eebbf0b5f96588600e5ce452a9379d",
+    "DOC-004-13": "f668a5e54c5c4bb26395b124334927bb360f352b7c660f6c0885715a02c802b2",
+    "DOC-004-14": "3f24c5b0da51078dc13202210fb98e728ba272ed8b0a34b377a37688986ac5c8",
+    "DOC-004-15": "feee54b4c2ce3e183855f99500ceee3c620bb332f7bcc701392f176b8939e4d7",
+    "DOC-004-16": "dbbf4082c9c1f7bbe08d0cd4e2975cdd30a6b9298bff4658f212248407b986f6",
+    "DOC-004-17": "1a888e611a012ecec35ac252ab59aa17ac2cacc5f930354a153ae77df7a68347",
+    "DOC-004-18": "36d138b7bdc0df3e9837e7ce01c6d954acf244ee9e3926816d1514d49a4e57f2"
+  }
+}
