@@ -1,16 +1,17 @@
 "use client";
 import Link from "next/link";
 import { LoadingState, EmptyState, ErrorState } from "@/components/shared/resource-state";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useResource } from "@/lib/api/use-resource";
 import { hospitalApi } from "@/lib/api/hospital";
 
-export function PatientDirectory({ embedded = false }: { embedded?: boolean }) {
+export function PatientDirectory({ embedded = false, onTotal }: { embedded?: boolean; onTotal?: (total: number | undefined) => void }) {
   const [offset, setOffset] = useState(0);
   const [query, setQuery] = useState("");
   const load = useCallback((signal: AbortSignal) => hospitalApi.patients(offset, signal, query), [offset, query]);
   const state = useResource(`patients:${offset}:${query}`, load);
+  useEffect(() => { if (!query) onTotal?.(state.data?.pagination.total); }, [query, state.data, onTotal]);
   const Heading = embedded ? "h2" : "h1";
   return <section className="space-y-5" aria-labelledby="directory-title">
     <div><p className="eyebrow">Hospital records</p><Heading id="directory-title">Synthetic patient directory</Heading>

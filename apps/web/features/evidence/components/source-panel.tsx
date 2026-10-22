@@ -1,4 +1,7 @@
 "use client";
+import Link from "next/link";
+import { hospitalSourceHref } from "@/features/records/navigation";
+import { RecordLinks } from "@/features/records/components/record-links";
 import { LoadingState, ErrorState } from "@/components/shared/resource-state";
 import { DocumentAsset } from "@/features/documents/components/document-asset";
 import { RecordCard } from "@/features/records/components/record-card";
@@ -13,6 +16,8 @@ export function SourcePanel({ patientId, source, anchor, anchors }: SourceSelect
     {!state.data && !state.error && <LoadingState>Retrieving source {source.id}…</LoadingState>}
     {state.error && <ErrorState onRetry={state.retry} retryLabel="Retry source">Source unavailable: {state.error}</ErrorState>}
     {state.data && <>
+      <Link className="source-link" href={hospitalSourceHref(patientId, source)}>Open in hospital workspace</Link>
+      {section && <RecordLinks patientId={patientId} record={state.data} section={section} />}
       {(anchors ?? (anchor ? [anchor] : [])).map((anchor, index) => <div key={index} className="rounded-lg border border-primary/25 bg-secondary p-4 text-sm space-y-2">
         <p className="font-semibold">Cited field: {anchor.field.replaceAll("_", " ")}</p>
         <p className="whitespace-pre-wrap break-words"><SourceHighlight value={state.data?.[anchor.field]} anchor={anchor} /></p>

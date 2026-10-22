@@ -1,25 +1,18 @@
+"use client";
+import {useState} from "react";
 import Link from "next/link";
 import { ApiStatus } from "@/components/system/api-status";
 import { PatientDirectory } from "@/features/patients/components/patient-directory";
-
+import { useOverview } from "../hooks/use-overview";
+import { LoadingState, ErrorState } from "@/components/shared/resource-state";
+import { CaseCard } from "@/features/cases/components/case-library";
+import { InvestigationHistory } from "@/features/investigations/components/history";
 export function Overview() {
-  return <div className="space-y-7">
-    <div><p className="eyebrow">Evidence starts at the source</p><h1>Clinical investigation workspace</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">Connect records across time. Investigate discrepancies. Trace every finding to its evidence.</p>
-    </div>
-    <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-      <section className="rounded-lg border border-border bg-card p-6 shadow-sm" aria-labelledby="foundation-title">
-        <p className="eyebrow">Hospital overview</p><h2 id="foundation-title">A workspace built around evidence</h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">Browse imported synthetic clinical records, start an investigation, and examine source-backed findings.</p>
-        <div className="mt-6 border-t border-border pt-5"><p className="text-sm font-medium">Hospital record browser available</p>
-          <p className="mt-1 text-sm text-muted-foreground">This overview checks API connectivity. The patient directory shows actual imported records.</p><Link href="/patients" className="mt-3 inline-block text-sm text-teal underline">Browse patient records</Link></div>
-      </section>
-      <ApiStatus />
-    </div>
-    <section className="rounded-lg border border-border bg-secondary/50 p-6" aria-labelledby="purpose-title">
-      <h2 id="purpose-title">Designed for traceable investigation</h2>
-      <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">CASETRACE retrieves source records, reconstructs chronology, and verifies proposed findings against original evidence. This prototype uses synthetic data and is not for clinical decisions.</p>
-    </section>
-    <PatientDirectory embedded />
-  </div>;
+ const state = useOverview();
+ const [patientTotal,setPatientTotal]=useState<number>();
+ return <div className="space-y-7"><header className="flex flex-wrap justify-between gap-4"><div><p className="eyebrow">Clinical investigation workspace</p><h1>Hospital Overview</h1><p className="mt-3 text-sm text-muted-foreground">Explore the synthetic clinical archive. Follow original records into an evidence-backed investigation.</p></div><div className="flex items-center gap-3"><Link className="action-link" href="/patients">Start Investigation</Link><Link className="source-link" href="/cases">Browse Cases</Link></div></header>
+ {!state.data && !state.error && <LoadingState>Loading hospital inventory...</LoadingState>}{state.error && <ErrorState onRetry={state.retry}>{state.error}</ErrorState>}
+ {state.data && <><dl className="hospital-metrics">{Object.entries({"Available cases":state.data.cases.pagination.total,"Imported patients":patientTotal??"Unavailable","Active investigations":state.data.active,"Completed investigations":state.data.completed,...(!state.data.cases.pagination.has_more ? {"Available-case encounters":state.data.cases.data.reduce((n,c)=>n+(c.counts.encounters??0),0),"Available-case documents":state.data.cases.data.reduce((n,c)=>n+(c.counts.documents??0),0)} : {})}).map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>{state.data.cases.data[0] && <CaseCard item={state.data.cases.data[0]} />}</>}
+ <div className="grid gap-6 xl:grid-cols-2"><InvestigationHistory /><ApiStatus /></div>
+ <section className="hospital-card"><h2>Investigation workflow</h2><div className="mt-5 grid gap-5 md:grid-cols-3">{[["01 / Retrieve","Discover source records"],["02 / Investigate","Connect clinical evidence across time"],["03 / Verify","Check findings against original records"]].map(([title,text])=><div key={title}><p className="eyebrow">{title}</p><p className="text-sm">{text}</p></div>)}</div></section><PatientDirectory embedded onTotal={setPatientTotal} /></div>;
 }

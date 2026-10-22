@@ -1,0 +1,2 @@
+import {HospitalSource} from "@/features/evidence/components/hospital-source";
+export default async function Page({params,searchParams}:{params:Promise<{patientId:string}>;searchParams:Promise<Record<string,string|undefined>>}) {const {patientId}=await params;const query=await searchParams;return <HospitalSource patientId={patientId} source={{type:query.source_type??"",id:query.source??""}} investigation={query.investigation} finding={query.finding}/>;}

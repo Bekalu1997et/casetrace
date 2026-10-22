@@ -70,3 +70,28 @@ a:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
   .app-shell { display: grid; grid-template-columns: 232px minmax(0,1fr); }
 }
 @media print { .app-shell { display: block; } }
+
+/* Hospital records: prototype density with readable source values. */
+.hospital-card { border:1px solid var(--border); border-radius:12px; background:white; padding:22px; min-width:0; overflow-wrap:anywhere; }
+.hospital-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+.hospital-metrics>div { background:white; border:1px solid var(--border); border-radius:10px; padding:18px; }
+.hospital-metrics dt { color:var(--muted-foreground); font-size:12px; text-transform:capitalize; }
+.hospital-metrics dd { font-size:27px; font-weight:650; margin-top:10px; overflow-wrap:anywhere; }
+.hospital-filters { display:flex; align-items:end; flex-wrap:wrap; gap:14px; font-size:12px; padding-bottom:16px; }
+.hospital-filters label { max-width:100%; }
+.clinical-tabs { display:flex; gap:4px; overflow:auto; border-bottom:1px solid var(--border); }
+.clinical-tabs a { padding:12px 16px; white-space:nowrap; color:var(--muted-foreground); border-bottom:2px solid transparent; font-size:13px; }
+.clinical-tabs a[aria-current] { border-color:var(--teal); color:var(--teal); font-weight:650; }
+.clinical-table-scroll { max-width:100%; overflow:auto; }
+.clinical-table { width:100%; border-collapse:collapse; text-align:left; font-size:12px; }
+.clinical-table th { background:#f7f9fc; color:var(--muted-foreground); font-weight:600; text-transform:capitalize; }
+.clinical-table :is(th,td) { padding:13px 15px; border-bottom:1px solid var(--border); vertical-align:top; min-width:110px; max-width:330px; overflow-wrap:anywhere; }
+.clinical-table tbody tr:hover { background:#f9fcfc; }
+button:disabled { opacity:.5; cursor:not-allowed; }
+.document-workspace { display:grid; grid-template-columns:minmax(0,1fr); gap:20px; }
+@media(min-width:1280px) { .document-workspace {grid-template-columns:180px minmax(0,1fr) 230px;} }
+@media(max-width:640px) { .hospital-card {padding:15px;} .hospital-metrics {grid-template-columns:repeat(2,minmax(0,1fr));} }
+
+.clinical-table td:first-child {min-width:210px;}
+
+.document-workspace {align-items:start;}

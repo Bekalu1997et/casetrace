@@ -1,5 +1,2 @@
-import { PatientRecord } from "@/features/patients/components/patient-record";
-export default async function PatientPage({ params }: { params: Promise<{ patientId: string }> }) {
-  const { patientId } = await params;
-  return <PatientRecord key={patientId} patientId={patientId} />;
-}
+import {ChartOverview} from "@/features/patients/components/chart-overview";
+export default async function Page({params}:{params:Promise<{patientId:string}>}) {const {patientId}=await params;return <ChartOverview patientId={patientId}/>;}

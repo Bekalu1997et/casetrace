@@ -11,14 +11,14 @@ afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); vi.restoreAllMocks(
 describe("foundation", () => {
   it("renders identity, empty records and real connection result", async () => {
     vi.stubEnv("NEXT_PUBLIC_API_URL", "http://localhost:8000");
-    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify(healthy)));
+    const fetchMock = vi.fn().mockImplementation(() => Promise.resolve(new Response(JSON.stringify(healthy))));
     vi.stubGlobal("fetch", fetchMock);
     render(<AppShell><Home /></AppShell>);
-    expect(screen.getByRole("heading", { name: "Clinical investigation workspace" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Hospital Overview" })).toBeVisible();
     expect(screen.getByText("SYNTHETIC DEMO — NOT FOR CLINICAL USE")).toBeVisible();
-    expect(screen.getByText("Hospital record browser available")).toBeVisible();
+    expect(screen.getByRole("link", {name: "Browse Cases"})).toHaveAttribute("href", "/cases");
     expect(await screen.findByText("API connected")).toBeVisible();
-    expect(fetchMock.mock.calls[0][0]).toBe("http://localhost:8000/api/health");
+    expect(fetchMock.mock.calls.some(call => call[0] === "http://localhost:8000/api/health")).toBe(true);
   });
 
   it("shows failure and supports a successful retry", async () => {

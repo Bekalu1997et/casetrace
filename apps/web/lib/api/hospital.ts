@@ -1,8 +1,9 @@
+import { validateTime } from "@/lib/validation/time";
 import { ApiRequestError, request, fetchApi } from "@/lib/api/client";
-import type { ClinicalRecord, Collection, Patient, RecordSection } from "@/types/hospital";
+import type { ClinicalRecord, Collection, Patient, RecordSection, HospitalRecords } from "@/types/hospital";
 
 const prefix = "/api/hospital/v1";
-function object(value: unknown): Record<string, unknown> {
+export function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new ApiRequestError("Invalid hospital response.", "INVALID_RESPONSE");
   return value as Record<string, unknown>;
 }
@@ -13,6 +14,7 @@ function stringFields(value: unknown, fields: string[]) {
 }
 export function parsePatient(value: unknown): Patient {
   const record = stringFields(value, ["id", "case_id", "synthetic_identifier", "display_name", "date_of_birth", "sex", "created_at"]);
+  validateTime(record.date_of_birth,true); validateTime(record.created_at);
   return record as unknown as Patient;
 }
 export function parseCollection<T>(value: unknown, parseItem: (item: unknown) => T): Collection<T> {
@@ -33,14 +35,25 @@ const required: Record<RecordSection, string[]> = {
   "clinical-events": ["id", "patient_id", "event_type", "description"], referrals: ["id", "patient_id", "referring_department", "referred_department", "reason", "status"],
   timeline: ["id", "patient_id", "event_type", "timestamp", "timestamp_type", "title"],
 };
-function parseRecord(section: RecordSection, value: unknown): ClinicalRecord {
+export function parseRecord<S extends RecordSection>(section: S, value: unknown): HospitalRecords[S] {
   const record = stringFields(value, required[section]);
   if (section === "observations" && record.value_numeric !== null && typeof record.value_numeric !== "number") throw new ApiRequestError("Invalid laboratory value.", "INVALID_RESPONSE");
   if (section === "documents" && typeof record.has_asset !== "boolean") throw new ApiRequestError("Invalid document asset state.", "INVALID_RESPONSE");
-  return record as ClinicalRecord;
+  if (section === "observations" && !["ordered","preliminary","final","corrected","cancelled"].includes(String(record.status))) throw new ApiRequestError("Invalid observation status.","INVALID_RESPONSE");
+  if (section === "medications" && !["ordered","active","discontinued","held","completed","unknown"].includes(String(record.status))) throw new ApiRequestError("Invalid medication status.","INVALID_RESPONSE");
+  for (const [key,value] of Object.entries(record)) {
+    if (key.endsWith("_id") && value != null && typeof value!=="string") throw new ApiRequestError("Invalid clinical source reference.","INVALID_RESPONSE");
+    if (key.endsWith("_at") && value != null) validateTime(value, ["start_at","end_at","diagnosed_at","onset_at"].includes(key));
+    if (["value_numeric","reference_range_low","reference_range_high","dose"].includes(key) && value != null && (typeof value !== "number" || !Number.isFinite(value))) throw new ApiRequestError("Invalid clinical numeric value.","INVALID_RESPONSE");
+  }
+  if (section === "timeline") {
+    const source=object(record.source_ref);
+    if(typeof source.id!=="string" || typeof source.type!=="string") throw new ApiRequestError("Invalid timeline source.","INVALID_RESPONSE");
+  }
+  return record as unknown as HospitalRecords[S];
 }
 export const hospitalApi = {
-  source: (patientId: string, section: RecordSection, id: string, signal?: AbortSignal) => {
+  source: <S extends RecordSection>(patientId: string, section: S, id: string, signal?: AbortSignal) => {
     if (section === "timeline") throw new ApiRequestError("Timeline entries are not original sources.", "INVALID_SOURCE");
     return request(`${prefix}/${section}/${encodeURIComponent(id)}`, value => {
       const record = parseRecord(section, object(value).data);
@@ -55,16 +68,17 @@ export const hospitalApi = {
     if (patient.id !== id) throw new ApiRequestError("Patient identity does not match the request.", "SOURCE_SCOPE_MISMATCH");
     return patient;
   }, signal),
-  records: (id: string, section: RecordSection, offset = 0, signal?: AbortSignal) => request(`${prefix}/patients/${encodeURIComponent(id)}/${section}?offset=${offset}`, value => parseCollection(value, item => {
+  records: <S extends RecordSection>(id: string, section: S, offset = 0, signal?: AbortSignal, filters: Record<string, string> = {}) => request(`${prefix}/patients/${encodeURIComponent(id)}/${section}?${new URLSearchParams({ ...filters, offset: String(offset) })}`, value => parseCollection(value, item => {
     const record = parseRecord(section, item);
     if (record.patient_id !== id) throw new ApiRequestError("Record does not belong to this patient.", "SOURCE_SCOPE_MISMATCH");
     return record;
   }), signal),
   imagingAssets: (id: string, signal?: AbortSignal, offset = 0) => request(`${prefix}/imaging-studies/${encodeURIComponent(id)}/assets?offset=${offset}`, value => parseCollection(value, item => stringFields(item, ["id", "imaging_study_id", "asset_type", "mime_type"]) as { id: string; imaging_study_id: string; asset_type: string; mime_type: string }), signal),
-  documentAsset: async (id: string, signal?: AbortSignal, imaging = false): Promise<string> => {
+  documentAsset: async (id: string, signal?: AbortSignal, imaging = false, expectedMime?: string): Promise<string> => {
     const response = await fetchApi(`${prefix}/${imaging ? "imaging-assets" : "documents"}/${encodeURIComponent(id)}/${imaging ? "content" : "asset"}`, signal);
     if (!response.ok) throw new ApiRequestError("Document asset is unavailable.", "ASSET_UNAVAILABLE", response.status);
     const mime = response.headers.get("content-type")?.split(";")[0];
+    if (expectedMime && mime !== expectedMime) throw new ApiRequestError("Original asset media type does not match its clinical record.", "INVALID_ASSET_TYPE");
     if (!["application/pdf", "image/png", "image/jpeg", "text/plain", "text/html"].includes(mime ?? "")) throw new ApiRequestError("This document is available as a download only.", "UNSUPPORTED_PREVIEW");
     return URL.createObjectURL(await response.blob());
   },
