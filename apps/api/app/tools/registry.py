@@ -232,4 +232,15 @@ class ToolRegistry:
         await self.store.tool_end(
             self.public_id, call_id, [ref.model_dump() for ref in result.source_refs]
         )
+        await self.store.record(
+            self.public_id,
+            "tool.page",
+            {
+                "tool_execution_id": str(call_id),
+                "record_count": len(result.records),
+                "total": result.total,
+                "has_more": result.has_more,
+                "representations": sorted({r.representation for r in result.records}),
+            },
+        )
         return result

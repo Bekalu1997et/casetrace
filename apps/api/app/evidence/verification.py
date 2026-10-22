@@ -4,6 +4,7 @@ from app.clinical.laboratory import analyte_key, range_description
 from app.clinical.ports import SourceResolver
 from app.clinical.reasoning import structured_contradictions
 from app.clinical.rules import contradictions, instant, onset_pair
+from app.clinical.series import record_series
 from app.evidence.provenance import anchor_matches
 from app.hospital.errors import HospitalError
 from app.schemas.investigation import Candidate, Check, SourceRecord, Verification
@@ -61,7 +62,24 @@ class EvidenceVerifier:
         valid = False
         claim = candidate.claim
         classification = "INSUFFICIENT_EVIDENCE"
-        if (
+        if candidate.rule == "record_series" and candidate.claim_kind == "observation":
+            # Rebuild the proposition from independently resolved originals. Never
+            # promote arbitrary candidate prose just because its citations exist.
+            supplied = [a.model_dump() for a in candidate.anchors]
+            matched_series = next(
+                (
+                    c
+                    for c in record_series(rows)
+                    if c.type == candidate.type
+                    and len(c.anchors) == len(supplied)
+                    and all(a.model_dump() in supplied for a in c.anchors)
+                ),
+                None,
+            )
+            valid = matched_series is not None
+            if matched_series:
+                claim = matched_series.claim
+        elif (
             candidate.rule == "field_observation"
             and candidate.claim_kind == "observation"
             and candidate.type in {"medication_change", "clinical_relationship"}

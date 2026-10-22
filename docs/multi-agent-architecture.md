@@ -3050,3 +3050,15 @@ Auditable Investigation Report
 **The frontend reveals the process.**
 
 That is the foundation of CASETRACE's multi-agent intelligence.
+
+## Generalization audit: bounded serial review
+
+Baseline specialists now preserve bounded laboratory series with repeated
+source-range abnormalities and group differing medication orders by explicit
+identity. The laboratory specialist follows only source-document links from
+eligible repeated-abnormality groups. No evaluation key, case identifier,
+disease-specific threshold, or provider inference selects these groups.
+This does not implement pathology workflow reconciliation or diagnostic
+hypothesis adjudication. Adaptive task planning is unchanged; shared specialists
+use the same longitudinal observation generator. See the investigation
+failure analysis and improvement report under docs/evaluation/.

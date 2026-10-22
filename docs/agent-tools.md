@@ -2325,3 +2325,12 @@ Therefore:
 **Evidence proves findings.**
 
 No layer should silently take over another layer's responsibility.
+
+## Generalization audit observability
+
+The existing tool audit emits an additional `tool.page` event after a successful
+result, carrying tool_execution_id, record_count, total, has_more and source
+representation kinds. It carries no note text or raw search string. Existing
+tool.completed source references and sanitized tool-audit arguments remain.
+Finding proposals also record source_refs, rule and candidate_type, without
+claim text. These are observable evidence handoffs, not private reasoning.

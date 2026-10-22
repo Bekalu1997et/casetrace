@@ -137,6 +137,7 @@ class Candidate(ClinicalModel):
     rule: Literal[
         "field_observation",
         "lab_change",
+        "record_series",
         "review_before_result",
         "onset_conflict",
         "interpretation",

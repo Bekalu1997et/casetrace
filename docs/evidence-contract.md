@@ -63,3 +63,19 @@ metadata remain outside runtime DB/assets. Deployment must exclude raw cases and
 evaluation directories, as in the existing Docker configuration. Local process
 file permissions are an operator responsibility: API omission alone is not OS
 isolation. Future agents may only use approved tools over hospital services.
+
+## Longitudinal observation verification (generalization audit)
+
+`record_series` is an additive candidate rule using existing medication_change
+and laboratory_change types. It compares source-specific recorded reference
+bounds across compatible analytes and differing medication order snapshots
+across encounters. Laboratory batches contain up to three measurements;
+medication batches contain up to four orders, with one overlapping record.
+The existing twenty-anchor limit and execution budgets remain unchanged.
+Only original source representations may contribute evidence. Relevant linked
+source documents are retrieved through the laboratory/medication tool scopes.
+The independent verifier regenerates the proposition from resolved records and
+requires the complete generated anchor set. Candidate prose is replaced with
+the canonical observation. Different medication states are not automatically
+contradictions; repeated source-range abnormalities are not diagnoses.
+Free-form follow-up, causal and diagnostic interpretations stay inconclusive.

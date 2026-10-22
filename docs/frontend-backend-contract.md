@@ -2793,3 +2793,11 @@ maintenance-only; a public case-library metadata contract remains deferred.
 Hospital routes add `/cases`, `/cases/[caseId]`, patient timeline/encounters/labs/medications/documents/imaging subroutes, encounter detail, document detail and patient-scoped source inspection. Existing URLs and source/source_type query keys remain supported. Patient layout shares identity/summary reads. Lists use existing pagination, filters and cancellation; original sources retain ownership checks.
 
 `GET /api/investigations` adds read-only history: `{items,total,limit,offset}` with limit 1?100, offset >=0, optional exact patient_id/case_id/status. Items contain id, patient_id, case_id, objective, status, created_at, nullable started_at/completed_at/current_stage. Persisted rows are ordered created_at descending with ID ties. Status uses existing RunStatus. No tool/event payloads or evaluation fields are included. Existing POST and detail routes are unchanged. Case discovery follows the additive contract in hospital-api.md.
+
+### Additive longitudinal rule and activity metadata
+
+Finding rule `record_series` uses existing finding types and anchor schemas.
+It verifies recorded longitudinal observations only. Clients already treat
+rule as a string. The activity stream additionally permits `tool.page` and
+candidate source_refs/rule/candidate_type fields on finding.proposed; unknown
+events remain tolerated. No route, state enum, or database schema changes.

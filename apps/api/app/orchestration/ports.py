@@ -7,6 +7,8 @@ from app.schemas.investigation import ActivityEvent, Finding, Report
 
 
 class ToolAudit(Protocol):
+    async def record(self, public_id: str, event: str, payload: dict[str, Any]) -> None: ...
+
     async def tool_start(
         self,
         public_id: str,

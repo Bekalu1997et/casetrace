@@ -199,6 +199,7 @@ class InvestigationEngine:
                 if output:
                     result, sources = output
                     proposals.extend(result.candidates)
+                    limits.extend(result.limitations)
                     for record in sources:
                         records[(record.source.type, record.source.id)] = record
             await self.store.stage(public_id, "specialist_analysis", True)
@@ -263,6 +264,9 @@ class InvestigationEngine:
                 "finding.proposed",
                 {
                     "finding_id": finding_id,
+                    "source_refs": [a.source.model_dump() for a in candidate.anchors],
+                    "rule": candidate.rule,
+                    "candidate_type": candidate.type,
                     **(
                         planning.candidate_origins.get(
                             digest(candidate.model_dump(mode="json")), {}

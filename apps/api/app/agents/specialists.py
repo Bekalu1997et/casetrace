@@ -4,6 +4,7 @@ from uuid import UUID
 
 from app.agents import analysis
 from app.clinical.reasoning import reasoning_limitations
+from app.clinical.series import record_series
 from app.schemas.investigation import AgentResult, Candidate, SourceRecord, ToolResult
 from app.tools.ports import ToolExecutor
 
@@ -76,7 +77,26 @@ class TimelineAgent(Specialist):
 class LaboratoryAgent(Specialist):
     async def run(self) -> tuple[AgentResult, list[SourceRecord]]:
         records = await self.collect("get_lab_results")
-        return AgentResult(candidates=analysis.lab_changes(records)), records
+        documents = {}
+        # Only follow provenance links for repeated source-range abnormalities.
+        relevant = record_series(records)
+        source_ids = {a.source.id for c in relevant for a in c.anchors}
+        for record in records:
+            document_id = record.data.get("source_document_id")
+            if record.source.id in source_ids and document_id and document_id not in documents:
+                documents[document_id] = (
+                    await self.call("get_document", record_id=document_id)
+                ).records[0]
+        sources = records + list(documents.values())
+        series = record_series(sources)
+        return AgentResult(
+            candidates=analysis.lab_changes(records) + series,
+            limitations=[
+                "Longitudinal observation limit reached; further groups may be unassessed."
+            ]
+            if len(series) >= 12
+            else [],
+        ), sources
 
 
 class MedicationAgent(Specialist):
@@ -94,7 +114,16 @@ class MedicationAgent(Specialist):
                 item = analysis.anchor(documents[document_id], "text_content")
                 item.relationship = "contextualizes"
                 candidate.anchors.append(item)
-        return AgentResult(candidates=candidates), records + list(documents.values())
+        sources = records + list(documents.values())
+        series = record_series(sources)
+        return AgentResult(
+            candidates=candidates + series,
+            limitations=[
+                "Longitudinal observation limit reached; further groups may be unassessed."
+            ]
+            if len(series) >= 12
+            else [],
+        ), sources
 
 
 class ContradictionInvestigator(Specialist):

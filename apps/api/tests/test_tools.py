@@ -133,6 +133,10 @@ class SnapshotSource:
 class Audit:
     def __init__(self):
         self.started, self.ended = [], []
+        self.events = []
+
+    async def record(self, public_id, event, payload):
+        self.events.append((event, payload))
 
     async def tool_start(self, public_id, agent_id, name, args, agent):
         self.started.append((name, args, agent))
@@ -614,8 +618,14 @@ async def test_persisted_actor_audit_and_ordered_events(tmp_path):
         assert [e.type for e in events if e.type.startswith("tool.")] == [
             "tool.started",
             "tool.completed",
+            "tool.page",
             "tool.started",
             "tool.failed",
         ]
+        page = next(e for e in events if e.type == "tool.page")
+        assert page.payload["record_count"] == 1
+        assert page.payload["has_more"] is False
+        assert page.payload["representations"] == ["search_hit"]
+        assert "Pipeline" not in str(page.payload)
     finally:
         await database.dispose()
