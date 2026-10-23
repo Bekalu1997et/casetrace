@@ -1,0 +1,2581 @@
+[
+  {
+    "phase": "before",
+    "case_id": "CASE-001",
+    "legacy": {
+      "case_id": "CASE-001",
+      "dataset_version": "1.1",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 1,
+      "expected_discovery_detected": true,
+      "expected_discoveries_detected": 1,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "exact",
+      "verified_findings": 17,
+      "verified_anchors": 205,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-001-01",
+        "DOC-001-03",
+        "DOC-001-05",
+        "DOC-001-08",
+        "DOC-001-22",
+        "MED-001-02"
+      ],
+      "required_sources_missing": [],
+      "required_source_coverage": "6/6",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-001",
+      "discoveries": [
+        {
+          "finding_key": "timeline-contradiction-1",
+          "domain": "timeline_contradiction",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "earlier_symptom_record": [
+              "DOC-001-01",
+              "DOC-001-08",
+              "DOC-001-03"
+            ],
+            "later_first_onset_history": [
+              "DOC-001-05"
+            ],
+            "prescription_context": [
+              "DOC-001-22",
+              "MED-001-02"
+            ]
+          },
+          "source_existence": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "source_retrieval": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "cited_sources": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "verified_citation_sources": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-a53429b4702f4814b50735a3add04a54"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-d01bf53a98264ff2a2c85536d6d0a085"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-f6e3142d1cf24a2698bde27e3bba8989"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-62208fc9286a4d79bcd5f23e2240d7e5"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-73adc0f2129e4191912aace0c68f1631"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "June consultation states cough first began May 26 with none before; contemporaneous January 8 and March 19 records establish earlier cough, including before lisinopril was prescribed.",
+          "counterevidence_rubric": "June note may reflect erroneous or incomplete history; no proven deliberate action. January and March documentation are contemporaneous, not late July entries. No documented full resolution between visits.",
+          "false_positive_rubric": [
+            {
+              "claim": "Repeat April radiograph was never performed",
+              "source_ids": [
+                "DOC-001-09",
+                "DOC-001-10",
+                "DOC-001-19",
+                "IMG-001-02"
+              ],
+              "reason": "Scheduling task reviewed at 11:00 before report finalized at 12:00; imaging performed at 10:00. Status lag is not evidence of absent care."
+            },
+            {
+              "claim": "Lisinopril definitively caused or cannot contribute to cough",
+              "source_ids": [
+                "DOC-001-01",
+                "DOC-001-22",
+                "DOC-001-07",
+                "DOC-001-12"
+              ],
+              "reason": "Earlier cough challenges sole-onset attribution; contribution remains uncertain. Two-week withdrawal interval is inconclusive."
+            },
+            {
+              "claim": "GERD or anxiety alone explains deterioration, or opacity establishes cancer/infection",
+              "source_ids": [
+                "DOC-001-02",
+                "DOC-001-05",
+                "DOC-001-07",
+                "DOC-001-20",
+                "LAB-001-18"
+              ],
+              "reason": "Reflux improved but cough persisted; opacity and inflammatory markers nonspecific. CT, spirometry and pathology unavailable."
+            }
+          ],
+          "factual_observations": [
+            "FND-a53429b4702f4814b50735a3add04a54",
+            "FND-d01bf53a98264ff2a2c85536d6d0a085",
+            "FND-f6e3142d1cf24a2698bde27e3bba8989",
+            "FND-62208fc9286a4d79bcd5f23e2240d7e5"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "53cb20664023c27698413e651437d666731db569f30a714a0c3cdcedc906a9da",
+        "key": "931770e68655957dadbcf99fd809c47ee02b085220cc7b68c829f3e91a9c31e5",
+        "spec": "095335597b8893ddd84d2cb5baf5a9bfe7a3a4c925f5922afee4517757e36f7f",
+        "case": "0828dc818969dbdd3fa51c87dda14800abe255ef442164c1e9fa044c2ae3a9a7",
+        "review": null,
+        "tools": "d3e7a3fc9c44653746df171a5e517ec96a84c7a947c4966b42ab874d81e8600c"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 75,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "before",
+    "case_id": "CASE-002",
+    "legacy": {
+      "case_id": "CASE-002",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 2,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 24,
+      "verified_anchors": 294,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-002-02",
+        "DOC-002-06",
+        "DOC-002-07",
+        "DOC-002-10",
+        "DOC-002-11",
+        "DOC-002-13",
+        "DOC-002-16",
+        "DOC-002-18"
+      ],
+      "required_sources_missing": [
+        "DOC-002-03",
+        "DOC-002-14"
+      ],
+      "required_source_coverage": "8/10",
+      "unresolved_findings": 1,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-002",
+      "discoveries": [
+        {
+          "finding_key": "medication-reconciliation-discrepancy-1",
+          "domain": "medication_reconciliation_discrepancy",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "prescribing_context": [
+              "DOC-002-03",
+              "DOC-002-06"
+            ],
+            "later_reconciliation_or_report": [
+              "DOC-002-07",
+              "DOC-002-11"
+            ],
+            "uncertainty_context": [
+              "DOC-002-14"
+            ]
+          },
+          "source_existence": [
+            "DOC-002-03",
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11",
+            "DOC-002-14"
+          ],
+          "source_retrieval": [
+            "DOC-002-03",
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11",
+            "DOC-002-14"
+          ],
+          "cited_sources": [
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11"
+          ],
+          "verified_citation_sources": [
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11"
+          ],
+          "missing_valid_citations": [
+            "DOC-002-03",
+            "DOC-002-14"
+          ],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-3e0165b1022d4117b3474359c47f3d18"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-05a692ee09c3406a95bc136c495a0584"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-9f415f00f72b437cb2e6c48d4aa976db"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-ba9a47818b1948c29a94340aae25c4f9"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-2de990cfe9f04e9ea3bd7fa933d73eae"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "The February prescribing record discontinued lisinopril and ordered losartan, but later emergency and primary-care records retain or report lisinopril exposure with uncertain timing; the records establish a documentation discrepancy, not confirmed ingestion.",
+          "counterevidence_rubric": "The patient could not confirm the last dose, and no administration or dispensing record proves ingestion.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive medication-induced kidney injury",
+              "source_ids": [
+                "DOC-002-14"
+              ],
+              "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+            },
+            {
+              "claim": "Confirmed lisinopril ingestion after discontinuation",
+              "source_ids": [
+                "DOC-002-11"
+              ],
+              "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+            }
+          ],
+          "factual_observations": [
+            "FND-3e0165b1022d4117b3474359c47f3d18",
+            "FND-05a692ee09c3406a95bc136c495a0584",
+            "FND-9f415f00f72b437cb2e6c48d4aa976db",
+            "FND-ba9a47818b1948c29a94340aae25c4f9",
+            "FND-2de990cfe9f04e9ea3bd7fa933d73eae"
+          ]
+        },
+        {
+          "finding_key": "renal-trend-1",
+          "domain": "longitudinal_laboratory_concern",
+          "priority": "secondary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "baseline_panel": [
+              "DOC-002-02"
+            ],
+            "illness_and_recovery_panels": [
+              "DOC-002-10",
+              "DOC-002-13",
+              "DOC-002-16",
+              "DOC-002-18"
+            ]
+          },
+          "source_existence": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "source_retrieval": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "cited_sources": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "verified_citation_sources": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-e0ede0e1d5d148beb7196c67054b46ac"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-f92eaca4bc8b424885010c21f05113dd"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-dec667a217ee4ae796de7960562a7eaf"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-de34fcfe34a14e75ae794ec5973434fe"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-bb21574eb20e475cb9f8ec110e75cd94"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "Creatinine rose from 1.18 mg/dL at baseline to 1.68 mg/dL during the diarrheal illness, then partially improved to 1.27 mg/dL; potassium was transiently elevated and later normalized.",
+          "counterevidence_rubric": "The renal trend overlaps with poor intake, diarrhea, and reported NSAID exposure; causation is not established.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive medication-induced kidney injury",
+              "source_ids": [
+                "DOC-002-14"
+              ],
+              "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+            },
+            {
+              "claim": "Confirmed lisinopril ingestion after discontinuation",
+              "source_ids": [
+                "DOC-002-11"
+              ],
+              "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+            }
+          ],
+          "factual_observations": [
+            "FND-e0ede0e1d5d148beb7196c67054b46ac",
+            "FND-f92eaca4bc8b424885010c21f05113dd",
+            "FND-dec667a217ee4ae796de7960562a7eaf",
+            "FND-de34fcfe34a14e75ae794ec5973434fe",
+            "FND-bb21574eb20e475cb9f8ec110e75cd94"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "cb0b205439f4e4136368d5ae5632987569adc58159e9392d660c7cc5a451b969",
+        "key": "9b75fce35ba7e66c123032c59a7734d0db17e1b016b0af24619ed98128c5672b",
+        "spec": "c99f7bab58cde0186d5cb067c636736e11024ad7d3690a747bab43b91ac82218",
+        "case": "bb76fa11c4b225932deb36089de1f6f66f9307ad3190707b785949a0691dd938",
+        "review": null,
+        "tools": "9d50a2fde96852b68749e998b6e4d6241d832667ecbc0f4500884116c0327953"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 63,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "before",
+    "case_id": "CASE-003",
+    "legacy": {
+      "case_id": "CASE-003",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 11,
+      "verified_anchors": 127,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-003-05",
+        "DOC-003-07",
+        "DOC-003-08",
+        "DOC-003-09",
+        "DOC-003-10",
+        "DOC-003-14"
+      ],
+      "required_sources_missing": [],
+      "required_source_coverage": "6/6",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-003",
+      "discoveries": [
+        {
+          "finding_key": "pathology-follow-up-gap",
+          "domain": "result_to_follow_up_discrepancy",
+          "priority": "primary",
+          "outcome": "not_assessable",
+          "reason": "Connected citations exist; clinical meaning requires review",
+          "required_source_roles": {
+            "procedure_context": [
+              "DOC-003-05"
+            ],
+            "abnormal_result": [
+              "DOC-003-07"
+            ],
+            "routing_and_closure": [
+              "DOC-003-08",
+              "DOC-003-09"
+            ],
+            "follow_up_and_uncertainty": [
+              "DOC-003-10",
+              "DOC-003-14"
+            ]
+          },
+          "source_existence": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "source_retrieval": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "cited_sources": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "verified_citation_sources": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-57c718842dc4454da08369818228c2d5"
+              ],
+              "required_sources_connected": true,
+              "all_anchors_valid": true,
+              "key_anchors_matched": true
+            },
+            {
+              "finding_ids": [
+                "FND-22e24d491e7b4581aec67454151eab42"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "The gastric biopsy was finalized with an abnormal finding requiring follow-up, while routing/closure records do not establish patient discussion or timely completed follow-up.",
+          "counterevidence_rubric": "Routing and administrative closure show workflow activity but do not prove that communication did not occur.",
+          "false_positive_rubric": [
+            {
+              "claim": "Clinician negligence or malpractice",
+              "source_ids": [
+                "DOC-003-08",
+                "DOC-003-09"
+              ],
+              "reason": "The record cannot establish whether an undocumented review or communication occurred."
+            }
+          ],
+          "factual_observations": [
+            "FND-57c718842dc4454da08369818228c2d5",
+            "FND-22e24d491e7b4581aec67454151eab42"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "ff9f01be40621ad60e069121e69f9aa9de81a152bd98ec37003b35a4c5c56108",
+        "key": "c1989329cd052481bb054ffb5080b2f26099ba6a9f2106c89376b9af5a6e67b0",
+        "spec": "01a60e8df016c3edf667f6623718dfd7176ee7608ec70156faa5213e35c3a013",
+        "case": "4a1790c1fd0bf7c86e21b57fb52fa56256591e192fde67c07bee5d3efd84e1d5",
+        "review": null,
+        "tools": "5589282b700b10957be1b978510d0c0ed09492b772aed8d798272865e84f789f"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 67,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "before",
+    "case_id": "CASE-004",
+    "legacy": {
+      "case_id": "CASE-004",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 6,
+      "verified_anchors": 56,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-004-05"
+      ],
+      "required_sources_missing": [
+        "DOC-004-08",
+        "DOC-004-10"
+      ],
+      "required_source_coverage": "1/3",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-004",
+      "discoveries": [
+        {
+          "finding_key": "case-004-primary",
+          "domain": "diagnostic_hypothesis_challenge",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "key_required_context_pending_role_review": [
+              "DOC-004-05",
+              "DOC-004-08",
+              "DOC-004-10"
+            ]
+          },
+          "source_existence": [
+            "DOC-004-05",
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "source_retrieval": [
+            "DOC-004-05",
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "cited_sources": [
+            "DOC-004-05"
+          ],
+          "verified_citation_sources": [
+            "DOC-004-05"
+          ],
+          "missing_valid_citations": [
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-bc8f1821cabb4992bf4a559c9f22c84b"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key.",
+            "Key uses generic Objective testing anchor; specific decisive source roles and interpretation require human review before exact scoring."
+          ],
+          "review_rationale": null,
+          "expected_claim": "Records across encounters show documented rhythm abnormality; objective evidence supports further investigation while preserving uncertainty.",
+          "counterevidence_rubric": "The record does not establish a definitive alternative diagnosis or causal attribution.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive causal diagnosis",
+              "source_ids": [
+                "DOC-004-08"
+              ],
+              "reason": "The records support an unresolved question rather than a definitive diagnosis."
+            }
+          ],
+          "factual_observations": [
+            "FND-bc8f1821cabb4992bf4a559c9f22c84b"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "88259154b9b4ad069fc6e72c483d65154a3f546385acacef18af14a1ecc6e6fd",
+        "key": "70482f4171419f9bd6690218bd28076c9fde87ad6b8be5ad601462b0e70f242b",
+        "spec": "c112e8bc4b93054e501c587c71a87d1710f581af20fb9d5c791743ba5742dba3",
+        "case": "416b93f9964c08b393ecdcab016ffb683775fba237395e74c74dc4102b0463ce",
+        "review": null,
+        "tools": "1b40c332aa42e0a5f2b84f2666d181e12ba4a22e57c3acd38f5117680eb0d866"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 45,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "before",
+    "case_id": "CASE-005",
+    "legacy": {
+      "case_id": "CASE-005",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 9,
+      "verified_anchors": 86,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-005-05",
+        "DOC-005-08"
+      ],
+      "required_sources_missing": [
+        "DOC-005-10"
+      ],
+      "required_source_coverage": "2/3",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-005",
+      "discoveries": [
+        {
+          "finding_key": "case-005-primary",
+          "domain": "medication_reconciliation_discrepancy",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "key_required_context_pending_role_review": [
+              "DOC-005-05",
+              "DOC-005-08",
+              "DOC-005-10"
+            ]
+          },
+          "source_existence": [
+            "DOC-005-05",
+            "DOC-005-08",
+            "DOC-005-10"
+          ],
+          "source_retrieval": [
+            "DOC-005-05",
+            "DOC-005-08",
+            "DOC-005-10"
+          ],
+          "cited_sources": [
+            "DOC-005-05",
+            "DOC-005-08"
+          ],
+          "verified_citation_sources": [
+            "DOC-005-05",
+            "DOC-005-08"
+          ],
+          "missing_valid_citations": [
+            "DOC-005-10"
+          ],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-ccde338ffa1d42fbac2362c716ccd2d5"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-5397ae90d3664f669961994b2ccf44ac"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-a46d758413904ed2b10b6d7e9a7c19a0"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key.",
+            "Key uses generic Objective testing anchor; specific decisive source roles and interpretation require human review before exact scoring."
+          ],
+          "review_rationale": null,
+          "expected_claim": "Records across encounters show conflicting hold and restart documentation; objective evidence supports further investigation while preserving uncertainty.",
+          "counterevidence_rubric": "The record does not establish a definitive alternative diagnosis or causal attribution.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive causal diagnosis",
+              "source_ids": [
+                "DOC-005-08"
+              ],
+              "reason": "The records support an unresolved question rather than a definitive diagnosis."
+            }
+          ],
+          "factual_observations": [
+            "FND-ccde338ffa1d42fbac2362c716ccd2d5",
+            "FND-5397ae90d3664f669961994b2ccf44ac",
+            "FND-a46d758413904ed2b10b6d7e9a7c19a0"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "bbfb406e431b63a61f48475dcaeb5eea96019d59df61b7dd713102fd9028dcf8",
+        "key": "8d2c181f2f38fdc735bdab37287166f9ada12fc88d639b4c26a649081b6a8008",
+        "spec": "b9ed5d96cdd0d4a3c6e3d02c7075f36b161c5607cf2149ae489b9e19d9df331e",
+        "case": "c5665e1a7770e259699415d33f152aed91c1aff107f63cff3fab292d7d122bf0",
+        "review": null,
+        "tools": "fa900d818ce051cb90448f4c07813ad28fa356602a56f524dbc8fbd843b061d4"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 49,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "after",
+    "case_id": "CASE-001",
+    "legacy": {
+      "case_id": "CASE-001",
+      "dataset_version": "1.1",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 1,
+      "expected_discovery_detected": true,
+      "expected_discoveries_detected": 1,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "exact",
+      "verified_findings": 17,
+      "verified_anchors": 205,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-001-01",
+        "DOC-001-03",
+        "DOC-001-05",
+        "DOC-001-08",
+        "DOC-001-22",
+        "MED-001-02"
+      ],
+      "required_sources_missing": [],
+      "required_source_coverage": "6/6",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-001",
+      "discoveries": [
+        {
+          "finding_key": "timeline-contradiction-1",
+          "domain": "timeline_contradiction",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "earlier_symptom_record": [
+              "DOC-001-01",
+              "DOC-001-08",
+              "DOC-001-03"
+            ],
+            "later_first_onset_history": [
+              "DOC-001-05"
+            ],
+            "prescription_context": [
+              "DOC-001-22",
+              "MED-001-02"
+            ]
+          },
+          "source_existence": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "source_retrieval": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "cited_sources": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "verified_citation_sources": [
+            "DOC-001-01",
+            "DOC-001-03",
+            "DOC-001-05",
+            "DOC-001-08",
+            "DOC-001-22",
+            "MED-001-02"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-fd812b8538b147cdaea0f329cc85f816"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-cecb195d01524f5bb44ccb5e6d22d178"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-9ccee9081d654344abd499dee16d8028"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-1f3ebccef184447d9c0ce9fd1cdea833"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-4d803929393245e6ba5a87fc8d494fda"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "June consultation states cough first began May 26 with none before; contemporaneous January 8 and March 19 records establish earlier cough, including before lisinopril was prescribed.",
+          "counterevidence_rubric": "June note may reflect erroneous or incomplete history; no proven deliberate action. January and March documentation are contemporaneous, not late July entries. No documented full resolution between visits.",
+          "false_positive_rubric": [
+            {
+              "claim": "Repeat April radiograph was never performed",
+              "source_ids": [
+                "DOC-001-09",
+                "DOC-001-10",
+                "DOC-001-19",
+                "IMG-001-02"
+              ],
+              "reason": "Scheduling task reviewed at 11:00 before report finalized at 12:00; imaging performed at 10:00. Status lag is not evidence of absent care."
+            },
+            {
+              "claim": "Lisinopril definitively caused or cannot contribute to cough",
+              "source_ids": [
+                "DOC-001-01",
+                "DOC-001-22",
+                "DOC-001-07",
+                "DOC-001-12"
+              ],
+              "reason": "Earlier cough challenges sole-onset attribution; contribution remains uncertain. Two-week withdrawal interval is inconclusive."
+            },
+            {
+              "claim": "GERD or anxiety alone explains deterioration, or opacity establishes cancer/infection",
+              "source_ids": [
+                "DOC-001-02",
+                "DOC-001-05",
+                "DOC-001-07",
+                "DOC-001-20",
+                "LAB-001-18"
+              ],
+              "reason": "Reflux improved but cough persisted; opacity and inflammatory markers nonspecific. CT, spirometry and pathology unavailable."
+            }
+          ],
+          "factual_observations": [
+            "FND-fd812b8538b147cdaea0f329cc85f816",
+            "FND-cecb195d01524f5bb44ccb5e6d22d178",
+            "FND-9ccee9081d654344abd499dee16d8028",
+            "FND-4d803929393245e6ba5a87fc8d494fda"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "7fa19291acb2c5ef320dd77fb4a65fcfec39c9b0378512cf709cf70f64152ec5",
+        "key": "931770e68655957dadbcf99fd809c47ee02b085220cc7b68c829f3e91a9c31e5",
+        "spec": "095335597b8893ddd84d2cb5baf5a9bfe7a3a4c925f5922afee4517757e36f7f",
+        "case": "0828dc818969dbdd3fa51c87dda14800abe255ef442164c1e9fa044c2ae3a9a7",
+        "review": null,
+        "tools": "5955dcc93596e79c48bcfff2418b3319775499d65d9df703bd7b612d5cdebba6"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 76,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "after",
+    "case_id": "CASE-002",
+    "legacy": {
+      "case_id": "CASE-002",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 2,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 24,
+      "verified_anchors": 294,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-002-02",
+        "DOC-002-06",
+        "DOC-002-07",
+        "DOC-002-10",
+        "DOC-002-11",
+        "DOC-002-13",
+        "DOC-002-16",
+        "DOC-002-18"
+      ],
+      "required_sources_missing": [
+        "DOC-002-03",
+        "DOC-002-14"
+      ],
+      "required_source_coverage": "8/10",
+      "unresolved_findings": 1,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-002",
+      "discoveries": [
+        {
+          "finding_key": "medication-reconciliation-discrepancy-1",
+          "domain": "medication_reconciliation_discrepancy",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "prescribing_context": [
+              "DOC-002-03",
+              "DOC-002-06"
+            ],
+            "later_reconciliation_or_report": [
+              "DOC-002-07",
+              "DOC-002-11"
+            ],
+            "uncertainty_context": [
+              "DOC-002-14"
+            ]
+          },
+          "source_existence": [
+            "DOC-002-03",
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11",
+            "DOC-002-14"
+          ],
+          "source_retrieval": [
+            "DOC-002-03",
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11",
+            "DOC-002-14"
+          ],
+          "cited_sources": [
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11"
+          ],
+          "verified_citation_sources": [
+            "DOC-002-06",
+            "DOC-002-07",
+            "DOC-002-11"
+          ],
+          "missing_valid_citations": [
+            "DOC-002-03",
+            "DOC-002-14"
+          ],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-b1425e004f6d4c7b85375d4009d56a55"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-9344aa36783c45d2b6347aab3b0e64ff"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-c16f660465594f18a3ba2f78007f268b"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-0a7bb26f7f874270a3a970bd4f73a093"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-24ad493ee8bb434faa0240df49e949bc"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "The February prescribing record discontinued lisinopril and ordered losartan, but later emergency and primary-care records retain or report lisinopril exposure with uncertain timing; the records establish a documentation discrepancy, not confirmed ingestion.",
+          "counterevidence_rubric": "The patient could not confirm the last dose, and no administration or dispensing record proves ingestion.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive medication-induced kidney injury",
+              "source_ids": [
+                "DOC-002-14"
+              ],
+              "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+            },
+            {
+              "claim": "Confirmed lisinopril ingestion after discontinuation",
+              "source_ids": [
+                "DOC-002-11"
+              ],
+              "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+            }
+          ],
+          "factual_observations": [
+            "FND-b1425e004f6d4c7b85375d4009d56a55",
+            "FND-9344aa36783c45d2b6347aab3b0e64ff",
+            "FND-c16f660465594f18a3ba2f78007f268b",
+            "FND-0a7bb26f7f874270a3a970bd4f73a093",
+            "FND-24ad493ee8bb434faa0240df49e949bc"
+          ]
+        },
+        {
+          "finding_key": "renal-trend-1",
+          "domain": "longitudinal_laboratory_concern",
+          "priority": "secondary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "baseline_panel": [
+              "DOC-002-02"
+            ],
+            "illness_and_recovery_panels": [
+              "DOC-002-10",
+              "DOC-002-13",
+              "DOC-002-16",
+              "DOC-002-18"
+            ]
+          },
+          "source_existence": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "source_retrieval": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "cited_sources": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "verified_citation_sources": [
+            "DOC-002-02",
+            "DOC-002-10",
+            "DOC-002-13",
+            "DOC-002-16",
+            "DOC-002-18"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-a10177f083c74569b0aa0271487d5726"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-91b535a293d448668846261bf003cc44"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-ec31dd662b0745c1ada3e3423bba884c"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-f2496ff76cdf4b2e8d33e236538bc323"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-1b05c0670c3e42e6b65f6790d7c7838d"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "Creatinine rose from 1.18 mg/dL at baseline to 1.68 mg/dL during the diarrheal illness, then partially improved to 1.27 mg/dL; potassium was transiently elevated and later normalized.",
+          "counterevidence_rubric": "The renal trend overlaps with poor intake, diarrhea, and reported NSAID exposure; causation is not established.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive medication-induced kidney injury",
+              "source_ids": [
+                "DOC-002-14"
+              ],
+              "reason": "Specialist documentation lists multiple plausible contributors and explicitly preserves uncertainty."
+            },
+            {
+              "claim": "Confirmed lisinopril ingestion after discontinuation",
+              "source_ids": [
+                "DOC-002-11"
+              ],
+              "reason": "Patient report and an old bottle indicate possible exposure but do not prove ingestion dates."
+            }
+          ],
+          "factual_observations": [
+            "FND-a10177f083c74569b0aa0271487d5726",
+            "FND-91b535a293d448668846261bf003cc44",
+            "FND-ec31dd662b0745c1ada3e3423bba884c",
+            "FND-f2496ff76cdf4b2e8d33e236538bc323",
+            "FND-1b05c0670c3e42e6b65f6790d7c7838d"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "1015a76e4abac6aea3f02bf317019b1cc4a975ea95e506d11e571fff7f4e5728",
+        "key": "9b75fce35ba7e66c123032c59a7734d0db17e1b016b0af24619ed98128c5672b",
+        "spec": "c99f7bab58cde0186d5cb067c636736e11024ad7d3690a747bab43b91ac82218",
+        "case": "bb76fa11c4b225932deb36089de1f6f66f9307ad3190707b785949a0691dd938",
+        "review": null,
+        "tools": "60ca8313d64216addc9a2fcfabb896bf224a3cc18f648f5876262b992f7b79c1"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 64,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "after",
+    "case_id": "CASE-003",
+    "legacy": {
+      "case_id": "CASE-003",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 11,
+      "verified_anchors": 127,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-003-05",
+        "DOC-003-07",
+        "DOC-003-08",
+        "DOC-003-09",
+        "DOC-003-10",
+        "DOC-003-14"
+      ],
+      "required_sources_missing": [],
+      "required_source_coverage": "6/6",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-003",
+      "discoveries": [
+        {
+          "finding_key": "pathology-follow-up-gap",
+          "domain": "result_to_follow_up_discrepancy",
+          "priority": "primary",
+          "outcome": "not_assessable",
+          "reason": "Connected citations exist; clinical meaning requires review",
+          "required_source_roles": {
+            "procedure_context": [
+              "DOC-003-05"
+            ],
+            "abnormal_result": [
+              "DOC-003-07"
+            ],
+            "routing_and_closure": [
+              "DOC-003-08",
+              "DOC-003-09"
+            ],
+            "follow_up_and_uncertainty": [
+              "DOC-003-10",
+              "DOC-003-14"
+            ]
+          },
+          "source_existence": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "source_retrieval": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "cited_sources": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "verified_citation_sources": [
+            "DOC-003-05",
+            "DOC-003-07",
+            "DOC-003-08",
+            "DOC-003-09",
+            "DOC-003-10",
+            "DOC-003-14"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-c0b1455f197d49679ec4bb2bac55a94a"
+              ],
+              "required_sources_connected": true,
+              "all_anchors_valid": true,
+              "key_anchors_matched": true
+            },
+            {
+              "finding_ids": [
+                "FND-fb06c666623543159a605b7c297e5d75"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key."
+          ],
+          "review_rationale": null,
+          "expected_claim": "The gastric biopsy was finalized with an abnormal finding requiring follow-up, while routing/closure records do not establish patient discussion or timely completed follow-up.",
+          "counterevidence_rubric": "Routing and administrative closure show workflow activity but do not prove that communication did not occur.",
+          "false_positive_rubric": [
+            {
+              "claim": "Clinician negligence or malpractice",
+              "source_ids": [
+                "DOC-003-08",
+                "DOC-003-09"
+              ],
+              "reason": "The record cannot establish whether an undocumented review or communication occurred."
+            }
+          ],
+          "factual_observations": [
+            "FND-c0b1455f197d49679ec4bb2bac55a94a",
+            "FND-fb06c666623543159a605b7c297e5d75"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "e955bd01498ad54f7dd703cbc6269b417ba11fccae7c45f070e4525bbfd8497e",
+        "key": "c1989329cd052481bb054ffb5080b2f26099ba6a9f2106c89376b9af5a6e67b0",
+        "spec": "01a60e8df016c3edf667f6623718dfd7176ee7608ec70156faa5213e35c3a013",
+        "case": "4a1790c1fd0bf7c86e21b57fb52fa56256591e192fde67c07bee5d3efd84e1d5",
+        "review": null,
+        "tools": "5a41ddd8d1c421f0d5e9542458c79b08495a7592f9d50e38d010266e2e882816"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 68,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  },
+  {
+    "phase": "after",
+    "case_id": "CASE-004",
+    "legacy": {
+      "case_id": "CASE-004",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 7,
+      "verified_anchors": 66,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-004-05",
+        "DOC-004-08",
+        "DOC-004-10"
+      ],
+      "required_sources_missing": [],
+      "required_source_coverage": "3/3",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-004",
+      "discoveries": [
+        {
+          "finding_key": "case-004-primary",
+          "domain": "diagnostic_hypothesis_challenge",
+          "priority": "primary",
+          "outcome": "not_assessable",
+          "reason": "Connected citations exist; clinical meaning requires review",
+          "required_source_roles": {
+            "key_required_context_pending_role_review": [
+              "DOC-004-05",
+              "DOC-004-08",
+              "DOC-004-10"
+            ]
+          },
+          "source_existence": [
+            "DOC-004-05",
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "source_retrieval": [
+            "DOC-004-05",
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "cited_sources": [
+            "DOC-004-05",
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "verified_citation_sources": [
+            "DOC-004-05",
+            "DOC-004-08",
+            "DOC-004-10"
+          ],
+          "missing_valid_citations": [],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-81732c8cb0f24b50960883dff7e17e23"
+              ],
+              "required_sources_connected": true,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-96e15b7be29c4cde945b3e07ec9c563c"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key.",
+            "Key uses generic Objective testing anchor; specific decisive source roles and interpretation require human review before exact scoring."
+          ],
+          "review_rationale": null,
+          "expected_claim": "Records across encounters show documented rhythm abnormality; objective evidence supports further investigation while preserving uncertainty.",
+          "counterevidence_rubric": "The record does not establish a definitive alternative diagnosis or causal attribution.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive causal diagnosis",
+              "source_ids": [
+                "DOC-004-08"
+              ],
+              "reason": "The records support an unresolved question rather than a definitive diagnosis."
+            }
+          ],
+          "factual_observations": [
+            "FND-81732c8cb0f24b50960883dff7e17e23",
+            "FND-96e15b7be29c4cde945b3e07ec9c563c"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "9d817fdd13267b0a18543dd1ab203d6110366cd7be6d3e408bfef702070e62f7",
+        "key": "70482f4171419f9bd6690218bd28076c9fde87ad6b8be5ad601462b0e70f242b",
+        "spec": "c112e8bc4b93054e501c587c71a87d1710f581af20fb9d5c791743ba5742dba3",
+        "case": "416b93f9964c08b393ecdcab016ffb683775fba237395e74c74dc4102b0463ce",
+        "review": null,
+        "tools": "17f422c0e8b0810ee662f0a78fab22ca66b2759f477048d7d6ddc4f12e21978d"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 66,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": [
+      {
+        "finding_id": "FND-81732c8cb0f24b50960883dff7e17e23",
+        "claim": "The documented working assessment and original test interpretations support a provisional comparison (reconsideration_question). Does anxiety fully explain the recorded symptoms and symptom-associated objective interpretation, or are additional explanations needed? This does not exclude the working explanation, establish a final diagnosis or imply improper care.",
+        "source_ids": [
+          "DOC-004-01",
+          "DOC-004-03",
+          "DOC-004-05",
+          "DOC-004-06",
+          "DOC-004-08",
+          "DOC-004-10",
+          "DOC-004-12",
+          "DOC-004-15",
+          "DOC-004-17",
+          "REF-004-01"
+        ],
+        "required_sources_missing_in_this_relationship": [],
+        "comparison": {
+          "hypothesis": "anxiety",
+          "certainty": "documented_assessment_unknown_certainty",
+          "scope": "sufficiency_of_working_explanation",
+          "evidence": [
+            {
+              "attribution": "explicit",
+              "role": "working_assessment",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-01"
+                },
+                "source_version": 1,
+                "source_hash": "ddb4c9758c58b785dac41140fbe5dfe0fcefc4ae1bd3045b57954c1569d2e73a",
+                "encounter_id": "ENC-004-01",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-01\nInitial assessment documents anxiety and recurring paroxysmal palpitations.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-01-08T09:40:00+03:00",
+                "authored_at": "2026-01-08T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "explicit",
+              "role": "working_assessment",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-10"
+                },
+                "source_version": 1,
+                "source_hash": "1be4ac602fc254131780b6521a03078b1431b389c8255b8ea56ae0eb0a8550a7",
+                "encounter_id": "ENC-004-04",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-04\nInitial assessment documents anxiety and recurring paroxysmal palpitations.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-03-05T09:40:00+03:00",
+                "authored_at": "2026-03-05T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "explicit",
+              "role": "objective_interpretation",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-05"
+                },
+                "source_version": 1,
+                "source_hash": "3aff23d13017e8738bfb8980ab5f0432472b3eb86f77d410119fde4a2498b6ab",
+                "encounter_id": "ENC-004-05",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-05\nAmbulatory monitor report: 14-day monitor captured three episodes of supraventricular tachycardia, maximum rate 164 bpm, with patient-triggered palpitations. This objective finding warrants reconsideration of an anxiety-only explanation; it does not establish a single final diagnosis.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-04-16T09:40:00+03:00",
+                "authored_at": "2026-04-16T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "test_order",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-03"
+                },
+                "source_version": 1,
+                "source_hash": "de6a5c8d5b0f03ee9e2d1a7a3a0cb2800a8fd5ad2fdf0615961232b07ef3a5a0",
+                "encounter_id": "ENC-004-03",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-03\nObjective testing is ordered because symptoms or findings persist; documented rhythm abnormality is not yet resolved.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-02-12T09:40:00+03:00",
+                "authored_at": "2026-02-12T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "reassessment",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-06"
+                },
+                "source_version": 1,
+                "source_hash": "ab4e6db6e252b5eef8245c6e0dfeab625a641cb52d6965b3fdf339454ab47b31",
+                "encounter_id": "ENC-004-06",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-06\nA follow-up note compares the new evidence with the prior working diagnosis.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-05-21T09:40:00+03:00",
+                "authored_at": "2026-05-21T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "reassessment",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-08"
+                },
+                "source_version": 1,
+                "source_hash": "4e5673d15d2507d4142611724bcc2adb4850c0af2777871942b423bd05a7ebd4",
+                "encounter_id": "ENC-004-02",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-02\nSpecialist review recommends additional evaluation without asserting a definitive diagnosis.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-01-29T09:40:00+03:00",
+                "authored_at": "2026-01-29T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "test_order",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-12"
+                },
+                "source_version": 1,
+                "source_hash": "5c20f08f67c7ea8ed08a36d3b5bf859e2bdfb00ec4cdb4ba56df094c4b90a461",
+                "encounter_id": "ENC-004-06",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-06\nObjective testing is ordered because symptoms or findings persist; documented rhythm abnormality is not yet resolved.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-05-21T09:40:00+03:00",
+                "authored_at": "2026-05-21T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "reassessment",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-15"
+                },
+                "source_version": 1,
+                "source_hash": "f02c247f1438e7f04344c97a3553ae25a287941934c52cb7a1cdb52fd21b014b",
+                "encounter_id": "ENC-004-03",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-03\nA follow-up note compares the new evidence with the prior working diagnosis.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-02-12T09:40:00+03:00",
+                "authored_at": "2026-02-12T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "reassessment",
+              "anchor": {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-17"
+                },
+                "source_version": 1,
+                "source_hash": "7fa646847b5d6b50e8d78ccc99b9930d4071cfd4133c13fe361ac0b42bade043",
+                "encounter_id": "ENC-004-05",
+                "field": "text_content",
+                "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-05\nSpecialist review recommends additional evaluation without asserting a definitive diagnosis.",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "event_at": "2026-04-16T09:40:00+03:00",
+                "authored_at": "2026-04-16T12:00:00+03:00"
+              }
+            },
+            {
+              "attribution": "nonspecific_context",
+              "role": "referral",
+              "anchor": {
+                "source": {
+                  "type": "referral",
+                  "id": "REF-004-01"
+                },
+                "source_version": 1,
+                "source_hash": "ce2c3a5a143871c9033703a7afb32a1a064abf1e8be9f5cd7f7aff85a46b0525",
+                "encounter_id": "ENC-004-04",
+                "field": "reason",
+                "expected": "documented rhythm abnormality",
+                "quote": null,
+                "char_start": null,
+                "char_end": null,
+                "relationship": "supports"
+              },
+              "timestamps": {
+                "ordered_at": "2026-03-05T09:00:00+03:00",
+                "appointment_at": "2026-05-21T09:00:00+03:00"
+              }
+            }
+          ],
+          "supporting_evidence": [],
+          "weakening_evidence": [
+            {
+              "source": {
+                "type": "document",
+                "id": "DOC-004-05"
+              },
+              "source_version": 1,
+              "source_hash": "3aff23d13017e8738bfb8980ab5f0432472b3eb86f77d410119fde4a2498b6ab",
+              "encounter_id": "ENC-004-05",
+              "field": "text_content",
+              "expected": "SYNTHETIC - NOT FOR CLINICAL USE\nPatient: SYN-004 | Encounter: ENC-004-05\nAmbulatory monitor report: 14-day monitor captured three episodes of supraventricular tachycardia, maximum rate 164 bpm, with patient-triggered palpitations. This objective finding warrants reconsideration of an anxiety-only explanation; it does not establish a single final diagnosis.",
+              "quote": null,
+              "char_start": null,
+              "char_end": null,
+              "relationship": "supports"
+            }
+          ],
+          "contradictory_evidence": [],
+          "missing_evidence": [
+            "Original test data and episode-level symptom correlation require clinical review.",
+            "Whether the working explanation and another mechanism coexist remains unresolved.",
+            "The original interpretation has no matching structured report link; its result metadata remains unverified."
+          ],
+          "alternatives": [
+            "The working explanation and another mechanism may coexist; neither is established here.",
+            "Incidental findings, interpretation disagreement or incomplete symptom correlation remain possible."
+          ],
+          "question": "Does anxiety fully explain the recorded symptoms and symptom-associated objective interpretation, or are additional explanations needed?",
+          "provisional_verdict": "reconsideration_question",
+          "search": {
+            "sources": [
+              {
+                "source": {
+                  "type": "diagnostic_report",
+                  "id": "RPT-004-01"
+                },
+                "version": 1,
+                "hash": "e2c52c03f8ed75f44ea08576cfb989e74943114ab4457249147e85a2f7ffa4fe"
+              },
+              {
+                "source": {
+                  "type": "diagnostic_report",
+                  "id": "RPT-004-02"
+                },
+                "version": 1,
+                "hash": "ee549be11bd9740daf50a27cd9ade97959aee37b51b2f14445581173dc4a2ba3"
+              },
+              {
+                "source": {
+                  "type": "diagnostic_report",
+                  "id": "RPT-004-03"
+                },
+                "version": 1,
+                "hash": "9a3ad6a9e87eedbd72b88573ca01c1306dba1d5b2b6d85afb44b46645f55630c"
+              },
+              {
+                "source": {
+                  "type": "diagnostic_report",
+                  "id": "RPT-004-04"
+                },
+                "version": 1,
+                "hash": "23c8891a51c8424157ddffbc71f6ab8bbb13f1f5bb29e8c8600fba545e1587aa"
+              },
+              {
+                "source": {
+                  "type": "diagnostic_report",
+                  "id": "RPT-004-05"
+                },
+                "version": 1,
+                "hash": "528d385a0a00f5b054779fe08d73b888e931533577fdcf1b13055908bb9923c6"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-01"
+                },
+                "version": 1,
+                "hash": "ddb4c9758c58b785dac41140fbe5dfe0fcefc4ae1bd3045b57954c1569d2e73a"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-02"
+                },
+                "version": 1,
+                "hash": "672295af30506a563155993043ab214e33f47463aab4eb2f00f85e1e742252a9"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-03"
+                },
+                "version": 1,
+                "hash": "de6a5c8d5b0f03ee9e2d1a7a3a0cb2800a8fd5ad2fdf0615961232b07ef3a5a0"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-04"
+                },
+                "version": 1,
+                "hash": "f6a0e1cf9da04395666ddbf8d490b5ded34c73da5189db2d520998d26a8d9c15"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-05"
+                },
+                "version": 1,
+                "hash": "3aff23d13017e8738bfb8980ab5f0432472b3eb86f77d410119fde4a2498b6ab"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-06"
+                },
+                "version": 1,
+                "hash": "ab4e6db6e252b5eef8245c6e0dfeab625a641cb52d6965b3fdf339454ab47b31"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-07"
+                },
+                "version": 1,
+                "hash": "21aa4954e83b151f0e39d9425122427959edfc6773c9eef9890065322dfc606c"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-08"
+                },
+                "version": 1,
+                "hash": "4e5673d15d2507d4142611724bcc2adb4850c0af2777871942b423bd05a7ebd4"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-09"
+                },
+                "version": 1,
+                "hash": "dea1a623fc18621d8c04b4f6b150101cc840be1ab6d3ab4cb0ef331c059e823e"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-10"
+                },
+                "version": 1,
+                "hash": "1be4ac602fc254131780b6521a03078b1431b389c8255b8ea56ae0eb0a8550a7"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-11"
+                },
+                "version": 1,
+                "hash": "0ed49bfdfb121605928db367921d3093452e633c7f98520c837abe70fbfd09fb"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-12"
+                },
+                "version": 1,
+                "hash": "5c20f08f67c7ea8ed08a36d3b5bf859e2bdfb00ec4cdb4ba56df094c4b90a461"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-13"
+                },
+                "version": 1,
+                "hash": "362a7618fadd7270d046611e856bffac3f072b5e02efd89665f9a26b44e2da06"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-14"
+                },
+                "version": 1,
+                "hash": "fe2fa6aebe5d5bc292598586b748090aebe8c71c2d49e2a703263a9c0bcf289a"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-15"
+                },
+                "version": 1,
+                "hash": "f02c247f1438e7f04344c97a3553ae25a287941934c52cb7a1cdb52fd21b014b"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-16"
+                },
+                "version": 1,
+                "hash": "34ccec9b781f4ce2f09d387e32c80d8c9c7740821c536d038f742f0b12667280"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-17"
+                },
+                "version": 1,
+                "hash": "7fa646847b5d6b50e8d78ccc99b9930d4071cfd4133c13fe361ac0b42bade043"
+              },
+              {
+                "source": {
+                  "type": "document",
+                  "id": "DOC-004-18"
+                },
+                "version": 1,
+                "hash": "dffdd80dd6b1094051e1ba2a0bc841e4d5e801a4957bcd71bdf53464035dd622"
+              },
+              {
+                "source": {
+                  "type": "encounter",
+                  "id": "ENC-004-01"
+                },
+                "version": 1,
+                "hash": "a823c13387539e503d7a5771646f076760328e8ff1f1fcd46fa04d943adf29b1"
+              },
+              {
+                "source": {
+                  "type": "encounter",
+                  "id": "ENC-004-02"
+                },
+                "version": 1,
+                "hash": "9ca742b96c3d2ce987f1368f743c2c8e8cdec24b02bec9f8883cc8fb1d4922fc"
+              },
+              {
+                "source": {
+                  "type": "encounter",
+                  "id": "ENC-004-03"
+                },
+                "version": 1,
+                "hash": "5b29c69719928cc9e44532e5ada25629e5e753477e4dd28295c48490eb749930"
+              },
+              {
+                "source": {
+                  "type": "encounter",
+                  "id": "ENC-004-04"
+                },
+                "version": 1,
+                "hash": "712ec410387dd7085b7f8322ccd0d1cb4c57b4c81874c51218b53a60fec520f3"
+              },
+              {
+                "source": {
+                  "type": "encounter",
+                  "id": "ENC-004-05"
+                },
+                "version": 1,
+                "hash": "bd8b4465a433d16fc413c8f3da339af32ce8f9bfc0fd81042ac110d5498d9de9"
+              },
+              {
+                "source": {
+                  "type": "encounter",
+                  "id": "ENC-004-06"
+                },
+                "version": 1,
+                "hash": "26935f0e3ed8cea332ea6cab9a0287651ac6a0c0c64b507debea3d581d890d9f"
+              },
+              {
+                "source": {
+                  "type": "referral",
+                  "id": "REF-004-01"
+                },
+                "version": 1,
+                "hash": "ce2c3a5a143871c9033703a7afb32a1a064abf1e8be9f5cd7f7aff85a46b0525"
+              }
+            ],
+            "complete": true,
+            "document_limit": 20,
+            "appointment_coverage": "referral_fields_only",
+            "categories": [
+              "diagnostic_report",
+              "document",
+              "encounter",
+              "referral"
+            ]
+          }
+        },
+        "tool_trace_ids": [
+          "bffe4a3f-40e3-4b9f-a0e2-9e8e17d63161",
+          "19ae6183-2878-420a-b86e-f11029f288d6",
+          "36026435-208e-4761-a580-cf6e722a027a",
+          "55305843-3601-4164-946f-255ce0f1d5c4",
+          "29baa8a1-6880-47f6-8374-69bc3b643626",
+          "b5f9be5b-839b-42ec-93a3-683ad13850df",
+          "2db3b297-c39a-462a-b6f2-6b77476a1dd2",
+          "0669d7f5-200c-44ec-a266-f0e06e1e2bee",
+          "5d48da5e-0c92-4b3d-934e-bc09564c4fdd",
+          "f8704468-2269-4d9e-9f64-1f12e37fa286",
+          "07fe561e-96d4-4e7e-882a-2b56f32d3d18",
+          "bf7237c4-1f37-4626-97e3-4e9a5aac3e77",
+          "9d0cee44-3c68-4f92-b9b2-591430378e9c",
+          "76c3e651-436c-47bc-88af-814e8241d556",
+          "092abb14-4c1a-4d87-aea8-3e5f18ebee30",
+          "f7eeb43f-9b65-4c02-a02b-061b32fc9096",
+          "301207fd-aa08-423d-bc67-2935299278b5",
+          "ab18c789-3f26-4467-b3a4-d49d25c5a5e1",
+          "aecfa0e9-007d-4e8e-af6c-e0d98e3ac4b6",
+          "c94720e4-1725-4179-a602-6781f111e59b",
+          "59122683-76d7-489e-a243-932b68f9e0b3",
+          "0bfbb618-1512-4e82-9e10-8cae381b6ee5",
+          "8750f2bf-0c6e-438a-86fa-6705aa55e09c",
+          "0d93ba05-19ca-4cfc-9e69-79461626c0b1"
+        ]
+      }
+    ]
+  },
+  {
+    "phase": "after",
+    "case_id": "CASE-005",
+    "legacy": {
+      "case_id": "CASE-005",
+      "dataset_version": "1.0",
+      "execution_mode": "deterministic_rules",
+      "completed": true,
+      "record_contradictions_detected": 0,
+      "expected_discovery_detected": false,
+      "expected_discoveries_detected": 0,
+      "expected_discoveries_total": 1,
+      "partial_discoveries": 0,
+      "discovery_grade": "failure",
+      "verified_findings": 9,
+      "verified_anchors": 86,
+      "failed_verification_checks_in_verified_findings": 0,
+      "required_sources_cited": [
+        "DOC-005-05",
+        "DOC-005-08"
+      ],
+      "required_sources_missing": [
+        "DOC-005-10"
+      ],
+      "required_source_coverage": "2/3",
+      "unresolved_findings": 0,
+      "limitations": [
+        "Detection is record-level, not a clinical diagnosis.",
+        "Coverage is across all verified findings, not necessarily one consolidated finding.",
+        "No semantic clinical quality or diagnostic probability metric is claimed.",
+        "Anchor validity is established by independent runtime verifier and integration tests; this evaluator summarizes their recorded results."
+      ]
+    },
+    "multi_domain": {
+      "spec_version": "1.0",
+      "case_id": "CASE-005",
+      "discoveries": [
+        {
+          "finding_key": "case-005-primary",
+          "domain": "medication_reconciliation_discrepancy",
+          "priority": "primary",
+          "outcome": "partial",
+          "reason": "Relevant evidence exists; full expected relationship is not established",
+          "required_source_roles": {
+            "key_required_context_pending_role_review": [
+              "DOC-005-05",
+              "DOC-005-08",
+              "DOC-005-10"
+            ]
+          },
+          "source_existence": [
+            "DOC-005-05",
+            "DOC-005-08",
+            "DOC-005-10"
+          ],
+          "source_retrieval": [
+            "DOC-005-05",
+            "DOC-005-08",
+            "DOC-005-10"
+          ],
+          "cited_sources": [
+            "DOC-005-05",
+            "DOC-005-08"
+          ],
+          "verified_citation_sources": [
+            "DOC-005-05",
+            "DOC-005-08"
+          ],
+          "missing_valid_citations": [
+            "DOC-005-10"
+          ],
+          "groups": [
+            {
+              "finding_ids": [
+                "FND-d24a3f1652d346bda8a511ae10138a15"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-3e4421db5dec45048b92df6c93888856"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            },
+            {
+              "finding_ids": [
+                "FND-e864723820f741aba84276c55dc4ad9d"
+              ],
+              "required_sources_connected": false,
+              "all_anchors_valid": true,
+              "key_anchors_matched": false
+            }
+          ],
+          "semantic_decisions": {
+            "relationship": "review",
+            "claim_correctness": "review",
+            "counterevidence": "review",
+            "causality": "review",
+            "uncertainty": "review",
+            "missing_evidence": "review",
+            "false_positives": "review"
+          },
+          "review_required": [
+            "Qualified review of claim entailment, relationship, counterevidence, causality, uncertainty, missing evidence and false positives.",
+            "Confirm exact decisive passages, temporal/measurement contexts, permissible alternatives and source roles against the unchanged key.",
+            "Key uses generic Objective testing anchor; specific decisive source roles and interpretation require human review before exact scoring."
+          ],
+          "review_rationale": null,
+          "expected_claim": "Records across encounters show conflicting hold and restart documentation; objective evidence supports further investigation while preserving uncertainty.",
+          "counterevidence_rubric": "The record does not establish a definitive alternative diagnosis or causal attribution.",
+          "false_positive_rubric": [
+            {
+              "claim": "Definitive causal diagnosis",
+              "source_ids": [
+                "DOC-005-08"
+              ],
+              "reason": "The records support an unresolved question rather than a definitive diagnosis."
+            }
+          ],
+          "factual_observations": [
+            "FND-d24a3f1652d346bda8a511ae10138a15",
+            "FND-3e4421db5dec45048b92df6c93888856",
+            "FND-e864723820f741aba84276c55dc4ad9d"
+          ]
+        }
+      ],
+      "primary_discovery_success": false,
+      "clinical_accuracy_claimed": false,
+      "input_hashes": {
+        "report": "5c145c2bc9ac8d90bbe92c735e6d9f99954b835efda4f18615942a0d67787bc1",
+        "key": "8d2c181f2f38fdc735bdab37287166f9ada12fc88d639b4c26a649081b6a8008",
+        "spec": "b9ed5d96cdd0d4a3c6e3d02c7075f36b161c5607cf2149ae489b9e19d9df331e",
+        "case": "c5665e1a7770e259699415d33f152aed91c1aff107f63cff3fab292d7d122bf0",
+        "review": null,
+        "tools": "21776491ad0976b863423a8433549b53f9bebe5ac485e15f666317e33e86ff67"
+      },
+      "reviewer": null,
+      "limitations": [
+        "Retrieval traces may include search hits; source_refs do not establish original-text retrieval.",
+        "Exact field/DTO anchors checked offline; asset bytes are protected by the separate frozen inventory.",
+        "Factual observations and recorded runtime verification do not establish clinical interpretation.",
+        "Reviewer identity/qualification are audit assertions, not authenticated credentials.",
+        "No semantic keyword matching; unreviewed meaning remains unassessed."
+      ]
+    },
+    "status": "completed",
+    "tool_calls": 71,
+    "unsupported_verified_findings": 0,
+    "failed_evidence_checks": 0,
+    "relationships": []
+  }
+]

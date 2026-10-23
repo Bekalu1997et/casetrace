@@ -1,0 +1,6006 @@
+[
+  {
+    "id": "EVT-230c4e7c5e1847dba03e1f9fcf3a1877",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 1,
+    "type": "investigation.started",
+    "timestamp": "2026-10-23T07:14:00.445586Z",
+    "payload": {
+      "to_state": "running",
+      "reason": "Worker claimed run",
+      "from_state": "queued"
+    }
+  },
+  {
+    "id": "EVT-f3e355dff9ba4a6e8594a1136dcfac4e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 2,
+    "type": "investigation.updated",
+    "timestamp": "2026-10-23T07:14:00.479843Z",
+    "payload": {}
+  },
+  {
+    "id": "EVT-3b68accc08864676be9e9a9654f1c53d",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 3,
+    "type": "stage.started",
+    "timestamp": "2026-10-23T07:14:00.495663Z",
+    "payload": {
+      "stage": "record_discovery"
+    }
+  },
+  {
+    "id": "EVT-452b462e5ed5480caa564aeaf19fe827",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 4,
+    "type": "agent.started",
+    "timestamp": "2026-10-23T07:14:00.525352Z",
+    "payload": {
+      "agent": "retrieval",
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7"
+    }
+  },
+  {
+    "id": "EVT-4dfcef1e040e47548225ab16fe8a86bd",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 5,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:00.550843Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "get_patient",
+      "tool_execution_id": "b3d50993-8357-49de-b09d-f052ed969ec7"
+    }
+  },
+  {
+    "id": "EVT-c525451a113846908595cd410d1a8cf7",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 6,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:00.599997Z",
+    "payload": {
+      "tool_execution_id": "b3d50993-8357-49de-b09d-f052ed969ec7",
+      "source_refs": [
+        {
+          "type": "patient",
+          "id": "SYN-001"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-70cb742e7ef74913b551a08bf88ed8a6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 7,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:00.622431Z",
+    "payload": {
+      "tool_execution_id": "b3d50993-8357-49de-b09d-f052ed969ec7",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-46c57172e2de40438f25f496537c7ab4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 8,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:00.641018Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "get_encounters",
+      "tool_execution_id": "c1f83dd1-0366-48e1-b8e2-bbaec16b0bbb"
+    }
+  },
+  {
+    "id": "EVT-ef21cd6ce434445581016ecb88a6103e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 9,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:00.680096Z",
+    "payload": {
+      "tool_execution_id": "c1f83dd1-0366-48e1-b8e2-bbaec16b0bbb",
+      "source_refs": [
+        {
+          "type": "encounter",
+          "id": "ENC-001-01"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-02"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-03"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-04"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-05"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-06"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-07"
+        }
+      ],
+      "record_count": 7,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-28b11be84d4f436a9fb2d62bb78fc0a3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 10,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:00.697314Z",
+    "payload": {
+      "tool_execution_id": "c1f83dd1-0366-48e1-b8e2-bbaec16b0bbb",
+      "record_count": 7,
+      "total": 7,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-7a133a4601834ef4929098db31effeaa",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 11,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:00.713674Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "search_documents",
+      "tool_execution_id": "b6485e8d-8557-41f6-b296-d8ed19676573"
+    }
+  },
+  {
+    "id": "EVT-879969ed51584a87b2523326de6ea56f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 12,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.416756Z",
+    "payload": {
+      "tool_execution_id": "b6485e8d-8557-41f6-b296-d8ed19676573",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-06"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-07"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-08"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-09"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-10"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-11"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-18"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-19"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-20"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-22"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 23,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-1e94ffa442b64d20968cd2f3573af544",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 13,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.432936Z",
+    "payload": {
+      "tool_execution_id": "b6485e8d-8557-41f6-b296-d8ed19676573",
+      "record_count": 23,
+      "total": 23,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-ddd9b5323d3b40b7af08be2243e15653",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 14,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.449830Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "get_lab_results",
+      "tool_execution_id": "90e2b004-2a47-468d-ac07-f21ae24c68c2"
+    }
+  },
+  {
+    "id": "EVT-3de6dcc9fc2a4a3fa04f3c6a885d8f57",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 15,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.505339Z",
+    "payload": {
+      "tool_execution_id": "90e2b004-2a47-468d-ac07-f21ae24c68c2",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-06"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-07"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-09"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-10"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-12"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-14"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-15"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-17"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-19"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-20"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        }
+      ],
+      "record_count": 25,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-4c418520265a4cc89f517ec286eb14da",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 16,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.525553Z",
+    "payload": {
+      "tool_execution_id": "90e2b004-2a47-468d-ac07-f21ae24c68c2",
+      "record_count": 25,
+      "total": 25,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-2d9a7d1663ff46bf856a32abebe99f5c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 17,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.539351Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "get_medication_history",
+      "tool_execution_id": "49f965aa-15de-44de-ba0d-d420e69b839b"
+    }
+  },
+  {
+    "id": "EVT-7757593a547147dd979f05ce0fa41a2a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 18,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.575642Z",
+    "payload": {
+      "tool_execution_id": "49f965aa-15de-44de-ba0d-d420e69b839b",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        }
+      ],
+      "record_count": 7,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-b7cbecd778ab4772807b179e4001224f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 19,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.585635Z",
+    "payload": {
+      "tool_execution_id": "49f965aa-15de-44de-ba0d-d420e69b839b",
+      "record_count": 7,
+      "total": 7,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-623803a269ed455da87af7f7717e9cac",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 20,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.610370Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "get_imaging_studies",
+      "tool_execution_id": "eba82dff-4dcd-4ace-86b0-c033ee2ac3fb"
+    }
+  },
+  {
+    "id": "EVT-5f78c5db1b79407bac3c1251b6aaa3bd",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 21,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.643582Z",
+    "payload": {
+      "tool_execution_id": "eba82dff-4dcd-4ace-86b0-c033ee2ac3fb",
+      "source_refs": [
+        {
+          "type": "imaging_study",
+          "id": "IMG-001-01"
+        },
+        {
+          "type": "imaging_study",
+          "id": "IMG-001-02"
+        },
+        {
+          "type": "imaging_study",
+          "id": "IMG-001-03"
+        }
+      ],
+      "record_count": 3,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-184844469f8f48da827c12b55f60ea70",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 22,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.658170Z",
+    "payload": {
+      "tool_execution_id": "eba82dff-4dcd-4ace-86b0-c033ee2ac3fb",
+      "record_count": 3,
+      "total": 3,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-5b84097fb2254d9ca026ea8830e29383",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 23,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.675459Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "tool": "get_diagnostic_reports",
+      "tool_execution_id": "eb9c0ff5-c0d6-4830-b5ec-2df52fcd645f"
+    }
+  },
+  {
+    "id": "EVT-40ff4e802677453090698af72f6d2b79",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 24,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.705531Z",
+    "payload": {
+      "tool_execution_id": "eb9c0ff5-c0d6-4830-b5ec-2df52fcd645f",
+      "source_refs": [
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L1"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L2"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-I1"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L3"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-I2"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L4"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-I3"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L5"
+        }
+      ],
+      "record_count": 8,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-91e49d568b61484ebba6e0d3ef7ad548",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 25,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.721005Z",
+    "payload": {
+      "tool_execution_id": "eb9c0ff5-c0d6-4830-b5ec-2df52fcd645f",
+      "record_count": 8,
+      "total": 8,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-3f6caeb6b6af4924bf81578183b7992a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 26,
+    "type": "agent.completed",
+    "timestamp": "2026-10-23T07:14:01.735449Z",
+    "payload": {
+      "agent_run_id": "6bac051a-cc5a-4f72-bccf-0268a8f537c7",
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-84f68820b0204aa797a2be87150f1a2d",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 27,
+    "type": "records.retrieved",
+    "timestamp": "2026-10-23T07:14:01.750229Z",
+    "payload": {
+      "record_count": 74
+    }
+  },
+  {
+    "id": "EVT-87aeb934ca134d7a8b99a5ea6d8ce9a8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 28,
+    "type": "stage.completed",
+    "timestamp": "2026-10-23T07:14:01.767496Z",
+    "payload": {
+      "stage": "record_discovery"
+    }
+  },
+  {
+    "id": "EVT-0897ad1c199145198b1fc516e33a2522",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 29,
+    "type": "stage.started",
+    "timestamp": "2026-10-23T07:14:01.792072Z",
+    "payload": {
+      "stage": "timeline_reconstruction"
+    }
+  },
+  {
+    "id": "EVT-d1a21ef7ed39459eb9aed7cf45674092",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 30,
+    "type": "agent.started",
+    "timestamp": "2026-10-23T07:14:01.809614Z",
+    "payload": {
+      "agent": "timeline",
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4"
+    }
+  },
+  {
+    "id": "EVT-192b7c3d5fbb41a38961b7e635d393d3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 31,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.832002Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "build_patient_timeline",
+      "tool_execution_id": "2113ffac-39f7-41f1-a236-e814d4e40901"
+    }
+  },
+  {
+    "id": "EVT-bae07c29f43b46caae048ff4babfe157",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 32,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.872651Z",
+    "payload": {
+      "tool_execution_id": "2113ffac-39f7-41f1-a236-e814d4e40901",
+      "source_refs": [
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-01"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-02"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-03"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-04"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-05"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-06"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-07"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-08"
+        }
+      ],
+      "record_count": 8,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-a1230f3e4a2a49ce945d6918c5d0b3ea",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 33,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.891131Z",
+    "payload": {
+      "tool_execution_id": "2113ffac-39f7-41f1-a236-e814d4e40901",
+      "record_count": 8,
+      "total": 8,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-1707cdc71e5f4b02a00496a8ded65468",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 34,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.910397Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_encounters",
+      "tool_execution_id": "461ed783-5e73-4396-8bfb-845345f4aec2"
+    }
+  },
+  {
+    "id": "EVT-1d4d88f06df548a0a81e46e0a8e23ea3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 35,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:01.940050Z",
+    "payload": {
+      "tool_execution_id": "461ed783-5e73-4396-8bfb-845345f4aec2",
+      "source_refs": [
+        {
+          "type": "encounter",
+          "id": "ENC-001-01"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-02"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-03"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-04"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-05"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-06"
+        },
+        {
+          "type": "encounter",
+          "id": "ENC-001-07"
+        }
+      ],
+      "record_count": 7,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-3c043e847280467abbaaf24b0ceda12c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 36,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:01.955736Z",
+    "payload": {
+      "tool_execution_id": "461ed783-5e73-4396-8bfb-845345f4aec2",
+      "record_count": 7,
+      "total": 7,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-f84f137810df49259f0bf6d84fc6672b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 37,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:01.975328Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "search_clinical_notes",
+      "tool_execution_id": "cd545b70-0e7b-4b47-b9a0-f044833a69ce"
+    }
+  },
+  {
+    "id": "EVT-f438af7be52d48f4a11571255d5fd962",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 38,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:02.659361Z",
+    "payload": {
+      "tool_execution_id": "cd545b70-0e7b-4b47-b9a0-f044833a69ce",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-06"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-07"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-08"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-09"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-10"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-11"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-18"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-19"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-20"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-22"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 23,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-a2363fdc45634b0783936d13a2d22fbe",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 39,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:02.679674Z",
+    "payload": {
+      "tool_execution_id": "cd545b70-0e7b-4b47-b9a0-f044833a69ce",
+      "record_count": 23,
+      "total": 23,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-27fe20b2d95e47ee9e693acc84c9dae3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 40,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:02.695440Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "ca2a0062-5caf-4d79-85a3-cd39d833c8ae"
+    }
+  },
+  {
+    "id": "EVT-6bc53964f42748a29104addd04d8dc96",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 41,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:02.735733Z",
+    "payload": {
+      "tool_execution_id": "ca2a0062-5caf-4d79-85a3-cd39d833c8ae",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-9efb0db9ef094b958bf5c7fb9b2f94a0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 42,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:02.755754Z",
+    "payload": {
+      "tool_execution_id": "ca2a0062-5caf-4d79-85a3-cd39d833c8ae",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-d1a07733d66f49b5a93a93d9a5d00fcd",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 43,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:02.775561Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "264833b1-9d31-4d15-8752-9fa478b8c84c"
+    }
+  },
+  {
+    "id": "EVT-7484eeeae6b54fb08014e9e4eafa21af",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 44,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:02.819910Z",
+    "payload": {
+      "tool_execution_id": "264833b1-9d31-4d15-8752-9fa478b8c84c",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-08e5c862b8da4cc685497fc043649a77",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 45,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:02.839325Z",
+    "payload": {
+      "tool_execution_id": "264833b1-9d31-4d15-8752-9fa478b8c84c",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-cdb1e1895dde46fbb129cc11024d0994",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 46,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:02.858351Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "593cb4f6-2db2-4d03-bc40-db272b0bb3f4"
+    }
+  },
+  {
+    "id": "EVT-63cf10a5764f4b0dad65ac69253af814",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 47,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:02.899892Z",
+    "payload": {
+      "tool_execution_id": "593cb4f6-2db2-4d03-bc40-db272b0bb3f4",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-7e833e897dc14655971ce75e71a44acf",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 48,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:02.916659Z",
+    "payload": {
+      "tool_execution_id": "593cb4f6-2db2-4d03-bc40-db272b0bb3f4",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-3650f7c1d7854bb8a75ff85f3986b737",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 49,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:02.933643Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "4a4ca00c-ac2a-480b-8c00-b84126204ac5"
+    }
+  },
+  {
+    "id": "EVT-9fad2772d72f4f79bbefe1077a26da00",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 50,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:02.966642Z",
+    "payload": {
+      "tool_execution_id": "4a4ca00c-ac2a-480b-8c00-b84126204ac5",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-3b2ff20fe531435fb7cc15c28eaf0c0e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 51,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:02.985393Z",
+    "payload": {
+      "tool_execution_id": "4a4ca00c-ac2a-480b-8c00-b84126204ac5",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-178cc83a3050403482e763fc721f30ee",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 52,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.000113Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "d64bd2bb-d7ac-435c-bbd9-c62471c98a49"
+    }
+  },
+  {
+    "id": "EVT-48f3a9407b8d4dc0bfd25acb9ad1ff59",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 53,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.041916Z",
+    "payload": {
+      "tool_execution_id": "d64bd2bb-d7ac-435c-bbd9-c62471c98a49",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-99b99878d0604ffb8cc9364a1975c694",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 54,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.056408Z",
+    "payload": {
+      "tool_execution_id": "d64bd2bb-d7ac-435c-bbd9-c62471c98a49",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-2570fe732c864f4c9a5ecb72429c2769",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 55,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.072726Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "117a4c75-f80a-4456-a346-a48830bf4937"
+    }
+  },
+  {
+    "id": "EVT-99fbb625af4440f09f9dd869d97776e6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 56,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.113907Z",
+    "payload": {
+      "tool_execution_id": "117a4c75-f80a-4456-a346-a48830bf4937",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-06"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-1fd9f63fe72a47fbb870d9757de08c05",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 57,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.125816Z",
+    "payload": {
+      "tool_execution_id": "117a4c75-f80a-4456-a346-a48830bf4937",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-24467d19a13e48c8b98afcd71c587259",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 58,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.145522Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "566dcca7-e751-4845-870b-06c9a413f5a5"
+    }
+  },
+  {
+    "id": "EVT-777e6e759d6544a9ad4f70dd0b9200ba",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 59,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.185721Z",
+    "payload": {
+      "tool_execution_id": "566dcca7-e751-4845-870b-06c9a413f5a5",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-07"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-16cbcef8c7f34e1eafd8ff633179a1c2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 60,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.197812Z",
+    "payload": {
+      "tool_execution_id": "566dcca7-e751-4845-870b-06c9a413f5a5",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-9e09d894e8274f1f8cdf5c0f4405bd00",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 61,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.222379Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "004fe21e-e2b1-4ada-a435-274689f18552"
+    }
+  },
+  {
+    "id": "EVT-be836a3c8015425783a7b56163d3fa95",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 62,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.266056Z",
+    "payload": {
+      "tool_execution_id": "004fe21e-e2b1-4ada-a435-274689f18552",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-08"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-beddf97d05ba4754aad6a0675fbfbb36",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 63,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.281859Z",
+    "payload": {
+      "tool_execution_id": "004fe21e-e2b1-4ada-a435-274689f18552",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-1ad640afb82c414e8e9c756132a1701b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 64,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.295764Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "2e80fc77-e433-4147-bd01-58e6a46dce62"
+    }
+  },
+  {
+    "id": "EVT-fad393caac14464c8049d565a9848dd4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 65,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.355423Z",
+    "payload": {
+      "tool_execution_id": "2e80fc77-e433-4147-bd01-58e6a46dce62",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-09"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-bfa5df9373644de3967788717b680d80",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 66,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.375773Z",
+    "payload": {
+      "tool_execution_id": "2e80fc77-e433-4147-bd01-58e6a46dce62",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-ad2afeb42b51429daea2ff90e3b47aea",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 67,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.395578Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "9d884a7d-3af4-48c6-b864-4bc54e11056c"
+    }
+  },
+  {
+    "id": "EVT-80112dadef8c434c94b5658536f31b42",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 68,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.445659Z",
+    "payload": {
+      "tool_execution_id": "9d884a7d-3af4-48c6-b864-4bc54e11056c",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-10"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-72f4af37ecf1435f96603ffe9e0093ba",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 69,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.461834Z",
+    "payload": {
+      "tool_execution_id": "9d884a7d-3af4-48c6-b864-4bc54e11056c",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-a05e113114cb413690fbcdad9613538a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 70,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.478269Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "63748e03-37d3-4355-955f-34254f4d9d62"
+    }
+  },
+  {
+    "id": "EVT-b3485d7120494287a6efa18f82a6b21b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 71,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.525437Z",
+    "payload": {
+      "tool_execution_id": "63748e03-37d3-4355-955f-34254f4d9d62",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-11"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-00f75fd84135431087d8a53c92f032b6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 72,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.540429Z",
+    "payload": {
+      "tool_execution_id": "63748e03-37d3-4355-955f-34254f4d9d62",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-fa53c72d8ac5477b885ab47c898d478e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 73,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.560636Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "02db92e3-30ef-4467-90bf-3872e1b8276a"
+    }
+  },
+  {
+    "id": "EVT-5479661675764dc8bc9f600e822b5776",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 74,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.602168Z",
+    "payload": {
+      "tool_execution_id": "02db92e3-30ef-4467-90bf-3872e1b8276a",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-3b31e11778b4442db724ce4ddf87c2d6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 75,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.617468Z",
+    "payload": {
+      "tool_execution_id": "02db92e3-30ef-4467-90bf-3872e1b8276a",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-c732fabd57a14d07a4b306d7438547b9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 76,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.637095Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "c8600522-8439-45f4-bd8b-823170561d8d"
+    }
+  },
+  {
+    "id": "EVT-71bb9a70394a4cb69880541de73f9252",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 77,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.675778Z",
+    "payload": {
+      "tool_execution_id": "c8600522-8439-45f4-bd8b-823170561d8d",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-494b678e8ca54104ba4ee9a1c7ad3403",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 78,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.694127Z",
+    "payload": {
+      "tool_execution_id": "c8600522-8439-45f4-bd8b-823170561d8d",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-05ef69d88eb342b8b4106f440607597a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 79,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.710837Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "6ac59775-b1db-4a42-8e18-ef06ed460445"
+    }
+  },
+  {
+    "id": "EVT-034413f5a6604e118d70fa138e069fba",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 80,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.750566Z",
+    "payload": {
+      "tool_execution_id": "6ac59775-b1db-4a42-8e18-ef06ed460445",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-d2c5696e8a4646b480ed68169a157626",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 81,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.768665Z",
+    "payload": {
+      "tool_execution_id": "6ac59775-b1db-4a42-8e18-ef06ed460445",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-703fbfb160b94595a078fa506b61da08",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 82,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.785720Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "aabfabf0-ae70-4ed2-8474-c3f61f446cf1"
+    }
+  },
+  {
+    "id": "EVT-1236fed47a61431c9adb15a71db0b557",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 83,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.825660Z",
+    "payload": {
+      "tool_execution_id": "aabfabf0-ae70-4ed2-8474-c3f61f446cf1",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-cb4396b755cf4593abf955502d1783fa",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 84,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.840257Z",
+    "payload": {
+      "tool_execution_id": "aabfabf0-ae70-4ed2-8474-c3f61f446cf1",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-aaea83c6de4344dc81e52b833e120c78",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 85,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.860198Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "72f20056-116d-43b6-a4cf-31f4b74134d1"
+    }
+  },
+  {
+    "id": "EVT-5a100d7d66c24087868beece4f5f3340",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 86,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.905419Z",
+    "payload": {
+      "tool_execution_id": "72f20056-116d-43b6-a4cf-31f4b74134d1",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-fa8fadc0c41345b2bf9eeb156318d02e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 87,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.915599Z",
+    "payload": {
+      "tool_execution_id": "72f20056-116d-43b6-a4cf-31f4b74134d1",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-18c2afa30c054b8685da286a3c5c429e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 88,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:03.935733Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "f79013cc-b165-425f-9658-21eccc29e603"
+    }
+  },
+  {
+    "id": "EVT-f1f18ecdd9154142a5e2a4fe1e0944ae",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 89,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:03.975683Z",
+    "payload": {
+      "tool_execution_id": "f79013cc-b165-425f-9658-21eccc29e603",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-633c790a0ea1497d89221e98ebd84c7b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 90,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:03.990305Z",
+    "payload": {
+      "tool_execution_id": "f79013cc-b165-425f-9658-21eccc29e603",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-656e7f3ee4bc4b3a9413b97f36d2eb86",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 91,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.005595Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "313d06b0-23e2-450a-ae5b-501a5c71a470"
+    }
+  },
+  {
+    "id": "EVT-39cfdd4832c2432c9261f141eef0d82b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 92,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.047807Z",
+    "payload": {
+      "tool_execution_id": "313d06b0-23e2-450a-ae5b-501a5c71a470",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-18"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-0787dc8b8dd24a4e8239a267c5786b02",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 93,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.065872Z",
+    "payload": {
+      "tool_execution_id": "313d06b0-23e2-450a-ae5b-501a5c71a470",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-3fc0253d20604b16a927e18c67338ae9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 94,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.085635Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "888abf2b-dea4-4946-85f4-c4fad56c3715"
+    }
+  },
+  {
+    "id": "EVT-273ae177c78342e68802ca1193b42bcc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 95,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.129549Z",
+    "payload": {
+      "tool_execution_id": "888abf2b-dea4-4946-85f4-c4fad56c3715",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-19"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-84ed95ce1fc947b59e9f02fc52ba8be1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 96,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.145881Z",
+    "payload": {
+      "tool_execution_id": "888abf2b-dea4-4946-85f4-c4fad56c3715",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-6b454cf6368744eaa9085797c2d0abc6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 97,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.165869Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "6b64246d-ea5c-4ffa-8a89-e1047376f753"
+    }
+  },
+  {
+    "id": "EVT-babdc40c0c3541b8a91554ff9e435e5e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 98,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.205592Z",
+    "payload": {
+      "tool_execution_id": "6b64246d-ea5c-4ffa-8a89-e1047376f753",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-20"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-9082e8ad18da45828f28b723dc8bb086",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 99,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.219596Z",
+    "payload": {
+      "tool_execution_id": "6b64246d-ea5c-4ffa-8a89-e1047376f753",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-fb35bf4fa7e543d0968f8097988e71c1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 100,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.235623Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "fcd9dbd8-bdb2-4f55-b43a-1cc16c86aff7"
+    }
+  },
+  {
+    "id": "EVT-95b72644ed884e029586d6061f5393b3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 101,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.275903Z",
+    "payload": {
+      "tool_execution_id": "fcd9dbd8-bdb2-4f55-b43a-1cc16c86aff7",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-36754e2c1cf34d918d608557048397c8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 102,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.292434Z",
+    "payload": {
+      "tool_execution_id": "fcd9dbd8-bdb2-4f55-b43a-1cc16c86aff7",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-ad44308d49064977bd73c755372f8c9c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 103,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.309179Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "25b64039-6fda-442b-9829-825f7b91b7e6"
+    }
+  },
+  {
+    "id": "EVT-0fef258f719d4577bae57364406c52b2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 104,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.355664Z",
+    "payload": {
+      "tool_execution_id": "25b64039-6fda-442b-9829-825f7b91b7e6",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-22"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-ff8efc0ab2614ed1ad4f674b52c9001e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 105,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.371039Z",
+    "payload": {
+      "tool_execution_id": "25b64039-6fda-442b-9829-825f7b91b7e6",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-472b2012608b44c4a139c5af6953948e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 106,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.387535Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "tool": "get_clinical_note",
+      "tool_execution_id": "c84fc259-7f0a-46e7-a3ae-698050647292"
+    }
+  },
+  {
+    "id": "EVT-543654f9459542b899283edfa081db5f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 107,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.435672Z",
+    "payload": {
+      "tool_execution_id": "c84fc259-7f0a-46e7-a3ae-698050647292",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-8bbe01c297f84474b88419207bcdbc53",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 108,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.447933Z",
+    "payload": {
+      "tool_execution_id": "c84fc259-7f0a-46e7-a3ae-698050647292",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-937ff8a8ad07458b9576ad175ccd5f73",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 109,
+    "type": "agent.completed",
+    "timestamp": "2026-10-23T07:14:04.525558Z",
+    "payload": {
+      "agent_run_id": "2705e6bc-2786-4074-aeae-0f13f9b309b4",
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-7cb26fb3f66f45d6b3cc21f59af19aa6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 110,
+    "type": "stage.completed",
+    "timestamp": "2026-10-23T07:14:04.545686Z",
+    "payload": {
+      "stage": "timeline_reconstruction"
+    }
+  },
+  {
+    "id": "EVT-1ed199a178a1408d933652f78814e6c0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 111,
+    "type": "stage.started",
+    "timestamp": "2026-10-23T07:14:04.558342Z",
+    "payload": {
+      "stage": "specialist_analysis"
+    }
+  },
+  {
+    "id": "EVT-77558334b4104d6db022731b6343cb70",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 112,
+    "type": "agent.started",
+    "timestamp": "2026-10-23T07:14:04.580962Z",
+    "payload": {
+      "agent": "laboratory",
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587"
+    }
+  },
+  {
+    "id": "EVT-6d717861737e4b2eacd46e4ea36bc954",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 113,
+    "type": "agent.started",
+    "timestamp": "2026-10-23T07:14:04.600519Z",
+    "payload": {
+      "agent": "medication",
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924"
+    }
+  },
+  {
+    "id": "EVT-4ecc6fc89c624c108f658b46139c1dae",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 114,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.616801Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "tool": "get_lab_results",
+      "tool_execution_id": "1737b792-220a-4a00-ba7b-d550de26c6f0"
+    }
+  },
+  {
+    "id": "EVT-12cc6fe02a0b404aa4bd5575d6f5969a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 115,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.699014Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_medication_history",
+      "tool_execution_id": "ad112d90-09d7-460f-a914-68d02ee4a38d"
+    }
+  },
+  {
+    "id": "EVT-d1182f465e2f401f84660f2e26e483f1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 116,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.740616Z",
+    "payload": {
+      "tool_execution_id": "1737b792-220a-4a00-ba7b-d550de26c6f0",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-06"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-07"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-09"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-10"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-12"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-14"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-15"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-17"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-19"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-20"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        }
+      ],
+      "record_count": 25,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-0d9f86ac540d4edeb0c837354b54e27a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 117,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.765848Z",
+    "payload": {
+      "tool_execution_id": "ad112d90-09d7-460f-a914-68d02ee4a38d",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        }
+      ],
+      "record_count": 7,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-22a3d2c3dd5a487a801d2d6f498f1022",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 118,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.775503Z",
+    "payload": {
+      "tool_execution_id": "1737b792-220a-4a00-ba7b-d550de26c6f0",
+      "record_count": 25,
+      "total": 25,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-0c53a80fca33471691d0744f770697cd",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 119,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.795734Z",
+    "payload": {
+      "tool_execution_id": "ad112d90-09d7-460f-a914-68d02ee4a38d",
+      "record_count": 7,
+      "total": 7,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-c8db9353512c4ef99106595ea56dcd6b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 120,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.815605Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "tool": "get_document",
+      "tool_execution_id": "5332da46-34f2-4158-b17e-6944cfda80b4"
+    }
+  },
+  {
+    "id": "EVT-0212b59d566c4cb592a096e86f96aa6a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 121,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:04.856895Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "d55385b1-af36-4456-bfa4-c346d308fcda"
+    }
+  },
+  {
+    "id": "EVT-8a1e7d1e07964691a1900789e917919d",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 122,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.939065Z",
+    "payload": {
+      "tool_execution_id": "5332da46-34f2-4158-b17e-6944cfda80b4",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-f728ed5dfc304be8ab2a04475975c117",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 123,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:04.975886Z",
+    "payload": {
+      "tool_execution_id": "5332da46-34f2-4158-b17e-6944cfda80b4",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-6c90c990025c467c9c8b475bc72989f3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 124,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:04.990089Z",
+    "payload": {
+      "tool_execution_id": "d55385b1-af36-4456-bfa4-c346d308fcda",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-08543697416642bba5d3d116a02cc3af",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 125,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.016006Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "tool": "get_document",
+      "tool_execution_id": "5240eda8-1999-400c-beeb-3477f14286ba"
+    }
+  },
+  {
+    "id": "EVT-ee6126e60e1a47a5a812bc98dbd62fd9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 126,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.028766Z",
+    "payload": {
+      "tool_execution_id": "d55385b1-af36-4456-bfa4-c346d308fcda",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-e1b3b5ab4db24355922ee762e1bac96c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 127,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.130101Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "724c3724-ce33-43f6-b58f-f1a32ff98ab0"
+    }
+  },
+  {
+    "id": "EVT-bddc582e780f4392ab6e042e9b51d89c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 128,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.155855Z",
+    "payload": {
+      "tool_execution_id": "5240eda8-1999-400c-beeb-3477f14286ba",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-af4ca796f1d9412ebc19beace9508a88",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 129,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.179645Z",
+    "payload": {
+      "tool_execution_id": "5240eda8-1999-400c-beeb-3477f14286ba",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-011cfa0d0467406383afe6dcf3ce2f4b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 130,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.199176Z",
+    "payload": {
+      "tool_execution_id": "724c3724-ce33-43f6-b58f-f1a32ff98ab0",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-22"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-7c41f8db67a64472923bf2c915a1b867",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 131,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.221380Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "tool": "get_document",
+      "tool_execution_id": "86301bd2-8a47-40bd-9721-4d5446f612e5"
+    }
+  },
+  {
+    "id": "EVT-810f062b783d4587a89ff3eda1c82993",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 132,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.238267Z",
+    "payload": {
+      "tool_execution_id": "724c3724-ce33-43f6-b58f-f1a32ff98ab0",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-fa28cd1a680a400baa4fa7e1aaac6c71",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 133,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.278405Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "cbe18db9-06f6-4ddb-b2ae-9c3d48b8219f"
+    }
+  },
+  {
+    "id": "EVT-699b29236a09475aa637b9ae6777d0d9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 134,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.295779Z",
+    "payload": {
+      "tool_execution_id": "86301bd2-8a47-40bd-9721-4d5446f612e5",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-25ced33e58724387b3f23f1cda985628",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 135,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.335594Z",
+    "payload": {
+      "tool_execution_id": "86301bd2-8a47-40bd-9721-4d5446f612e5",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-7d3e0657934749faad6acf84c6c325ad",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 136,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.345674Z",
+    "payload": {
+      "tool_execution_id": "cbe18db9-06f6-4ddb-b2ae-9c3d48b8219f",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-0da8decbb747482fb04b43073e7b6328",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 137,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.372623Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "tool": "get_document",
+      "tool_execution_id": "88b1cfac-a04c-46c8-b04d-84fb0e5dcaeb"
+    }
+  },
+  {
+    "id": "EVT-b8c037c6b5124857a7cb91cc7ae2c097",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 138,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.395590Z",
+    "payload": {
+      "tool_execution_id": "cbe18db9-06f6-4ddb-b2ae-9c3d48b8219f",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-45cc7aebfe0740d4bded22dd0becc8da",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 139,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.437350Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "ca1176c8-3f9c-4e0e-ad56-1d9f8d8ded9d"
+    }
+  },
+  {
+    "id": "EVT-686e30924ad747239fc8caad3c6030a5",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 140,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.461759Z",
+    "payload": {
+      "tool_execution_id": "88b1cfac-a04c-46c8-b04d-84fb0e5dcaeb",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-0ceb11db658048bfae6d101760b98ec0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 141,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.489145Z",
+    "payload": {
+      "tool_execution_id": "88b1cfac-a04c-46c8-b04d-84fb0e5dcaeb",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-67d3ad8e21544e13966355c9f068440a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 142,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.511005Z",
+    "payload": {
+      "tool_execution_id": "ca1176c8-3f9c-4e0e-ad56-1d9f8d8ded9d",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-e1fbb43dcead477d8730f0ee88127132",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 143,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.539077Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "tool": "get_document",
+      "tool_execution_id": "59cc2b71-7fd2-47b6-997a-0ed1023cd720"
+    }
+  },
+  {
+    "id": "EVT-17263c64a12a4b0ca89fac9761d96bd3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 144,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.559788Z",
+    "payload": {
+      "tool_execution_id": "ca1176c8-3f9c-4e0e-ad56-1d9f8d8ded9d",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-567f299ec08c4d12a5572f7fdee8c0e0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 145,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.610046Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "7f44d5ce-0639-475a-8dcb-4e157cdf9d08"
+    }
+  },
+  {
+    "id": "EVT-8ec3553a0d3f443e9c435bde69e3dbab",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 146,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.667982Z",
+    "payload": {
+      "tool_execution_id": "59cc2b71-7fd2-47b6-997a-0ed1023cd720",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-61252727b7594af59d252ae5748545a4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 147,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.700373Z",
+    "payload": {
+      "tool_execution_id": "59cc2b71-7fd2-47b6-997a-0ed1023cd720",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-476803cd2aa245ee8349fa286260b5f0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 148,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.732347Z",
+    "payload": {
+      "tool_execution_id": "7f44d5ce-0639-475a-8dcb-4e157cdf9d08",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-4488d0ba577e4caabb6cbcbde2ec7863",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 149,
+    "type": "agent.completed",
+    "timestamp": "2026-10-23T07:14:05.757400Z",
+    "payload": {
+      "agent_run_id": "a2f33389-589c-4938-bbd5-53bd5f32a587",
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-db04d33dc8104cadb87b5256013509f5",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 150,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.777741Z",
+    "payload": {
+      "tool_execution_id": "7f44d5ce-0639-475a-8dcb-4e157cdf9d08",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-4e0ab1aa71b74e559913199cabc84226",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 151,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.798286Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "899f798c-3f6a-4635-8f72-1c0f5c180200"
+    }
+  },
+  {
+    "id": "EVT-8e2c323d78cb4e5788acd148c4930c7c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 152,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:05.845655Z",
+    "payload": {
+      "tool_execution_id": "899f798c-3f6a-4635-8f72-1c0f5c180200",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-67b345b369e64e8e816d0d3f8778c4dc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 153,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:05.861679Z",
+    "payload": {
+      "tool_execution_id": "899f798c-3f6a-4635-8f72-1c0f5c180200",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-5409617445ea4da7bcfea82b7d78fbb5",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 154,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:05.880714Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "4f679cab-283c-494c-84ae-ce1ab66683a0"
+    }
+  },
+  {
+    "id": "EVT-ff3a5849572a4d519de0bca8959d1660",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 155,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.135593Z",
+    "payload": {
+      "tool_execution_id": "4f679cab-283c-494c-84ae-ce1ab66683a0",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        }
+      ],
+      "record_count": 4,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-2840c2b52d934793b024029e772ea26d",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 156,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.156395Z",
+    "payload": {
+      "tool_execution_id": "4f679cab-283c-494c-84ae-ce1ab66683a0",
+      "record_count": 4,
+      "total": 4,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-93f9518df213434e922c3ec4b1b60f4a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 157,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:06.175716Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "21f0c64d-a539-4553-ac33-aa6b3c8fe02d"
+    }
+  },
+  {
+    "id": "EVT-6f4a51b662d443b290f8a0a2184f294c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 158,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.227514Z",
+    "payload": {
+      "tool_execution_id": "21f0c64d-a539-4553-ac33-aa6b3c8fe02d",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-bbb313a7a2714d2d8a507b5f7a60e12f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 159,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.246865Z",
+    "payload": {
+      "tool_execution_id": "21f0c64d-a539-4553-ac33-aa6b3c8fe02d",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-f2256228465e41e1b03a020809d287df",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 160,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:06.267414Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "12b79b9a-e4b1-46d7-90b0-52a84e4dfccd"
+    }
+  },
+  {
+    "id": "EVT-a7d169702339417a9f536050d26a50a8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 161,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.645310Z",
+    "payload": {
+      "tool_execution_id": "12b79b9a-e4b1-46d7-90b0-52a84e4dfccd",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-06"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-07"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-11"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-22"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 10,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-cc9f874116ef44a3ad51018f042a9f86",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 162,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.665368Z",
+    "payload": {
+      "tool_execution_id": "12b79b9a-e4b1-46d7-90b0-52a84e4dfccd",
+      "record_count": 10,
+      "total": 10,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-d5c94ef1118044978b84ede2c4cf24d4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 163,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:06.690414Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "3a8375a6-0a20-4608-8430-2a46801e38c9"
+    }
+  },
+  {
+    "id": "EVT-3d70608cd0a048fca5e9f9140c3661e6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 164,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.735496Z",
+    "payload": {
+      "tool_execution_id": "3a8375a6-0a20-4608-8430-2a46801e38c9",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-14637799f93c473eb19ed6a8bad95b3f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 165,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.748103Z",
+    "payload": {
+      "tool_execution_id": "3a8375a6-0a20-4608-8430-2a46801e38c9",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-bb623d0daf004d2e83875284f6df501c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 166,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:06.774852Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "23a9830e-689f-4c38-b444-93fc041e20d6"
+    }
+  },
+  {
+    "id": "EVT-18ab7ac429884eb0a02e63e94c4064a6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 167,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.818653Z",
+    "payload": {
+      "tool_execution_id": "23a9830e-689f-4c38-b444-93fc041e20d6",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-6ff1f040b1044d76b14b672ab11f2f08",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 168,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.830532Z",
+    "payload": {
+      "tool_execution_id": "23a9830e-689f-4c38-b444-93fc041e20d6",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-166fad7b897f411380bcb76f49fdc195",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 169,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:06.847100Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "b8e6a912-5346-4b77-9569-32fdf9d3f5bf"
+    }
+  },
+  {
+    "id": "EVT-dd85968ef9484a838f2dde9013a6f6eb",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 170,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.893017Z",
+    "payload": {
+      "tool_execution_id": "b8e6a912-5346-4b77-9569-32fdf9d3f5bf",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-06"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-179d688555a547e7b25bbe8b1a5ac8bc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 171,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.906973Z",
+    "payload": {
+      "tool_execution_id": "b8e6a912-5346-4b77-9569-32fdf9d3f5bf",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-96c9d2d1e2844f9489ea88f7316ce109",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 172,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:06.929074Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "cb46a435-485a-4d4e-b426-fde6b618f9fd"
+    }
+  },
+  {
+    "id": "EVT-73d92f77ddef4b1395a0fbf936f2ffe3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 173,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:06.972765Z",
+    "payload": {
+      "tool_execution_id": "cb46a435-485a-4d4e-b426-fde6b618f9fd",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-07"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-70069dc86b55498e8a2fcc0dec20e0c3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 174,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:06.986847Z",
+    "payload": {
+      "tool_execution_id": "cb46a435-485a-4d4e-b426-fde6b618f9fd",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-bae0394ad88641d999028058ca8a6f37",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 175,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:07.005449Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "ec4b3b5e-79fe-419f-b324-cc42f0095d18"
+    }
+  },
+  {
+    "id": "EVT-07ef995169e04ce2ac07cc2d82710974",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 176,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:07.070553Z",
+    "payload": {
+      "tool_execution_id": "ec4b3b5e-79fe-419f-b324-cc42f0095d18",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-11"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-cc68b1296ce248ed9f8b65fa1d7e2de3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 177,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:07.092503Z",
+    "payload": {
+      "tool_execution_id": "ec4b3b5e-79fe-419f-b324-cc42f0095d18",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-7683a12c305a40628dcddbd8d0e94c8a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 178,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:07.115538Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "45762978-2c9d-4744-9889-28253ddb250c"
+    }
+  },
+  {
+    "id": "EVT-cfbbc2a868f942fca318d7ed76217252",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 179,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:07.385520Z",
+    "payload": {
+      "tool_execution_id": "45762978-2c9d-4744-9889-28253ddb250c",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-06"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-07"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-11"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 5,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-1589880279a645dcb289583133c3172c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 180,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:07.407390Z",
+    "payload": {
+      "tool_execution_id": "45762978-2c9d-4744-9889-28253ddb250c",
+      "record_count": 5,
+      "total": 5,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-75c5c43977e54b4e9ea123aa4ace1422",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 181,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:07.427756Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "85008bf7-46c7-4b7a-ae5e-6766b3ba8ca1"
+    }
+  },
+  {
+    "id": "EVT-5555c875f86d40dfa371c604d8f06e76",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 182,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:07.678200Z",
+    "payload": {
+      "tool_execution_id": "85008bf7-46c7-4b7a-ae5e-6766b3ba8ca1",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "record_count": 5,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-c79e6884d4774d6bb9c3e6e990f949db",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 183,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:07.695535Z",
+    "payload": {
+      "tool_execution_id": "85008bf7-46c7-4b7a-ae5e-6766b3ba8ca1",
+      "record_count": 5,
+      "total": 5,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-4d3da34807b14018a31f8da9b1c533c2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 184,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:07.716737Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "3bd0902f-74b2-4578-aa19-5b5eff6dfa2d"
+    }
+  },
+  {
+    "id": "EVT-ab482de24ceb4abba915233adadfd39e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 185,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:07.835482Z",
+    "payload": {
+      "tool_execution_id": "3bd0902f-74b2-4578-aa19-5b5eff6dfa2d",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-89ad5a4f9e0a43d5b729eb628471509a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 186,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:07.857313Z",
+    "payload": {
+      "tool_execution_id": "3bd0902f-74b2-4578-aa19-5b5eff6dfa2d",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-e95727ddb22f424884443e79a683c5ec",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 187,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:07.877183Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "3c9fb7a5-9a28-454a-8e73-be36b6f4f406"
+    }
+  },
+  {
+    "id": "EVT-a7aa1e69798544e286bc578e6732e591",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 188,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.105613Z",
+    "payload": {
+      "tool_execution_id": "3c9fb7a5-9a28-454a-8e73-be36b6f4f406",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        }
+      ],
+      "record_count": 5,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-0666ef9b16df4a79a3a1b79a90971560",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 189,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.125612Z",
+    "payload": {
+      "tool_execution_id": "3c9fb7a5-9a28-454a-8e73-be36b6f4f406",
+      "record_count": 5,
+      "total": 5,
+      "has_more": false,
+      "representations": [
+        "search_hit"
+      ]
+    }
+  },
+  {
+    "id": "EVT-307cfcfb06bc4add80990c52793b752e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 190,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.143576Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "a2a13888-fc30-4857-a72e-af173fc65d97"
+    }
+  },
+  {
+    "id": "EVT-450dff080c774ed68ec7dd367e6667b9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 191,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.185824Z",
+    "payload": {
+      "tool_execution_id": "a2a13888-fc30-4857-a72e-af173fc65d97",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-0bdc1712100b44eeac794338199d1bbf",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 192,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.197272Z",
+    "payload": {
+      "tool_execution_id": "a2a13888-fc30-4857-a72e-af173fc65d97",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-e5da8b9fa1bd4bae946a5c367c58fd75",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 193,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.222707Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "363b39c1-a638-4043-b9cd-a542ee0cf71d"
+    }
+  },
+  {
+    "id": "EVT-41a25a38f3d74eaeb26115c7665deb99",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 194,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.265643Z",
+    "payload": {
+      "tool_execution_id": "363b39c1-a638-4043-b9cd-a542ee0cf71d",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-fb06096105d246db822e4bd4edd42411",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 195,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.285586Z",
+    "payload": {
+      "tool_execution_id": "363b39c1-a638-4043-b9cd-a542ee0cf71d",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-14d6ceeb6afa428cab90e77e6e5e1abb",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 196,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.305365Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "0a25c736-5f42-41ec-9707-148ad7de828c"
+    }
+  },
+  {
+    "id": "EVT-1d412b0ca65a4e6aa7835c129e80be27",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 197,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.353707Z",
+    "payload": {
+      "tool_execution_id": "0a25c736-5f42-41ec-9707-148ad7de828c",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-e442375bed5a4c90a55d8028f5354bb5",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 198,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.371999Z",
+    "payload": {
+      "tool_execution_id": "0a25c736-5f42-41ec-9707-148ad7de828c",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-294efc86900248c59212ae8f7750bb92",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 199,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.393837Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "67b16c90-ab16-43f0-8af5-de0454fd6083"
+    }
+  },
+  {
+    "id": "EVT-a6aa3366abcd44c88c5e5c703ac1ed79",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 200,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.435434Z",
+    "payload": {
+      "tool_execution_id": "67b16c90-ab16-43f0-8af5-de0454fd6083",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-edde0c0d89374b61b02a389c490340f6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 201,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.450746Z",
+    "payload": {
+      "tool_execution_id": "67b16c90-ab16-43f0-8af5-de0454fd6083",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-d57e3510dede484186d1aef635bd8c7c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 202,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.468169Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "get_document",
+      "tool_execution_id": "12cf45ae-86ad-4abd-a3d6-7b984a2dd94a"
+    }
+  },
+  {
+    "id": "EVT-c521eefd711e4096b226ecba1e84d0c4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 203,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.505516Z",
+    "payload": {
+      "tool_execution_id": "12cf45ae-86ad-4abd-a3d6-7b984a2dd94a",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-5fec161acc3b4e91bd0523fc93bd6cb0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 204,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.517176Z",
+    "payload": {
+      "tool_execution_id": "12cf45ae-86ad-4abd-a3d6-7b984a2dd94a",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-9f954e8f4d9243dbb7a8514689e82e59",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 205,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.542045Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "tool": "search_documents",
+      "tool_execution_id": "06bd6bcb-ca56-4e7e-b98b-d972e4a85376"
+    }
+  },
+  {
+    "id": "EVT-8d4b9d9c71f344babe7ba9c31ceacfdd",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 206,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.621610Z",
+    "payload": {
+      "tool_execution_id": "06bd6bcb-ca56-4e7e-b98b-d972e4a85376",
+      "source_refs": [],
+      "record_count": 0,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-7c93cf7553f7426a8ca35730fdbfe5d6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 207,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.635496Z",
+    "payload": {
+      "tool_execution_id": "06bd6bcb-ca56-4e7e-b98b-d972e4a85376",
+      "record_count": 0,
+      "total": 0,
+      "has_more": false,
+      "representations": []
+    }
+  },
+  {
+    "id": "EVT-ed212e0832184ca5b28eb29f7dc3fb4a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 208,
+    "type": "agent.completed",
+    "timestamp": "2026-10-23T07:14:08.675711Z",
+    "payload": {
+      "agent_run_id": "6c06a484-f309-45c0-a3af-5d7cd846b924",
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-2d4afc322b9c409ba696ac69faf5ddaf",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 209,
+    "type": "stage.completed",
+    "timestamp": "2026-10-23T07:14:08.699111Z",
+    "payload": {
+      "stage": "specialist_analysis"
+    }
+  },
+  {
+    "id": "EVT-1bd0cca652364adb90a056b8db707da4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 210,
+    "type": "stage.started",
+    "timestamp": "2026-10-23T07:14:08.713720Z",
+    "payload": {
+      "stage": "contradiction_verification"
+    }
+  },
+  {
+    "id": "EVT-70297af90c9843a08339f35aa9efb924",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 211,
+    "type": "agent.started",
+    "timestamp": "2026-10-23T07:14:08.740566Z",
+    "payload": {
+      "agent": "contradiction",
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58"
+    }
+  },
+  {
+    "id": "EVT-bdc46e4796fe4b8aba733074d78ab15d",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 212,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.765868Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "dc1ef47f-c641-4d6c-946e-18d7329d683f"
+    }
+  },
+  {
+    "id": "EVT-258f570d44e341f18038535354b7cf36",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 213,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.807540Z",
+    "payload": {
+      "tool_execution_id": "dc1ef47f-c641-4d6c-946e-18d7329d683f",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-04ceeca50569412eaf85be88a296657d",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 214,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.823750Z",
+    "payload": {
+      "tool_execution_id": "dc1ef47f-c641-4d6c-946e-18d7329d683f",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-041cfee01c744758bff2c78e997b6b8a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 215,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.839915Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "89928848-3814-4c15-934c-e6d1bafa5c61"
+    }
+  },
+  {
+    "id": "EVT-c19b378063134e49a3f7c7924ae0a0d3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 216,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.881717Z",
+    "payload": {
+      "tool_execution_id": "89928848-3814-4c15-934c-e6d1bafa5c61",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-4b7b84f47079459485ad66bb40dcdcdf",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 217,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.897292Z",
+    "payload": {
+      "tool_execution_id": "89928848-3814-4c15-934c-e6d1bafa5c61",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-22d22f613aff46d3864c3f9b8b437c02",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 218,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.915689Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "959b72d5-5a22-490a-b830-2edf48765eda"
+    }
+  },
+  {
+    "id": "EVT-be9b52264de142f8b6e103bfd386edfb",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 219,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:08.958951Z",
+    "payload": {
+      "tool_execution_id": "959b72d5-5a22-490a-b830-2edf48765eda",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-51d54e24b4da4c30bddcc88a729bc1f1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 220,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:08.967166Z",
+    "payload": {
+      "tool_execution_id": "959b72d5-5a22-490a-b830-2edf48765eda",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-88a9361d210d425d8a782d321e174c2a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 221,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:08.989946Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "2385e32b-444c-4fd8-99e3-e23dea17524c"
+    }
+  },
+  {
+    "id": "EVT-a3c3e1d56cb54c6091394953657358e5",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 222,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.028304Z",
+    "payload": {
+      "tool_execution_id": "2385e32b-444c-4fd8-99e3-e23dea17524c",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-cb7c976f84644521ba680c31ceefcc56",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 223,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.045600Z",
+    "payload": {
+      "tool_execution_id": "2385e32b-444c-4fd8-99e3-e23dea17524c",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-e11fc734687948479732c7525571d2dc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 224,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.060936Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "448967f4-b194-48a3-badc-6b2a681f9330"
+    }
+  },
+  {
+    "id": "EVT-fa7e31a9238d43b28d5ee68f06691987",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 225,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.105503Z",
+    "payload": {
+      "tool_execution_id": "448967f4-b194-48a3-badc-6b2a681f9330",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-9bb119833b1a4646b3332aae4146c750",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 226,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.115681Z",
+    "payload": {
+      "tool_execution_id": "448967f4-b194-48a3-badc-6b2a681f9330",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-9075103ca96546d7ae0cb31bbaf0d4f7",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 227,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.135388Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "e96bb3d5-9ab3-47c4-b85d-70bfe776395d"
+    }
+  },
+  {
+    "id": "EVT-4ce33e619fb145a4ba0f19cabba408c1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 228,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.175371Z",
+    "payload": {
+      "tool_execution_id": "e96bb3d5-9ab3-47c4-b85d-70bfe776395d",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-08"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-5c02940f49404fe6918f74cb496118c4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 229,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.189362Z",
+    "payload": {
+      "tool_execution_id": "e96bb3d5-9ab3-47c4-b85d-70bfe776395d",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-6bd7b8eeec974624b78ee782fa4acb37",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 230,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.205360Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "024a00da-f5da-4b86-9203-7b01206cb934"
+    }
+  },
+  {
+    "id": "EVT-50ba23bbed5e4f36a8a0c610c47fff98",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 231,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.245850Z",
+    "payload": {
+      "tool_execution_id": "024a00da-f5da-4b86-9203-7b01206cb934",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-18"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-a437f2a705cb4b6488d37ad0a54a33df",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 232,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.260636Z",
+    "payload": {
+      "tool_execution_id": "024a00da-f5da-4b86-9203-7b01206cb934",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-55da9069752f46fbb8311c2ddca9d15a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 233,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.277207Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_document",
+      "tool_execution_id": "716d7440-92d0-4454-a8d3-038fbd9b6e71"
+    }
+  },
+  {
+    "id": "EVT-5a8e2fae8c7e4f6aa5f85b35f51011e0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 234,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.321846Z",
+    "payload": {
+      "tool_execution_id": "716d7440-92d0-4454-a8d3-038fbd9b6e71",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-19"
+        }
+      ],
+      "record_count": 1,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-2f69f6c282f843ed921775d6db7583fa",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 235,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.335812Z",
+    "payload": {
+      "tool_execution_id": "716d7440-92d0-4454-a8d3-038fbd9b6e71",
+      "record_count": 1,
+      "total": 1,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-aed54db5a30b47c99aba9667760faacc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 236,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.352574Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "search_documents",
+      "tool_execution_id": "bd462708-ecd6-442f-9556-7c712f996ebb"
+    }
+  },
+  {
+    "id": "EVT-4427da6324e04cd29e969a3f6b859eb8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 237,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.435602Z",
+    "payload": {
+      "tool_execution_id": "bd462708-ecd6-442f-9556-7c712f996ebb",
+      "source_refs": [],
+      "record_count": 0,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-538c74ac69fc452b804223a1e420f044",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 238,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.445702Z",
+    "payload": {
+      "tool_execution_id": "bd462708-ecd6-442f-9556-7c712f996ebb",
+      "record_count": 0,
+      "total": 0,
+      "has_more": false,
+      "representations": []
+    }
+  },
+  {
+    "id": "EVT-17d494b98f6a4a808e910712df78df9e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 239,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.468268Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_referrals",
+      "tool_execution_id": "724a5c79-23e8-4d3e-88b6-33986fe38221"
+    }
+  },
+  {
+    "id": "EVT-bb273fc9b49f4bc592804f55fb00017b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 240,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.495483Z",
+    "payload": {
+      "tool_execution_id": "724a5c79-23e8-4d3e-88b6-33986fe38221",
+      "source_refs": [
+        {
+          "type": "referral",
+          "id": "REF-001-01"
+        },
+        {
+          "type": "referral",
+          "id": "REF-001-02"
+        }
+      ],
+      "record_count": 2,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-5280b1e98d8249b88cea5a266af1f5c8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 241,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.515795Z",
+    "payload": {
+      "tool_execution_id": "724a5c79-23e8-4d3e-88b6-33986fe38221",
+      "record_count": 2,
+      "total": 2,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-fec9fcbe67ea49efa8ffba489ac221b5",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 242,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.533831Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "get_diagnostic_reports",
+      "tool_execution_id": "e69c1d90-1f6a-49a7-8fc0-9be87c5eeeab"
+    }
+  },
+  {
+    "id": "EVT-09d4658f084d4ecebb94108b9f97f3de",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 243,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.560720Z",
+    "payload": {
+      "tool_execution_id": "e69c1d90-1f6a-49a7-8fc0-9be87c5eeeab",
+      "source_refs": [
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L1"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L2"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-I1"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L3"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-I2"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L4"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-I3"
+        },
+        {
+          "type": "diagnostic_report",
+          "id": "RPT-001-L5"
+        }
+      ],
+      "record_count": 8,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-b14bf615bc99412fad0bb3b734d33899",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 244,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.575697Z",
+    "payload": {
+      "tool_execution_id": "e69c1d90-1f6a-49a7-8fc0-9be87c5eeeab",
+      "record_count": 8,
+      "total": 8,
+      "has_more": false,
+      "representations": [
+        "source"
+      ]
+    }
+  },
+  {
+    "id": "EVT-c9f38d64dde84338af1887e01830d4b3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 245,
+    "type": "tool.started",
+    "timestamp": "2026-10-23T07:14:09.595683Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "tool": "search_documents",
+      "tool_execution_id": "d7b07ae1-1cd1-465e-a50d-f243350a4745"
+    }
+  },
+  {
+    "id": "EVT-e9b5580fe96a4863b39995cd872a4233",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 246,
+    "type": "tool.completed",
+    "timestamp": "2026-10-23T07:14:09.675727Z",
+    "payload": {
+      "tool_execution_id": "d7b07ae1-1cd1-465e-a50d-f243350a4745",
+      "source_refs": [],
+      "record_count": 0,
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-4018f109c918446bafc05c78147b05dd",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 247,
+    "type": "tool.page",
+    "timestamp": "2026-10-23T07:14:09.692211Z",
+    "payload": {
+      "tool_execution_id": "d7b07ae1-1cd1-465e-a50d-f243350a4745",
+      "record_count": 0,
+      "total": 0,
+      "has_more": false,
+      "representations": []
+    }
+  },
+  {
+    "id": "EVT-3c64b6c26f624931b0e081b9f1d45ea1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 248,
+    "type": "agent.completed",
+    "timestamp": "2026-10-23T07:14:09.709598Z",
+    "payload": {
+      "agent_run_id": "dae70dda-26f1-4aab-8caf-62c5c9c9ac58",
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-a2646498045c44b482fbf8cb6c076f09",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 249,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:09.758914Z",
+    "payload": {
+      "finding_id": "FND-9d404cae03494299ad1bcb2332ec6842",
+      "source_refs": [
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-01"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-01"
+        },
+        {
+          "type": "clinical_event",
+          "id": "EVT-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-02"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-04"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-08"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-18"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-19"
+        }
+      ],
+      "rule": "onset_conflict",
+      "candidate_type": "timeline_contradiction"
+    }
+  },
+  {
+    "id": "EVT-0c610d8593284ab2bbb33a48f8027cc1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 250,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:09.772535Z",
+    "payload": {
+      "finding_id": "FND-9d404cae03494299ad1bcb2332ec6842"
+    }
+  },
+  {
+    "id": "EVT-945eb7a88dcc4d93802a07682204d020",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 251,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:10.055705Z",
+    "payload": {
+      "finding_id": "FND-9d404cae03494299ad1bcb2332ec6842"
+    }
+  },
+  {
+    "id": "EVT-d68d18c3b89d4dc5b8d683b8f06d5ef6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 252,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:10.073774Z",
+    "payload": {
+      "finding_id": "FND-9d404cae03494299ad1bcb2332ec6842",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-d61208ebed04444aa7d12ae598fa1852",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 253,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:10.089393Z",
+    "payload": {
+      "finding_id": "FND-fdcf77a594c24822a9b796d367ac4d8d",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-01"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        }
+      ],
+      "rule": "lab_change",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-cec44c41240e453ba2695aa45c10fa5c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 254,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:10.098739Z",
+    "payload": {
+      "finding_id": "FND-fdcf77a594c24822a9b796d367ac4d8d"
+    }
+  },
+  {
+    "id": "EVT-eb68addf667c4a6e8af93dcdac86b3bf",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 255,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:10.275598Z",
+    "payload": {
+      "finding_id": "FND-fdcf77a594c24822a9b796d367ac4d8d"
+    }
+  },
+  {
+    "id": "EVT-429630402f1f4502b77e0117bdf09a49",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 256,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:10.290684Z",
+    "payload": {
+      "finding_id": "FND-fdcf77a594c24822a9b796d367ac4d8d",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-1fe4649746874461ab7401715a4bf717",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 257,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:10.307610Z",
+    "payload": {
+      "finding_id": "FND-2d82e523b98449ecadda4ed14d2827d9",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-02"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-22"
+        }
+      ],
+      "rule": "lab_change",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-d9d82279b2a7455eb0f9e2c92137fb56",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 258,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:10.315497Z",
+    "payload": {
+      "finding_id": "FND-2d82e523b98449ecadda4ed14d2827d9"
+    }
+  },
+  {
+    "id": "EVT-46d8b15e10444deca624d40182c3818e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 259,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:10.489605Z",
+    "payload": {
+      "finding_id": "FND-2d82e523b98449ecadda4ed14d2827d9"
+    }
+  },
+  {
+    "id": "EVT-958bf35eb07244cab037cbac8707b257",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 260,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:10.512914Z",
+    "payload": {
+      "finding_id": "FND-2d82e523b98449ecadda4ed14d2827d9",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-79c7713150204477b93f91ad086789f1",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 261,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:10.527875Z",
+    "payload": {
+      "finding_id": "FND-64a80e9da460481b9bde1a41b1631793",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        }
+      ],
+      "rule": "lab_change",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-7195e6d1e9c44b24a8b8f67b8911630c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 262,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:10.538108Z",
+    "payload": {
+      "finding_id": "FND-64a80e9da460481b9bde1a41b1631793"
+    }
+  },
+  {
+    "id": "EVT-3255f4dc7f7e4492a0862fdea79b12de",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 263,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:10.715923Z",
+    "payload": {
+      "finding_id": "FND-64a80e9da460481b9bde1a41b1631793"
+    }
+  },
+  {
+    "id": "EVT-efa839e3b1d74af18d9f1600e821a05f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 264,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:10.733788Z",
+    "payload": {
+      "finding_id": "FND-64a80e9da460481b9bde1a41b1631793",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-8930f2c851f34d02a074f59f050a6aeb",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 265,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:10.750589Z",
+    "payload": {
+      "finding_id": "FND-fff952b555ef421e8f932a262c6d433c",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-04"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-24"
+        }
+      ],
+      "rule": "lab_change",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-7bee95e332094448a5827b5855552dc9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 266,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:10.758962Z",
+    "payload": {
+      "finding_id": "FND-fff952b555ef421e8f932a262c6d433c"
+    }
+  },
+  {
+    "id": "EVT-71e60e4febfe46d6b43bbca7a97111cc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 267,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:10.957203Z",
+    "payload": {
+      "finding_id": "FND-fff952b555ef421e8f932a262c6d433c"
+    }
+  },
+  {
+    "id": "EVT-5708495658c345f592a90c194f66065e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 268,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:10.972078Z",
+    "payload": {
+      "finding_id": "FND-fff952b555ef421e8f932a262c6d433c",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-f0952be4b4c540eda97c98e4e6ff3f8f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 269,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:10.985791Z",
+    "payload": {
+      "finding_id": "FND-1073a634bb1e434d9391019d96277b1a",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-05"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-25"
+        }
+      ],
+      "rule": "lab_change",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-9477888798c64a20881ec4a26d87fff3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 270,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:10.998518Z",
+    "payload": {
+      "finding_id": "FND-1073a634bb1e434d9391019d96277b1a"
+    }
+  },
+  {
+    "id": "EVT-38930b28edc04f5b9b74cc8234a32616",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 271,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:11.187435Z",
+    "payload": {
+      "finding_id": "FND-1073a634bb1e434d9391019d96277b1a"
+    }
+  },
+  {
+    "id": "EVT-d282b80782944bd4ae66d4a9840696da",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 272,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:11.203241Z",
+    "payload": {
+      "finding_id": "FND-1073a634bb1e434d9391019d96277b1a",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-702857ac90e047cd95bf440378345b4e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 273,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:11.215761Z",
+    "payload": {
+      "finding_id": "FND-618a960857ea48a38e8a84d640cfcbcc",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-03"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-08"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-14"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        }
+      ],
+      "rule": "record_series",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-d230bcff462347f98f3ed5653700f637",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 274,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:11.230450Z",
+    "payload": {
+      "finding_id": "FND-618a960857ea48a38e8a84d640cfcbcc"
+    }
+  },
+  {
+    "id": "EVT-59bd5908ff0049b28fa3c7b3aca7e616",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 275,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:11.498710Z",
+    "payload": {
+      "finding_id": "FND-618a960857ea48a38e8a84d640cfcbcc"
+    }
+  },
+  {
+    "id": "EVT-52481968bb1948098d7e81ce46cc8b21",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 276,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:11.515658Z",
+    "payload": {
+      "finding_id": "FND-618a960857ea48a38e8a84d640cfcbcc",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-fdbdefe29f8043918777b9080060794f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 277,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:11.532268Z",
+    "payload": {
+      "finding_id": "FND-216c9c448c8e483388f97e9932b1e9d9",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-13"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-18"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-23"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        }
+      ],
+      "rule": "record_series",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-b344cb09a59842988ab586d9aaf2e734",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 278,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:11.545619Z",
+    "payload": {
+      "finding_id": "FND-216c9c448c8e483388f97e9932b1e9d9"
+    }
+  },
+  {
+    "id": "EVT-4f5135fee9a64594ac318950064620de",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 279,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:11.835331Z",
+    "payload": {
+      "finding_id": "FND-216c9c448c8e483388f97e9932b1e9d9"
+    }
+  },
+  {
+    "id": "EVT-e164569753fa492bbcdf73bcd5dc0df3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 280,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:11.855343Z",
+    "payload": {
+      "finding_id": "FND-216c9c448c8e483388f97e9932b1e9d9",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-31050524aba84170a75ffe388fbf9fff",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 281,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:11.865680Z",
+    "payload": {
+      "finding_id": "FND-e872cbe3937043fbbb1627552bc8e9b3",
+      "source_refs": [
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-11"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-15"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-16"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-16"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "observation",
+          "id": "LAB-001-21"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-17"
+        }
+      ],
+      "rule": "record_series",
+      "candidate_type": "laboratory_change"
+    }
+  },
+  {
+    "id": "EVT-81767a01fa104ca8968ded35901064e8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 282,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:11.883204Z",
+    "payload": {
+      "finding_id": "FND-e872cbe3937043fbbb1627552bc8e9b3"
+    }
+  },
+  {
+    "id": "EVT-6f69e3ffad9f4269884c45e7acb9de4c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 283,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:12.181854Z",
+    "payload": {
+      "finding_id": "FND-e872cbe3937043fbbb1627552bc8e9b3"
+    }
+  },
+  {
+    "id": "EVT-718a923d12f44d00a2881103c0463622",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 284,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:12.209923Z",
+    "payload": {
+      "finding_id": "FND-e872cbe3937043fbbb1627552bc8e9b3",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-abe836da13fb4579b52e7966ab46192b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 285,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:12.241728Z",
+    "payload": {
+      "finding_id": "FND-60315ef83bf349a899c8c047a377a418",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-ff11a068fd064e33bc553c8cf3d4241e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 286,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:12.260623Z",
+    "payload": {
+      "finding_id": "FND-60315ef83bf349a899c8c047a377a418"
+    }
+  },
+  {
+    "id": "EVT-732ec8422bf14ddeafd19b14e112bca2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 287,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:12.428518Z",
+    "payload": {
+      "finding_id": "FND-60315ef83bf349a899c8c047a377a418"
+    }
+  },
+  {
+    "id": "EVT-1931b455d0d64a1fa67788138e2c24a4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 288,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:12.445335Z",
+    "payload": {
+      "finding_id": "FND-60315ef83bf349a899c8c047a377a418",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-3cf8b8b326fb45be92c0a0eb64a92613",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 289,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:12.460971Z",
+    "payload": {
+      "finding_id": "FND-c24278b4126c4b889c44f07161d9e5bf",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-02"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-22"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-a089e5cd88b246ea9f365ea9475167da",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 290,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:12.477999Z",
+    "payload": {
+      "finding_id": "FND-c24278b4126c4b889c44f07161d9e5bf"
+    }
+  },
+  {
+    "id": "EVT-bb7434c0425541538a3766c89aac776a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 291,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:12.684494Z",
+    "payload": {
+      "finding_id": "FND-c24278b4126c4b889c44f07161d9e5bf"
+    }
+  },
+  {
+    "id": "EVT-0125581aff65419ab41bb68318307ba0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 292,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:12.705285Z",
+    "payload": {
+      "finding_id": "FND-c24278b4126c4b889c44f07161d9e5bf",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-593ec14e054e4f02be7a000cf55e6dc4",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 293,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:12.728869Z",
+    "payload": {
+      "finding_id": "FND-644c86e8efd0461dbcf8c6ee4f4a25af",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-39ba09aafb6143ca8ec7fcd9a16bb38e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 294,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:12.737223Z",
+    "payload": {
+      "finding_id": "FND-644c86e8efd0461dbcf8c6ee4f4a25af"
+    }
+  },
+  {
+    "id": "EVT-1f7eae78f0724b679a442113e849c5f3",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 295,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:12.871850Z",
+    "payload": {
+      "finding_id": "FND-644c86e8efd0461dbcf8c6ee4f4a25af"
+    }
+  },
+  {
+    "id": "EVT-e2150162f924461d8e9ed4331d496e14",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 296,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:12.894304Z",
+    "payload": {
+      "finding_id": "FND-644c86e8efd0461dbcf8c6ee4f4a25af",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-cffd523d122947b58bb04c49963bba48",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 297,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:12.907295Z",
+    "payload": {
+      "finding_id": "FND-25627a8a02d14602859f3a915543f3f9",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-06"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-4280b503d5684fa59ffcd7e966aab2f9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 298,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:12.918768Z",
+    "payload": {
+      "finding_id": "FND-25627a8a02d14602859f3a915543f3f9"
+    }
+  },
+  {
+    "id": "EVT-a268c94bbd8040e98548c7f987bd988b",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 299,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:13.055338Z",
+    "payload": {
+      "finding_id": "FND-25627a8a02d14602859f3a915543f3f9"
+    }
+  },
+  {
+    "id": "EVT-60cbc928def744e0a337970a6735a574",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 300,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:13.077251Z",
+    "payload": {
+      "finding_id": "FND-25627a8a02d14602859f3a915543f3f9",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-2211896f8ad34abcaec5aaaf12f2a8c2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 301,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:13.088287Z",
+    "payload": {
+      "finding_id": "FND-d0d9c73799374149a72c6ba6845d1ea9",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-03"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-03"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-5d09aae2ac2e436bbd91236fc794653a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 302,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:13.103811Z",
+    "payload": {
+      "finding_id": "FND-d0d9c73799374149a72c6ba6845d1ea9"
+    }
+  },
+  {
+    "id": "EVT-e86c7a7eface44a79c178e9a32387a74",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 303,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:13.219604Z",
+    "payload": {
+      "finding_id": "FND-d0d9c73799374149a72c6ba6845d1ea9"
+    }
+  },
+  {
+    "id": "EVT-88b2b12b90a84f699dac8a6f0e57bcc7",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 304,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:13.241724Z",
+    "payload": {
+      "finding_id": "FND-d0d9c73799374149a72c6ba6845d1ea9",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-da91dccfd64940e799730c4d07f6af91",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 305,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:13.255675Z",
+    "payload": {
+      "finding_id": "FND-5769f2e7b78f438ab15c5c11b0f1f4c9",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-05"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-23"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-04d236f9b9964ae6802e830c1e7c9bac",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 306,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:13.266799Z",
+    "payload": {
+      "finding_id": "FND-5769f2e7b78f438ab15c5c11b0f1f4c9"
+    }
+  },
+  {
+    "id": "EVT-d924d2a697a84769ae6108813503f142",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 307,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:13.385504Z",
+    "payload": {
+      "finding_id": "FND-5769f2e7b78f438ab15c5c11b0f1f4c9"
+    }
+  },
+  {
+    "id": "EVT-6397a3341a434c14a31022abd1852fb2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 308,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:13.407404Z",
+    "payload": {
+      "finding_id": "FND-5769f2e7b78f438ab15c5c11b0f1f4c9",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-6d8b9459b99641d58fbfa36396f81928",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 309,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:13.416969Z",
+    "payload": {
+      "finding_id": "FND-b0be5ecfa93a409880b93f67eaa2ff21",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-07"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-12"
+        }
+      ],
+      "rule": "field_observation",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-f7641c23b25949248083bfcfc7f7e821",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 310,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:13.435804Z",
+    "payload": {
+      "finding_id": "FND-b0be5ecfa93a409880b93f67eaa2ff21"
+    }
+  },
+  {
+    "id": "EVT-f3605712966d4cbc9b1f7bc33afdb7c6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 311,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:13.555771Z",
+    "payload": {
+      "finding_id": "FND-b0be5ecfa93a409880b93f67eaa2ff21"
+    }
+  },
+  {
+    "id": "EVT-d0343e170cae49c18276c6e0701f168c",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 312,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:13.575904Z",
+    "payload": {
+      "finding_id": "FND-b0be5ecfa93a409880b93f67eaa2ff21",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-eab84070b14b40ca8fc8c43b4f464e0e",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 313,
+    "type": "finding.proposed",
+    "timestamp": "2026-10-23T07:14:13.593014Z",
+    "payload": {
+      "finding_id": "FND-65943e8b8cfc4df785a007deff228eb6",
+      "source_refs": [
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-01"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-21"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "medication",
+          "id": "MED-001-04"
+        },
+        {
+          "type": "document",
+          "id": "DOC-001-05"
+        }
+      ],
+      "rule": "record_series",
+      "candidate_type": "medication_change"
+    }
+  },
+  {
+    "id": "EVT-5893ac995da5440197d9d19d99ff27f2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 314,
+    "type": "verification.started",
+    "timestamp": "2026-10-23T07:14:13.606159Z",
+    "payload": {
+      "finding_id": "FND-65943e8b8cfc4df785a007deff228eb6"
+    }
+  },
+  {
+    "id": "EVT-d3e75eb141034b8d8ce7f8319255c7b8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 315,
+    "type": "finding.verified",
+    "timestamp": "2026-10-23T07:14:13.745604Z",
+    "payload": {
+      "finding_id": "FND-65943e8b8cfc4df785a007deff228eb6"
+    }
+  },
+  {
+    "id": "EVT-de8a01105855408ea6b6a3071aabbfa6",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 316,
+    "type": "verification.completed",
+    "timestamp": "2026-10-23T07:14:13.767284Z",
+    "payload": {
+      "finding_id": "FND-65943e8b8cfc4df785a007deff228eb6",
+      "status": "verified"
+    }
+  },
+  {
+    "id": "EVT-4d92baa28b824e289c88625ef3a44df8",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 317,
+    "type": "investigation.updated",
+    "timestamp": "2026-10-23T07:14:13.785741Z",
+    "payload": {}
+  },
+  {
+    "id": "EVT-61e6a42ffdcc4bc3a626cf965b83a8ff",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 318,
+    "type": "stage.completed",
+    "timestamp": "2026-10-23T07:14:13.805474Z",
+    "payload": {
+      "stage": "contradiction_verification"
+    }
+  },
+  {
+    "id": "EVT-012415be64a04bafa8a20c0da70fd9d2",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 319,
+    "type": "stage.started",
+    "timestamp": "2026-10-23T07:14:13.822788Z",
+    "payload": {
+      "stage": "report_synthesis"
+    }
+  },
+  {
+    "id": "EVT-b8f602d3eb914cf585223d4b31adda7f",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 320,
+    "type": "agent.started",
+    "timestamp": "2026-10-23T07:14:13.858011Z",
+    "payload": {
+      "agent": "synthesis",
+      "agent_run_id": "78ea9c93-1d60-464c-969f-2f1fa7946b42"
+    }
+  },
+  {
+    "id": "EVT-dd3e7ce32acb4ad7be457f0329e070cc",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 321,
+    "type": "agent.completed",
+    "timestamp": "2026-10-23T07:14:13.898411Z",
+    "payload": {
+      "agent_run_id": "78ea9c93-1d60-464c-969f-2f1fa7946b42",
+      "error_code": null
+    }
+  },
+  {
+    "id": "EVT-d50da8bc76294cd3a212a508207c198a",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 322,
+    "type": "investigation.updated",
+    "timestamp": "2026-10-23T07:14:13.915947Z",
+    "payload": {}
+  },
+  {
+    "id": "EVT-66edb05972584a8392a2dc440f2413e0",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 323,
+    "type": "stage.completed",
+    "timestamp": "2026-10-23T07:14:13.939661Z",
+    "payload": {
+      "stage": "report_synthesis"
+    }
+  },
+  {
+    "id": "EVT-c594578ed2b24979bba0c22b359a33f9",
+    "investigation_id": "INV-df9ce236a1084b5c8248db47ddd0bceb",
+    "sequence": 324,
+    "type": "investigation.completed",
+    "timestamp": "2026-10-23T07:14:13.964222Z",
+    "payload": {
+      "status": "completed"
+    }
+  }
+]
