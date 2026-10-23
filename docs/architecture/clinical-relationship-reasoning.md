@@ -1,5 +1,72 @@
 # Clinical relationship reasoning — Phase 2.2
 
+## Phase 2.5 diagnostic hypothesis comparison
+
+The existing contradiction specialist discovers original diagnostic documents as
+well as structured reports. Its bounded document/encounter/referral retrieval is
+shared with the result-follow-up workflow. No new planner, tool permission or
+autonomous diagnostic agent is introduced. Working assessments are reconstructed
+from explicit original narrative wording, with certainty unknown unless stated.
+Unavailable structured diagnosis data is not silently supplied to agents.
+
+An optional diagnostic_comparison on the relationship envelope records the working
+hypothesis, exact source roles, supporting/weakening/contradictory evidence,
+remaining alternatives, missing evidence and a provisional reconsideration
+question. The independent verifier repeats the accessible search, validates
+originals and reconstructs the full comparison, including counterinterpretations
+and result/document encounter mismatches. Only the recorded evidence relationship
+is verified; clinical interpretation remains provisional. The engine publishes
+source-linked Hypothesis comparisons only after this independent reconstruction.
+Legacy hypotheses and envelopes retain their original paths.
+
+Explicit symptom correlation is required to ask whether an objective interpreted
+finding weakens an exclusive working explanation. Incidental, inconclusive,
+supportive or conflicting interpretations do not become a positive challenge.
+No probabilities, definitive diagnosis, exclusion of coexisting explanations,
+treatment instructions or clinician-impropriety allegations are generated.
+Generic reassessment notes are context, not invented interpretation or chronology.
+
+## Phase 2.4 result-to-follow-up extension
+
+The existing contradiction specialist discovers actionable finalized diagnostic
+reports and retrieves original documents, encounters and referrals using its
+existing permissions. A bounded accessible-record manifest records the unfiltered
+search, original source versions/hashes, truncation and appointment coverage
+(referral appointment fields only; no standalone appointment resource exists).
+The independent verifier repeats that search through the clinical reader and
+resolves originals before regenerating the complete result relationship.
+Incomplete or changed scopes cannot verify an absence-of-documentation claim.
+
+An additive result workflow envelope preserves eleven lifecycle stages, unknown,
+partial and conflicting documentation, named source timestamps and literal dates.
+Administrative closure is separate from acknowledgment, patient communication and
+completed clinical follow-up. Later review is retained as counterevidence to an
+open-ended absence claim. No clinical deadline is invented. Generic result text
+requires a unique actionable result; ambiguous multi-result attribution remains
+unresolved. The parser is conservative explicit vocabulary, not general clinical
+NLP. Findings establish documented relationships only, never absent care,
+negligence, progression or a new diagnosis. No clinical schema or tool changes.
+
+## Phase 2.3 medication extension
+
+Medication reconciliation reuses this envelope and verifier. Explicit ingredient,
+strength, formulation and route constrain identity; ambiguous products stay
+unmatched. A bounded source parser distinguishes orders, copied lists, reported
+use, hold/restart instructions, documented administration and exposure uncertainty.
+Document event time, authoring time and intended effective dates remain distinct.
+The medication specialist retrieves original documents through its existing tools.
+Independent verification reconstructs medication assertions and the entire
+consolidated proposition from originals, including decisive identity/time anchors.
+Different recorded instructions are not automatically proof of overlapping
+clinical conflict. Planned hold/restart transitions and retrospective entries
+retain explicit temporal limitations. Actual ingestion and causality stay unknown.
+
+The existing orchestrator can request laboratory proposal evidence from the
+already executed laboratory specialist, preserving its source references in an
+unresolved cross-specialist question. The medication agent gains no laboratory
+read permission. Association questions cannot verify a medication-induced injury.
+No case IDs, expected source IDs or evaluation material select medication work.
+
 This is an additive extension of the existing investigation engine. Specialists
 continue to receive scoped tool executors. Only the independent EvidenceVerifier
 receives a SourceResolver. There is no new scheduler, database or agent runtime.
@@ -98,3 +165,31 @@ Only synthetic independent controls and existing CASE-001 regressions are used
 for architecture validation. Frozen cases, assets, keys, evaluation adapters and
 scoring thresholds remain unchanged. Runtime imports no evaluation files.
 Clinical interpretation and broader extraction remain future reviewed work.
+
+## Phase 2.6 longitudinal planning contract
+
+Laboratory investigation consolidates compatible patient/analyte/unit/specimen
+series, retaining collection instants, every intermediate measurement and each
+source-specific reference interval. Unknown specimen/fasting context remains
+unknown; narrative values never overwrite structured measurements. A typed
+`longitudinal` envelope on Candidate/Finding carries measurements, searched
+source identities, follow-up evidence, bounded question and stop reason.
+The additive `longitudinal_followup` rule verifies record relationships only.
+
+A deterministic laboratory queue ranks repeated abnormalities by relative range
+excursion, encounter repetition, change and source diversity. It selects at most
+six groups and forty measurements per group; every deferred group is named with
+a reason in limitations. Original-document retrieval is capped at twenty, with
+paged lab/encounter/referral/document discovery and existing per-role/global
+call and time limits. Search truncation never establishes absence. Related
+assessments/recommendations and later tests/referrals are reassessed once;
+completion requires explicit linked, dated completion evidence. Tests alone do
+not prove that every recommendation was fulfilled. Missing records do not prove
+missed care or diagnosis. Important deferred or unresolved work produces
+completed_with_limitations. No recursive laboratory loop or extra model call.
+
+Verification independently repeats the bounded paginated accessible search,
+resolves originals and reconstructs the complete measurement/follow-up envelope,
+including counterevidence. Canonical wording replaces proposed prose. Final
+candidate selection suppresses overlapping pairwise lab changes already covered
+by a consolidated series, while preserving source evidence in the envelope.

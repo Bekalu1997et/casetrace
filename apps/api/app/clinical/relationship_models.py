@@ -5,6 +5,8 @@ from typing import Literal
 from pydantic import Field, model_validator
 
 from app.clinical.claims import ClinicalClaim
+from app.clinical.diagnostic_models import DiagnosticComparison
+from app.clinical.result_models import ResultWorkflow
 from app.hospital.schemas import ClinicalModel
 
 
@@ -18,6 +20,8 @@ class TemporalOrdering(ClinicalModel):
 
 class RelationshipEvidence(ClinicalModel):
     schema_version: Literal["1.0"] = "1.0"
+    result_workflow: ResultWorkflow | None = None
+    diagnostic_comparison: DiagnosticComparison | None = None
     relationship_type: Literal[
         "recorded_state_difference",
         "documented_assertion_conflict",

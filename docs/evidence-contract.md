@@ -1,5 +1,18 @@
 # Phase 2 source provenance boundary
 
+## Phase 2.3 medication reconciliation
+
+The existing medication_reconciliation envelope now supports independently
+reconstructed medication-specific assertions. ClinicalClaim origin additionally
+permits copied_list and administration (documented administration, not inferred
+ingestion). Identity uses explicit ingredient/strength/formulation/route and
+does not infer synonyms. Source event, authored, ordered and intended start/end
+times remain distinct. Explicit ISO planned dates are retained as qualifiers;
+unknown relative applicability stays unknown. The verifier regenerates the
+complete consolidated candidate and canonical claim from independently fetched
+originals. Actual ingestion, causal injury and definitive diagnosis remain
+unsupported. Cross-specialist laboratory association questions remain unresolved.
+
 ## Phase 2.2 typed relationship evidence
 
 Candidates/findings may include an optional `relationship` envelope composed of
@@ -90,3 +103,29 @@ requires the complete generated anchor set. Candidate prose is replaced with
 the canonical observation. Different medication states are not automatically
 contradictions; repeated source-range abnormalities are not diagnoses.
 Free-form follow-up, causal and diagnostic interpretations stay inconclusive.
+# Phase 2.4 result workflow evidence
+
+Phase 2.5 diagnostic_comparison reuses the bounded source search manifest for
+working-assessment versus objective-interpretation comparisons. Independently
+repeated category search and original resolution protect against omitted opposing
+interpretations. Reconstruction checks the entire comparison, factual assertions,
+certainty, chronology, patient/encounter links and exact source anchors. Empty,
+over-limit, changed or unavailable evidence remains unverified. Supported record
+relationships can include an inconclusive or non-challenged provisional verdict;
+verified does not mean a diagnosis is established. Hypothesis.comparison is emitted
+only from a verified comparison; incoming provider comparison fields are cleared.
+Source-interpreted findings are distinct from measurements and final diagnoses.
+Generic context never supplies an invented diagnosis, causal link or later date.
+
+The optional relationship.result_workflow carries result_id, attribution,
+search (complete, categories, document_limit, appointment_coverage and original
+source/version/hash manifest), and eleven lifecycle stages. Each stage has a
+documented/partial/unknown/conflicting state and exact source observations with
+named event_time_field, timestamps and literal narrative dates. Metadata/narrative
+date conflicts are retained; narrative dates do not become invented instants.
+Unknown means unestablished, not that an action did not happen. The result rule
+independently repeats all four category searches and source resolution before
+reconstructing the complete envelope, anchors and canonical record-level claim.
+Changed, omitted, foreign or stale evidence fails closed. Incomplete search is
+inconclusive. Later completed referral/review and patient notification evidence
+constrain absence claims. This adds no proof of negligence, progression or diagnosis.

@@ -36,6 +36,9 @@ PERMISSIONS = {
         "get_medication_history",
     },
     "laboratory": {
+        "get_encounters",
+        "get_encounter",
+        "get_referrals",
         "get_lab_results",
         "get_lab_result",
         "compare_lab_results",

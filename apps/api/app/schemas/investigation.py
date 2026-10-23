@@ -5,6 +5,8 @@ from typing import Any, Literal
 
 from pydantic import Field
 
+from app.clinical.diagnostic_models import DiagnosticComparison
+from app.clinical.longitudinal_models import LongitudinalEvidence
 from app.clinical.relationship_models import RelationshipEvidence
 from app.hospital.schemas import ClinicalModel, Identifier
 from app.schemas.provenance import (
@@ -106,6 +108,7 @@ class Candidate(ClinicalModel):
         "field_observation",
         "lab_change",
         "record_series",
+        "longitudinal_followup",
         "clinical_relationship",
         "review_before_result",
         "onset_conflict",
@@ -115,9 +118,11 @@ class Candidate(ClinicalModel):
     alternatives: list[str] = Field(default_factory=list, max_length=10)
     limitations: list[str] = Field(default_factory=list, max_length=10)
     relationship: RelationshipEvidence | None = None
+    longitudinal: LongitudinalEvidence | None = None
 
 
 class Hypothesis(ClinicalModel):
+    comparison: DiagnosticComparison | None = None
     explanation: str = Field(max_length=1500)
     supports: list[Anchor] = Field(default_factory=list, max_length=20)
     weakens: list[Anchor] = Field(default_factory=list, max_length=20)

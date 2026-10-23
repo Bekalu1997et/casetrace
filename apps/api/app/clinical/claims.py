@@ -56,6 +56,8 @@ class ClinicalClaim(ClinicalModel):
         "patient_report",
         "clinician_record",
         "clinician_interpretation",
+        "copied_list",
+        "administration",
         "unknown",
     ] = "unknown"
     source_status: str | None = None

@@ -1,5 +1,29 @@
 # CASETRACE — Frontend–Backend Contract
 
+Phase 2.5 adds optional nullable `relationship.diagnostic_comparison` to existing
+findings and optional nullable `Hypothesis.comparison`. These contain the documented
+working hypothesis/certainty, exact source roles/anchors/timestamps, supporting,
+weakening and contradictory evidence, missing evidence, alternatives, a question,
+provisional_verdict and accessible search manifest. Nonspecific context is marked.
+Verdicts are reconsideration_question, not_challenged or inconclusive; existing
+Hypothesis.verdict remains inconclusive for generated clinical questions. A verified
+finding validates the recorded relationship, not the diagnosis or clinical answer.
+Old payloads remain readable. No endpoint, status, SSE or frontend workflow changes.
+
+Phase 2.4 adds optional nullable relationship.result_workflow inside existing
+findings/reports: result_id, attribution, search completeness/source manifest and
+eleven lifecycle stages with documented/partial/unknown/conflicting states,
+original anchors, named timestamps and literal dates. Clients may ignore it.
+Administrative closure is independent of completed follow-up and notification.
+Existing endpoints, statuses, SSE activity and REST reconciliation remain.
+
+Phase 2.3 adds ClinicalClaim origins `copied_list` and `administration` inside
+the optional relationship envelope; administration means documented source
+language, not inferred ingestion. The additive `specialist.evidence_requested`
+activity event carries requesting/providing agent names, question count, source
+references and proposal verification state. Existing routes, finding statuses
+and unknown-event tolerance remain unchanged.
+
 ## Phase 2.2 additive relationship contract
 
 Candidate/Finding adds optional nullable `relationship` (schema_version 1.0):

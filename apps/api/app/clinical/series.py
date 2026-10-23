@@ -114,6 +114,4 @@ def record_series(records: list[SourceRecord]) -> list[Candidate]:
                     ],
                 )
             )
-            if len(results) >= 12:
-                return results
     return results

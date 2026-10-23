@@ -97,7 +97,10 @@ async def test_fixture_source_runs_real_tools_specialist_and_verifier_without_sq
     executor = ScopedToolExecutor("PAT-CONTROL", execute)
     assert not hasattr(executor, "store") and not hasattr(executor, "clinical")
     output, records = await MedicationAgent(executor, "medication", uuid4()).run()
-    assert calls == ["get_medication_history", "get_document"]
+    assert calls[:2] == ["get_medication_history", "get_document"]
+    # Reconciliation now performs bounded authorized searches beyond provenance links.
+    assert 2 < len(calls) <= 10
+    assert set(calls[2:]) == {"search_documents"}
     assert len(records) == 2 and len(output.candidates) == 1
     result, _ = await EvidenceVerifier(source, "PAT-CONTROL").verify(output.candidates[0])
     assert result.status == "verified"

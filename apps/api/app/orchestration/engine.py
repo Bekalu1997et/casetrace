@@ -14,6 +14,10 @@ from app.agents.specialists import (
     RetrievalAgent,
     TimelineAgent,
 )
+from app.clinical.diagnostic_challenger import LIMITATIONS as DIAGNOSTIC_LIMITATIONS
+from app.clinical.diagnostic_challenger import comparison_hypothesis
+from app.clinical.longitudinal import consolidate
+from app.clinical.medications import laboratory_questions
 from app.clinical.ports import ClinicalSource
 from app.clinical.relationship_synthesis import (
     RELATIONSHIP_ALTERNATIVES,
@@ -21,6 +25,7 @@ from app.clinical.relationship_synthesis import (
     synthesize_relationships,
 )
 from app.clinical.relationships import investigative_relationships, medication_associations
+from app.clinical.result_followup import LIMITATIONS as RESULT_FOLLOWUP_LIMITATIONS
 from app.core.config import Settings
 from app.core.provenance import digest, now
 from app.evidence.verification import EvidenceVerifier
@@ -106,6 +111,8 @@ class InvestigationEngine:
         limits: list[str] = []
         records: dict[tuple[str, str], SourceRecord] = {}
         proposals: list[Candidate] = []
+        medication_proposals: list[Candidate] = []
+        laboratory_proposals: list[Candidate] = []
         hypotheses = []
 
         async def run_agent(name: str, factory: Callable[[Any], Awaitable[Any]]) -> Any:
@@ -145,6 +152,22 @@ class InvestigationEngine:
             )
             adaptive, sources, planning = await supervisor.run()
             proposals.extend(adaptive.candidates)
+            medication_proposals = [
+                c
+                for c in adaptive.candidates
+                if planning.candidate_origins.get(digest(c.model_dump(mode="json")), {}).get(
+                    "agent"
+                )
+                == "medication"
+            ]
+            laboratory_proposals = [
+                c
+                for c in adaptive.candidates
+                if planning.candidate_origins.get(digest(c.model_dump(mode="json")), {}).get(
+                    "agent"
+                )
+                == "laboratory"
+            ]
             limits.extend(planning.limitations)
             for record in sources:
                 records[(record.source.type, record.source.id)] = record
@@ -200,6 +223,10 @@ class InvestigationEngine:
                     "medication", lambda id_: MedicationAgent(executor, "medication", id_).run()
                 ),
             )
+            if outputs[0]:
+                laboratory_proposals = list(outputs[0][0].candidates)
+            if outputs[1]:
+                medication_proposals = list(outputs[1][0].candidates)
             for output in outputs:
                 if output:
                     result, sources = output
@@ -275,10 +302,31 @@ class InvestigationEngine:
                     },
                 )
             proposals.extend(relationships)
+        cross_specialist = laboratory_questions(
+            medication_proposals,
+            [c for c in laboratory_proposals if c.type == "laboratory_change"],
+        )
+        if cross_specialist:
+            await self.store.record(
+                public_id,
+                "specialist.evidence_requested",
+                {
+                    "requesting_agent": "medication",
+                    "providing_agent": "laboratory",
+                    "question_count": len(cross_specialist),
+                    "source_refs": [
+                        a.source.model_dump() for c in cross_specialist for a in c.anchors
+                    ],
+                    "evidence_state": "proposals_pending_independent_verification",
+                },
+            )
+            proposals.extend(cross_specialist)
         hypotheses.extend(analysis.challenge(proposals))
         verifier = EvidenceVerifier(self.clinical, patient, self.settings.investigation_reasoning)
         # Never accept model verdicts as established clinical explanations.
         for hypothesis in hypotheses:
+            # Provider-supplied comparison envelopes cannot bypass reconstruction.
+            hypothesis.comparison = None
             hypothesis.verdict = "inconclusive"
             for anchor in hypothesis.supports + hypothesis.weakens:
                 probe = Candidate(
@@ -298,6 +346,9 @@ class InvestigationEngine:
                         "A model hypothesis contained invalid citations; its evidence was removed."
                     )
                     break
+        proposals = consolidate(proposals)
+        for deferred in proposals[self.settings.investigation_max_candidates:]:
+            limits.append(f"Deferred candidate: {deferred.title}; CANDIDATE_BUDGET_EXHAUSTED.")
         for candidate in proposals[: self.settings.investigation_max_candidates]:
             finding_id = f"FND-{uuid4().hex}"
             if candidate.relationship:
@@ -343,7 +394,13 @@ class InvestigationEngine:
                     **(
                         {
                             "alternatives": RELATIONSHIP_ALTERNATIVES,
-                            "limitations": RELATIONSHIP_LIMITATIONS,
+                            "limitations": RESULT_FOLLOWUP_LIMITATIONS
+                            if candidate.relationship
+                            and candidate.relationship.relationship_type == "result_followup"
+                            else DIAGNOSTIC_LIMITATIONS
+                            if candidate.relationship
+                            and candidate.relationship.relationship_type == "hypothesis_challenge"
+                            else RELATIONSHIP_LIMITATIONS,
                         }
                         if candidate.relationship and status == "verified"
                         else {}
@@ -370,6 +427,14 @@ class InvestigationEngine:
                 verified_at=now() if status == "verified" else None,
             )
             await self.store.save_finding(public_id, finding)
+            if (
+                status == "verified"
+                and candidate.relationship
+                and candidate.relationship.diagnostic_comparison
+            ):
+                hypotheses.append(
+                    comparison_hypothesis(candidate.relationship.diagnostic_comparison)
+                )
             if candidate.relationship:
                 await self.store.record(
                     public_id,

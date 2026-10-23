@@ -13,6 +13,7 @@ from app.agents.specialists import (
     RetrievalAgent,
     TimelineAgent,
 )
+from app.clinical.longitudinal import consolidate
 from app.core.config import Settings
 from app.core.provenance import digest
 from app.hospital.errors import HospitalError
@@ -191,16 +192,16 @@ class InvestigationSupervisor:
                 self.context.stop_reason = "budget_exhaustion"
                 break
             self.records[key] = record
-        for candidate in output.analysis.candidates:
+        for candidate in consolidate(output.analysis.candidates):
             candidate_key = digest(candidate.model_dump(mode="json"))
             if candidate_key in self.candidate_keys:
                 continue
             if len(self.result.candidates) >= self.settings.investigation_max_candidates:
                 self.context.limitations.append(
-                    "Finding budget exhausted; candidates remain unassessed."
+                    f"Deferred candidate: {candidate.title}; CANDIDATE_BUDGET_EXHAUSTED."
                 )
                 self.context.stop_reason = "budget_exhaustion"
-                break
+                continue
             self.candidate_keys.add(candidate_key)
             self.result.candidates.append(candidate)
             self.context.candidate_origins[candidate_key] = {

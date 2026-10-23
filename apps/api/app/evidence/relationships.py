@@ -1,6 +1,7 @@
 """Independent source reconstruction for typed relationship candidates."""
 
 from app.clinical.extraction import extract_claims
+from app.clinical.medications import medication_assertions, medication_relationships
 from app.clinical.ports import SourceResolver
 from app.clinical.relationship_synthesis import synthesize_relationships
 from app.clinical.rules import instant
@@ -58,6 +59,17 @@ async def verify_relationship(
             "conclusion_scope",
             "Definitive exposure, causal and diagnostic conclusions are unsupported.",
         )
+    if evidence.relationship_type == "result_followup" and evidence.result_workflow is not None:
+        from app.evidence.result_followup import verify_result_followup
+
+        return await verify_result_followup(resolver, patient_id, candidate)
+    if (
+        evidence.relationship_type == "hypothesis_challenge"
+        and evidence.diagnostic_comparison is not None
+    ):
+        from app.evidence.diagnostic_challenger import verify_diagnostic_comparison
+
+        return await verify_diagnostic_comparison(resolver, patient_id, candidate)
     ids = [a.id for a in evidence.assertions]
     identities = [a.anchor.model_dump_json() for a in evidence.assertions]
     if len(set(ids)) != len(ids) or len(set(identities)) != len(identities):
@@ -105,7 +117,14 @@ async def verify_relationship(
         )
     for assertion in evidence.assertions:
         original = records.get((assertion.anchor.source.type, assertion.anchor.source.id))
-        if not original or not any(a == assertion for a in extract_claims(original)):
+        reproduced = (
+            medication_assertions(original, list(records.values()))
+            if original and assertion.id.startswith("MC-")
+            else extract_claims(original)
+            if original
+            else []
+        )
+        if not original or not any(a == assertion for a in reproduced):
             return result(
                 "rejected",
                 "assertion_reconstruction",
@@ -148,6 +167,7 @@ async def verify_relationship(
     if evidence.conclusion_kind == "interpretation" or evidence.relationship_type not in {
         "recorded_state_difference",
         "documented_assertion_conflict",
+        "medication_reconciliation",
     }:
         return result(
             "inconclusive",
@@ -158,7 +178,11 @@ async def verify_relationship(
     regenerated = next(
         (
             c
-            for c in synthesize_relationships(list(records.values()))
+            for c in (
+                medication_relationships(list(records.values()))
+                if evidence.relationship_type == "medication_reconciliation"
+                else synthesize_relationships(list(records.values()))
+            )
             if c.relationship == evidence
             and c.claim_kind == candidate.claim_kind
             and len(c.anchors) == len(supplied)

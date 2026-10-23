@@ -81,6 +81,8 @@ def propose_leads(task: InvestigationTask, result: TaskResult) -> list[Investiga
                 )
     if task.task_type == "laboratory":
         for candidate in result.analysis.candidates:
+            if candidate.longitudinal is not None:
+                continue
             relevant = list(
                 {
                     a.source.id: by_key[(a.source.type, a.source.id)]
@@ -90,7 +92,7 @@ def propose_leads(task: InvestigationTask, result: TaskResult) -> list[Investiga
             )
             for record in relevant:
                 document = record.data.get("source_document_id")
-                if document:
+                if document and ("document", document) not in by_key:
                     add(
                         [record],
                         [RetrievalAction(tool="get_document", arguments={"record_id": document})],
