@@ -1,7 +1,7 @@
 export type InvestigationStatus = "queued" | "running" | "completed" |
   "completed_with_limitations" | "failed" | "cancelled";
 export type Objective = "full_record_investigation" | "timeline_investigation" |
-  "contradiction_investigation" | "medication_investigation" | "laboratory_investigation";
+  "contradiction_investigation" | "medication_investigation" | "laboratory_investigation" | "followup_investigation" | "hypothesis_investigation";
 export interface SourceRef { type: string; id: string }
 export interface Anchor {
   source: SourceRef; source_version: number; source_hash: string;
@@ -20,7 +20,7 @@ export interface Finding {
 }
 export interface InvestigationEvent {
   id: string; investigation_id: string; sequence: number; type: string;
-  timestamp: string; payload: Record<string, unknown>;
+  timestamp: string; payload: Record<string, unknown>; message?: string; execution_status?: string;
 }
 export interface TimelineEvent {
   id: string; source: SourceRef; timestamp: string | null; timestamp_type: string;

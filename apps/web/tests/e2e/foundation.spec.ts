@@ -19,10 +19,10 @@ test("browser reaches the real backend and retry works", async ({ page }, testIn
   await expect(page.getByText("API connected", { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole("navigation", { name: "Main navigation" })).toBeHidden();
-  const toggle = page.getByRole("button", { name: "Expand navigation" });
+  const toggle = page.getByRole("button", { name: "Expand sidebar" });
   await toggle.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("button", { name: "Collapse navigation" })).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("button", { name: "Collapse sidebar" })).toHaveAttribute("aria-expanded", "true");
   await expect(page.getByRole("navigation", { name: "Main navigation" })).toBeVisible();
   await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Patient records" }).click();
   await expect(page).toHaveURL(/\/patients$/);

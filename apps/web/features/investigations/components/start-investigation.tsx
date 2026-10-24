@@ -33,7 +33,7 @@ export function StartInvestigation({ patientId, caseId }: { patientId: string; c
     {open && <section className="rounded-lg border border-teal/30 bg-accent p-5 space-y-3" aria-label="Investigation context"><h2>Review investigation context</h2>
       <p className="text-sm">Patient {patientId} · {caseId}. Investigate available hospital records, compare chronology, verify evidence, and produce a source-backed report.</p>
       <label className="block text-sm">Investigation objective<select className="field block" value={objective} disabled={busy} onChange={event => setObjective(event.target.value as Objective)}>
-        {(["full_record_investigation", "timeline_investigation", "contradiction_investigation", "medication_investigation", "laboratory_investigation"] as const).map(value => <option key={value} value={value}>{value.replaceAll("_", " ")}</option>)}
+        {(["full_record_investigation", "timeline_investigation", "contradiction_investigation", "medication_investigation", "laboratory_investigation", "followup_investigation", "hypothesis_investigation"] as const).map(value => <option key={value} value={value}>{value.replaceAll("_", " ")}</option>)}
       </select></label><p className="text-xs text-muted-foreground">Execution mode is configured by the backend. Source records remain read-only. Repeated submission of this request opens the same run.</p>
       {error && <p role="alert">{error}</p>}
       <div className="flex gap-3"><Button disabled={busy} onClick={() => void start()}>{busy ? "Creating investigation…" : "Begin investigation"}</Button><Button variant="outline" disabled={busy} onClick={() => setOpen(false)}>Cancel</Button></div>

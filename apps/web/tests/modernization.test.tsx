@@ -1,3 +1,4 @@
+import { AppShell } from "@/components/layout/app-shell";
 import { act, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { SourceHighlight } from "@/features/evidence/components/source-highlight";
@@ -148,11 +149,23 @@ it("exposes truthful navigation, active location, environment and accessible sta
   render(<><WorkspaceNavigation /><WorkspaceBreadcrumbs /><EnvironmentBanner /><LoadingState>Loading source</LoadingState><EmptyState>No records available</EmptyState><ErrorState onRetry={retry}>Source unavailable</ErrorState><StatusBadge status="completed_with_limitations" /></>);
   expect(screen.getByRole("link", { name: "Patient records" })).toHaveAttribute("aria-current", "page");
   expect(screen.queryByRole("link", { name: "Case library" })).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: "Expand navigation" }));
-  expect(screen.getByRole("button", { name: "Collapse navigation" })).toHaveAttribute("aria-expanded", "true");
+  fireEvent.click(screen.getByRole("button", { name: "Expand sidebar" }));
+  expect(screen.getByRole("button", { name: "Collapse sidebar" })).toHaveAttribute("aria-expanded", "true");
   expect(screen.getByText("SYNTHETIC DATA — DEMONSTRATION ENVIRONMENT")).toBeVisible();
   expect(screen.getByRole("status")).toHaveTextContent("Loading source");
   expect(screen.getByText("No records available")).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Retry" })); expect(retry).toHaveBeenCalledOnce();
   expect(screen.getByText("completed with limitations")).toBeVisible();
+});
+
+it("collapses the desktop shell while keeping labeled navigation available", () => {
+  vi.stubGlobal("matchMedia", vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+  render(<AppShell><p>Chart content</p></AppShell>);
+  fireEvent.click(screen.getByRole("button", { name: "Collapse sidebar" }));
+  expect(document.querySelector(".app-shell")).toHaveClass("sidebar-collapsed");
+  expect(screen.getByRole("link", { name: "Patient records" })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("link", { name: "Patient records" }));
+  expect(screen.getByRole("button", { name: "Expand sidebar" })).toHaveAttribute("aria-expanded", "false");
+  fireEvent.click(screen.getByRole("button", { name: "Expand sidebar" }));
+  expect(document.querySelector(".app-shell")).not.toHaveClass("sidebar-collapsed");
 });

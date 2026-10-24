@@ -15,6 +15,8 @@ import { catalogApi } from "@/lib/api/catalog";
 import { mergeEvents, readInvestigationStream } from "@/lib/sse/investigation-stream";
 import type { Anchor, Finding, Investigation, InvestigationEvent, TimelineEvent } from "@/types/investigation";
 
+vi.mock("@/features/investigations/components/investigation-conclusion", () => ({ InvestigationConclusion: () => null }));
+vi.mock("@/lib/api/chat", () => ({ chatApi: { history: vi.fn().mockResolvedValue({ items: [], has_more: false }) } }));
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 const anchor: Anchor = { source: { type: "clinical_event", id: "EVT-CONTROL" }, source_version: 1, source_hash: "abc", encounter_id: "ENC-CONTROL", field: "description", expected: "Recorded observation", quote: "Recorded observation", relationship: "supports" };
@@ -99,7 +101,7 @@ it("restores terminal state and history without reopening a stream", async () =>
   vi.spyOn(investigationsApi, "events").mockResolvedValueOnce({ items: [event(1)], total: 1 }).mockResolvedValue({ items: [], total: 0 });
   const fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
   render(<InvestigationWorkspace id={state.id} />);
-  expect(await screen.findByRole("link", { name: "Open investigation report →" })).toBeVisible();
+  expect(await screen.findByRole("link", { name: /Open investigation report/ })).toBeVisible();
   expect(await screen.findByText("History restored")).toBeVisible(); expect(fetchMock).not.toHaveBeenCalled();
 });
 
@@ -109,7 +111,7 @@ it("shows genuine failed state with persisted partial output", async () => {
   vi.spyOn(investigationsApi, "events").mockResolvedValue({ items: [], total: 0 });
   render(<InvestigationWorkspace id={state.id} />);
   expect(await screen.findByText(/This investigation failed/)).toBeVisible();
-  expect(screen.queryByRole("link", { name: "Open investigation report →" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: /Open investigation report/ })).not.toBeInTheDocument();
 });
 
 it("shows report-not-ready errors and renders the backend report after retry", async () => {
