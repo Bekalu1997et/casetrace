@@ -10,6 +10,7 @@ from fastapi.responses import StreamingResponse
 from app.hospital.errors import HospitalError
 from app.orchestration.store import TERMINAL, InvestigationStore
 from app.schemas.audit import ToolAuditPage
+from app.schemas.chat import ChatHistory, ChatRequest, ChatResponse
 from app.schemas.investigation import (
     CreateInvestigation,
     CreationResponse,
@@ -21,9 +22,27 @@ from app.schemas.investigation import (
     Report,
     RunStatus,
 )
+from app.services.conversations import ConversationService
 from app.services.investigations import InvestigationService
 
 router = APIRouter(prefix="/api/investigations", tags=["Investigations"])
+
+
+@router.get("/{investigation_id}/chat", response_model=ChatHistory)
+async def chat_history(
+    investigation_id: str,
+    request: Request,
+    after: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+) -> ChatHistory:
+    service: ConversationService = request.app.state.conversation_service
+    return await service.repository.history(investigation_id, after, limit)
+
+
+@router.post("/{investigation_id}/chat", response_model=ChatResponse)
+async def chat(investigation_id: str, body: ChatRequest, request: Request) -> ChatResponse:
+    service: ConversationService = request.app.state.conversation_service
+    return await service.send(investigation_id, body)
 
 
 def store_for(request: Request) -> InvestigationStore:

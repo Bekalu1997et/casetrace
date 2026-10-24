@@ -112,3 +112,10 @@ class Report(RunRow, Base):
     status: Mapped[str] = mapped_column(String)
     body_json: Mapped[dict[str, Any]] = mapped_column(JSON)
     generated_at: Mapped[datetime] = mapped_column(UTCDateTime)
+
+
+class ChatMessage(RunRow, Base):
+    __tablename__ = "investigation_chat_messages"
+    __table_args__ = (UniqueConstraint("investigation_id", "sequence"),)
+    sequence: Mapped[int] = mapped_column(Integer)
+    body: Mapped[dict[str, Any]] = mapped_column(JSON)

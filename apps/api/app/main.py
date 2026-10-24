@@ -19,8 +19,10 @@ from app.core.database import Database
 from app.core.errors import install_error_handlers, internal_error_response
 from app.core.logging import configure_logging
 from app.hospital.asset_service import LocalAssetReader
+from app.llm.openai import OpenAIProvider
 from app.llm.provider import LLMProvider
 from app.orchestration.store import InvestigationStore
+from app.services.conversations import ConversationService
 from app.services.investigations import InvestigationService
 
 
@@ -49,6 +51,13 @@ def create_app(
             application.state.investigation_service = InvestigationService(store, engine)
             application.state.investigation_store = store
             application.state.investigation_engine = engine
+            application.state.conversation_service = ConversationService(
+                store,
+                application.state.investigation_service,
+                engine.clinical,
+                config,
+                engine.provider if isinstance(engine.provider, OpenAIProvider) else None,
+            )
             async with database.engine.connect() as connection:
                 migrated = await connection.run_sync(
                     lambda conn: inspect(conn).has_table("investigations")
