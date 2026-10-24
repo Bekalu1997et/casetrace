@@ -249,7 +249,7 @@ async def test_mock_provider_failure_is_partial_not_fake_success(tmp_path):
         await build_engine(store, settings, BrokenProvider()).execute(id_)
         report = await store.report(id_)
         assert report.status == "completed_with_limitations"
-        assert report.execution_mode == "mock_test"
+        assert report.execution_mode == "deterministic_rules"
         assert any("contradiction failed" in item for item in report.limitations)
     finally:
         await database.dispose()

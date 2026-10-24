@@ -32,9 +32,11 @@ class Settings(BaseSettings):
     asset_storage_path: Path = Path("data/assets")
     cors_allowed_origins: list[str] = ["http://localhost:3000"]
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
-    llm_provider: Literal["rules", "gemini"] = "rules"
+    llm_provider: Literal["rules", "gemini", "openai"] = "rules"
     llm_model: str = Field(default="", pattern=r"^[A-Za-z0-9._-]*$")
     llm_api_key: str = Field(default="", repr=False)
+    openai_api_key: str = Field(default="", repr=False)
+    openai_model: str = "gpt-4o-mini"
     llm_timeout_seconds: float = Field(default=30, gt=0, le=120)
     llm_max_retries: int = Field(default=1, ge=0, le=2)
     llm_max_output_tokens: int = Field(default=4000, ge=100, le=16000)

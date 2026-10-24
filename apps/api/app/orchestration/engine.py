@@ -29,7 +29,8 @@ from app.clinical.result_followup import LIMITATIONS as RESULT_FOLLOWUP_LIMITATI
 from app.core.config import Settings
 from app.core.provenance import digest, now
 from app.evidence.verification import EvidenceVerifier
-from app.llm.provider import LLMProvider
+from app.llm.context import proposal_context
+from app.llm.provider import LLMProvider, ProviderError
 from app.orchestration.ports import InvestigationRuntime
 from app.orchestration.reporting import build_report
 from app.orchestration.state import RunConflict
@@ -114,6 +115,7 @@ class InvestigationEngine:
         medication_proposals: list[Candidate] = []
         laboratory_proposals: list[Candidate] = []
         hypotheses = []
+        model_succeeded = False
 
         async def run_agent(name: str, factory: Callable[[Any], Awaitable[Any]]) -> Any:
             execution = await self.store.agent_start(public_id, name)
@@ -177,13 +179,16 @@ class InvestigationEngine:
                     "contradiction",
                     lambda _: provider.propose(
                         "contradiction",
-                        {
-                            "objective": state["objective"],
-                            "candidates": [c.model_dump(mode="json") for c in proposals],
-                        },
+                        proposal_context(
+                            state["objective"],
+                            proposals,
+                            list(records.values()),
+                            self.settings.investigation_max_context_chars,
+                        ),
                     ),
                 )
                 if model:
+                    model_succeeded = True
                     proposals.extend(model.candidates)
                     hypotheses.extend(model.hypotheses)
                     limits.extend(model.limitations)
@@ -238,6 +243,7 @@ class InvestigationEngine:
             await self.store.stage(public_id, "contradiction_verification")
 
             async def investigate(id_: Any) -> AgentResult:
+                nonlocal model_succeeded
                 specialist = ContradictionInvestigator(executor, "contradiction", id_)
                 # Target clinical discrepancy candidates, not every medication observation.
                 await specialist.retrieve_candidates(
@@ -245,13 +251,30 @@ class InvestigationEngine:
                 )
                 result = await specialist.followups()
                 if self.provider:
-                    model = await self.provider.propose(
-                        "contradiction",
-                        {
-                            "objective": state["objective"],
-                            "candidates": [c.model_dump(mode="json") for c in proposals],
-                        },
-                    )
+                    try:
+                        model = await self.provider.propose(
+                            "contradiction",
+                            proposal_context(
+                                state["objective"],
+                                proposals,
+                                list(records.values()),
+                                self.settings.investigation_max_context_chars,
+                            ),
+                        )
+                    except ProviderError:
+                        result.limitations.append(
+                            "Model proposals unavailable; completed specialist results retained."
+                        )
+                        await self.store.record(
+                            public_id,
+                            "model.failed",
+                            {
+                                "execution_mode": self.provider.mode,
+                                "error_code": "MODEL_PROPOSALS_UNAVAILABLE",
+                            },
+                        )
+                        return result
+                    model_succeeded = True
                     result.candidates.extend(model.candidates)
                     result.hypotheses.extend(model.hypotheses)
                     result.limitations.extend(model.limitations)
@@ -347,7 +370,7 @@ class InvestigationEngine:
                     )
                     break
         proposals = consolidate(proposals)
-        for deferred in proposals[self.settings.investigation_max_candidates:]:
+        for deferred in proposals[self.settings.investigation_max_candidates :]:
             limits.append(f"Deferred candidate: {deferred.title}; CANDIDATE_BUDGET_EXHAUSTED.")
         for candidate in proposals[: self.settings.investigation_max_candidates]:
             finding_id = f"FND-{uuid4().hex}"
@@ -469,7 +492,13 @@ class InvestigationEngine:
         async def synthesize(_: Any) -> Report:
             findings = await self.store.findings(public_id)
             return build_report(
-                public_id, findings, timeline, hypotheses, limits, self.settings, self.provider
+                public_id,
+                findings,
+                timeline,
+                hypotheses,
+                limits,
+                self.settings,
+                self.provider if model_succeeded else None,
             )
 
         report = await run_agent("synthesis", synthesize)
