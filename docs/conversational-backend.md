@@ -76,14 +76,44 @@ assistant_message}`. Each message contains `id`, `conversation_id`, `role`,
 and the existing `anchor` with source type/ID, version/hash, encounter, field,
 expected value and optional exact quote/character offsets.
 
-Ask retrieves relevant persisted findings, compact timeline/hypothesis context,
-up to six recent messages and bounded original clinical records through the
-patient-scoped clinical service. It revalidates anchors against original sources
-before exposing a citation catalog. The model selects catalog IDs, not new
-anchors. Unknown citations/findings or an uncited model answer discard the entire
-answer and return a labeled deterministic evidence fallback. Citation validation
-establishes source integrity; it cannot prove every natural-language interpretation.
-The provider enforces a final serialized context budget, including history.
+Ask routes questions deterministically to overview, timeline, medication, laboratory,
+follow-up, hypothesis, evidence and operational-status intents. Multiple intents
+can apply to a medication/laboratory comparison. Broad questions retrieve patient
+identity and a compact cross-domain selection instead of searching the whole question.
+Clinical terminology searches use at most two terms and two document hits per term;
+hits are independently resolved through the patient-scoped clinical source.
+
+Context reuses the latest saved assistant references before selecting up to four
+relevant findings and bounded original records. Up to eight saved messages contribute
+continuity, including finding IDs and a mapping from previous response-local citation
+IDs to the current validated catalog. Only saved assistant anchors are eligible for
+reuse; user-supplied IDs never grant access. Each reused anchor is revalidated for
+patient scope, version, hash, encounter and exact field/quote. Missing or stale anchors
+are omitted. Original record DTOs preserve chronology, values, units and associations.
+
+Category retrieval reads at most the first two and last two records (the overview
+keeps one from each end). This is a bounded selection, not exhaustive clinical review.
+There are at most 32 original records and 20 citation anchors. Finding selection
+reserves catalog capacity for original clinical context. The full serialized provider
+payload, including history/catalog/state, is checked against the configured character
+budget. Whole optional items are removed without truncating exact anchors. Context
+that still cannot fit is rejected before inference, with an explicit fallback.
+
+Each question reads persisted investigation status, objective, agent states, finding
+counts and the latest 12 actual activity events. A terminal run can contribute its
+stored report summary. No chat request starts agents in Ask mode or holds a database
+transaction across inference. Candidate status stays distinct from verification.
+Operational status-only answers may omit clinical citations; clinical answers must
+select catalog citations. Unknown citation/finding IDs or uncited clinical answers
+are discarded completely. Validation establishes source integrity, not correctness
+of every natural-language interpretation. Prompt rules require direct answers,
+conversation continuity, uncertainty, and separate hypotheses from verified findings.
+
+Provider errors expose only sanitized codes. Without a validated live answer,
+responses explicitly identify stored evidence: persisted findings or readable original
+record excerpts and their citation actions, rather than pretending to be model output.
+The existing Responses API schema, timeouts, retry/output budgets and `store=False`
+remain unchanged.
 
 For `mode=investigate`, an explicit focus maps to an existing supported objective.
 When focus is all, a small keyword mapping can select medication, timeline,
@@ -148,3 +178,14 @@ existing timeout. No POST is retried automatically. Pending submissions are
 locked; input clears only on success and edits made while waiting are preserved.
 On an uncertain failure, refresh history before deciding to resend because POST
 is not idempotent. The composer supports Enter, Shift+Enter and IME composition.
+
+
+## Conversational intelligence integration
+
+The conversation retains Prompt 01's layout. Citation chips still open SourcePanel;
+"Compare cited records" opens two distinct originals in the same inspector. Linked
+run cards display the real run ID, persisted status and connection state through a
+separate instance of the existing REST/SSE hook. Each child has its own event cursor;
+the parent thread and activity remain scoped to the parent. The child link opens its
+own conversation and report. Pending text describes the actual unanswered request.
+No chat streaming endpoint or artificial progress was added.

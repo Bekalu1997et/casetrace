@@ -18,7 +18,7 @@ test("conversation, history, linked run and evidence work at desktop and mobile 
         messages.push(user, assistant); data = { conversation_id: `CHAT-${id}`, investigation_id: id, user_message: user, assistant_message: assistant };
       } else data = { conversation_id: `CHAT-${id}`, investigation_id: id, items: messages, total: messages.length, has_more: false };
     } else if (url.pathname.endsWith("/findings") || url.pathname.endsWith("/events")) data = { items: [], total: 0 };
-    else if (url.pathname.includes("/investigations/")) data = state;
+    else if (url.pathname.includes("/investigations/")) data = { ...state, id: url.pathname.split("/").at(-1) };
     else data = { data: { id: "EVT-CONTROL", patient_id: "SYN-CONTROL", description: "Recorded observation", event_type: "symptom", source_version: 1, source_hash: "abc" }, meta: { request_id: "TEST" } };
     await route.fulfill({ json: data });
   });

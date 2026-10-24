@@ -8,8 +8,6 @@ from pydantic import BaseModel
 from app.clinical.ports import ClinicalSource
 from app.core.config import Settings
 from app.core.provenance import now
-from app.evidence.verification import EvidenceVerifier
-from app.hospital.errors import HospitalError
 from app.llm.prompts.conversation import CHAT_PROMPT
 from app.llm.provider import ProviderError
 from app.orchestration.conversations import ConversationRepository
@@ -21,8 +19,9 @@ from app.schemas.chat import (
     ChatRequest,
     ChatResponse,
 )
-from app.schemas.investigation import Candidate, CreateInvestigation, Finding, SourceRecord
-from app.schemas.provenance import Anchor, SourceRef, SourceType
+from app.schemas.investigation import CreateInvestigation, Finding
+from app.services.conversation_context import ConversationContext, serialized_size
+from app.services.conversation_fallback import record_excerpts
 from app.services.investigations import InvestigationService
 
 Output = TypeVar("Output", bound=BaseModel)
@@ -59,157 +58,9 @@ class ConversationService:
     async def context(
         self, public_id: str, body: ChatRequest
     ) -> tuple[dict[str, Any], list[ChatCitation], list[Finding], list[str]]:
-        state = await self.store.snapshot(public_id)
-        findings = await self.store.findings(public_id)
-        words = set(body.message.lower().split())
-        focused = {
-            "timeline": {"timeline_contradiction", "documentation_delay"},
-            "medication": {"medication_change"},
-            "followup": {"missing_evidence"},
-        }
-        findings.sort(
-            key=lambda f: (
-                f.type not in focused.get(body.focus, set()),
-                -len(words & set((f.title + " " + f.claim).lower().split())),
-                f.id,
-            )
-        )
-        citations: list[ChatCitation] = []
-        selected: list[Finding] = []
-        limits = ["Answers are limited to accessible synthetic records; no clinical decisions."]
-        verifier = EvidenceVerifier(
-            self.clinical, state["patient_id"], self.settings.investigation_reasoning
-        )
-        context: dict[str, Any] = {
-            "question": body.message,
-            "focus": body.focus,
-            "findings": [],
-            "records": [],
-            "history": [],
-        }
-        remaining = self.settings.investigation_max_context_chars - 6000
-
-        async def add(anchor: Anchor) -> str | None:
-            if len(citations) >= 20:
-                return None
-            if any(c.anchor == anchor for c in citations):
-                return next(c.id for c in citations if c.anchor == anchor)
-            probe = Candidate(
-                type="clinical_relationship",
-                title="Citation validation",
-                claim="Citation validation",
-                claim_kind="hypothesis",
-                rule="interpretation",
-                anchors=[anchor],
-            )
-            verification, _ = await verifier.verify(probe)
-            if verification.status == "rejected":
-                limits.append("A stale or inaccessible evidence reference was omitted.")
-                return None
-            citation = ChatCitation(id=f"C{len(citations) + 1}", anchor=anchor)
-            citations.append(citation)
-            return citation.id
-
-        for finding in findings[:8]:
-            size = len(finding.model_dump_json())
-            if size > remaining:
-                limits.append("Some findings were omitted to respect the answer context budget.")
-                continue
-            if len(citations) + len(finding.anchors) > 20:
-                limits.append("Additional finding evidence exceeded the citation budget.")
-                continue
-            ids = [value for anchor in finding.anchors if (value := await add(anchor))]
-            if ids and len(ids) == len(finding.anchors):
-                selected.append(finding)
-                context["findings"].append(
-                    {
-                        "id": finding.id,
-                        "status": finding.status,
-                        "claim": finding.claim,
-                        "verification": finding.verification.model_dump(),
-                        "citation_ids": ids,
-                        "limitations": finding.limitations,
-                    }
-                )
-                remaining -= size
-
-        # Search is a bounded lead; only independently resolved originals enter model context.
-        query = " ".join(body.message.split())[:200]
-        try:
-            hits, total = await self.clinical.search_documents(
-                state["patient_id"], query, {"limit": 4, "offset": 0}
-            )
-        except HospitalError:
-            hits, total = [], 0
-            limits.append("Document search was unavailable; the answer uses retained evidence.")
-        originals: list[SourceRecord] = []
-        for hit in hits[:4]:
-            try:
-                originals.append(
-                    await self.clinical.resolve(
-                        state["patient_id"], SourceRef(type="document", id=hit.id)
-                    )
-                )
-            except HospitalError:
-                limits.append("An original document was inaccessible.")
-        categories: list[SourceType] = {
-            "timeline": ["clinical_event"],
-            "medication": ["medication", "observation"],
-            "followup": ["referral", "diagnostic_report"],
-            "hypothesis": ["diagnosis"],
-            "all": [],
-        }[body.focus]  # type: ignore[assignment]
-        for category in categories:
-            try:
-                rows, count = await self.clinical.records(
-                    category, state["patient_id"], {"limit": 4, "offset": 0}
-                )
-            except HospitalError:
-                limits.append(f"Retrieval of {category} records was unavailable.")
-                continue
-            originals.extend(rows[:4])
-            if count > 4:
-                limits.append(f"Only a bounded selection of {category} records was reviewed.")
-        if total > 4:
-            limits.append("Additional matching documents were outside the chat retrieval budget.")
-        for record in originals:
-            size = len(record.model_dump_json())
-            if size > remaining or len(citations) >= 20:
-                limits.append("Additional records were outside the chat context budget.")
-                continue
-            field = next(
-                (
-                    f
-                    for f in ("text_content", "description", "status", "test_name")
-                    if record.data.get(f) is not None
-                ),
-                None,
-            )
-            if field is None:
-                continue
-            anchor = Anchor(
-                source=record.source,
-                source_version=record.source_version,
-                source_hash=record.source_hash,
-                encounter_id=record.data.get("encounter_id"),
-                field=field,
-                expected=record.data[field],
-            )
-            citation_id = await add(anchor)
-            if citation_id:
-                context["records"].append(
-                    {"citation_id": citation_id, "source": record.model_dump(mode="json")}
-                )
-                remaining -= size
-        context["citations"] = [c.model_dump(mode="json") for c in citations]
-        # Persisted state contributes compact context, rather than a second generated conclusion.
-        context["timeline"] = state["timeline"][:10]
-        context["hypotheses"] = state["hypotheses"][:3]
-        context["limitations"] = state["limitations"][:10] + list(dict.fromkeys(limits))
-        history = await self.repository.history(public_id, limit=1)
-        recent = await self.repository.history(public_id, after=max(0, history.total - 6), limit=6)
-        context["history"] = [{"role": m.role, "content": m.content[:1000]} for m in recent.items]
-        return context, citations, selected, list(dict.fromkeys(limits))
+        return await ConversationContext(
+            self.store, self.clinical, self.settings, self.repository
+        ).build(public_id, body)
 
     async def send(self, public_id: str, body: ChatRequest) -> ChatResponse:
         state = await self.store.snapshot(public_id)
@@ -258,6 +109,8 @@ class ConversationService:
             answer: ChatAnswer | None = None
             if self.provider:
                 try:
+                    if serialized_size(context) > self.settings.investigation_max_context_chars:
+                        raise ProviderError("MODEL_CONTEXT_BUDGET_EXCEEDED")
                     answer = await self.provider.generate(
                         "conversation", context, ChatAnswer, CHAT_PROMPT
                     )
@@ -270,7 +123,7 @@ class ConversationService:
             if answer and (
                 not set(answer.citation_ids) <= allowed_citations
                 or not set(answer.finding_ids) <= allowed_findings
-                or not answer.citation_ids
+                or (not answer.citation_ids and context["intents"] != ["status"])
             ):
                 answer = None
                 limits.append("The model answer failed citation validation and was discarded.")
@@ -282,14 +135,27 @@ class ConversationService:
                 assistant.execution_mode = "openai"
             else:
                 assistant.content = (
-                    "The available evidence does not establish an answer to this question."
+                    "Live conversation is unavailable. Here is stored evidence for review."
                 )
+                if "status" in context["intents"]:
+                    run = context["investigation"]
+                    assistant.content += (
+                        f" The investigation is {run['status']}; "
+                        f"current stage: {run['progress']['current_stage']}."
+                    )
                 if selected:
                     assistant.content += " Stored findings for review: " + " ".join(
                         f"[{f.status}] {f.claim}" for f in selected[:3]
                     )
                     assistant.citations = citations
                     assistant.finding_ids = [f.id for f in selected[:3]]
+                elif context["records"]:
+                    assistant.content += "\n\n" + record_excerpts(context)
+                    assistant.citations = citations
+                else:
+                    assistant.content += (
+                        " No accessible clinical evidence was retrieved for this question."
+                    )
             assistant.limitations = list(dict.fromkeys(limits))
         assistant.created_at = now()
         await self.repository.save_pair(public_id, [user, assistant])

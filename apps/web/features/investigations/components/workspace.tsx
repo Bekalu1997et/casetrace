@@ -37,7 +37,7 @@ function Workspace({ id, initialSource }: { id: string; initialSource?: SourceRe
     {error && <div role="alert" className="notice">{error} <Button variant="outline" onClick={retry}>Reconnect / refresh</Button></div>}
     {!state && !error && <p role="status">Loading investigation...</p>}
     {state && <div className="chat-workspace-body">
-      <Conversation key={id} id={id} onOpen={open} findings={findings}>{ask =>
+      <Conversation key={id} id={id} onOpen={open} onCompare={anchors => setSources(comparisonSources(anchors))} findings={findings}>{ask =>
         <section className="investigation-artifacts" aria-label="Investigation results and activity">
           {state.status === "failed" && <p role="alert" className="notice mb-3">This investigation failed. Persisted activity and partial findings remain available.</p>}
           <details className="compact-activity" onToggle={event => setActivityOpen(event.currentTarget.open)}><summary><strong>{state.status === "failed" ? "Investigation failed" : state.status === "cancelled" ? "Investigation cancelled" : isTerminal(state.status) ? "Investigation completed" : "CASETRACE is investigating..."}</strong><span className="block text-xs text-muted-foreground mt-1">{isTerminal(state.status) ? `${findings.length} persisted findings. View execution details` : events.at(-1)?.message ?? "Waiting for recorded activity. View investigation activity"}</span></summary>

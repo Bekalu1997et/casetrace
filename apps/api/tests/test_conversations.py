@@ -232,7 +232,11 @@ async def test_cross_patient_sources_cannot_enter_chat(tmp_path):
                 AnswerProvider(True),
             )
             response = await chat.send(parent, ChatRequest(message="Explain evidence."))
-        assert not response.assistant_message.citations
+        # Accessible local originals may still support a partial answer.
+        assert all(
+            c.anchor.source.id != "FOREIGN-PATIENT-RECORD"
+            for c in response.assistant_message.citations
+        )
         assert not response.assistant_message.finding_ids
         assert "FOREIGN-PATIENT-RECORD" not in response.model_dump_json()
     finally:

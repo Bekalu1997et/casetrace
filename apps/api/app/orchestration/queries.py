@@ -217,6 +217,20 @@ class InvestigationQueries:
                 for row in rows
             ]
 
+    async def recent_events(self, public_id: str, limit: int = 12) -> list[ActivityEvent]:
+        """Read a bounded persisted tail without scanning/replaying the full trace."""
+        async with self.persistence.database.session() as session:
+            run = await self.persistence.find(session, public_id)
+            sequence = (
+                await session.scalar(
+                    select(func.max(db.InvestigationEvent.sequence)).where(
+                        db.InvestigationEvent.investigation_id == run.id
+                    )
+                )
+                or 0
+            )
+        return await self.events(public_id, max(0, sequence - limit), limit)
+
     async def findings(self, public_id: str) -> list[Finding]:
         async with self.persistence.database.session() as session:
             run = await self.persistence.find(session, public_id)

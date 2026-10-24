@@ -2846,4 +2846,8 @@ events remain tolerated. No route, state enum, or database schema changes.
 
 The additive chat routes, focus objectives, event presentation fields and report
 summary fields are specified in [conversational backend](conversational-backend.md).
+Ask context now includes bounded intent-specific original records, validated saved
+conversation references and persisted investigation activity. Status-only answers
+may have no clinical citations. Linked-run cards read each child's REST/SSE state
+independently; existing chat request/response schemas and endpoints are unchanged.
 Existing REST/SSE fields, sequences and reconnect semantics are preserved.

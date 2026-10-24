@@ -3,6 +3,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { Conversation } from "@/features/investigations/components/conversation";
 import { chatApi } from "@/lib/api/chat";
 import type { ChatMessage } from "@/types/chat";
+vi.mock("@/features/investigations/hooks/use-investigation", () => ({ useInvestigation: () => ({ state: { status: "queued" }, connection: "Live", retry: vi.fn() }) }));
 const base: ChatMessage = { id: "M1", conversation_id: "CHAT-I", role: "user", content: "Question", created_at: "2026-01-01T00:00:00Z", citations: [], finding_ids: [], limitations: [], execution_mode: "deterministic_rules", new_investigation_id: null };
 const answer: ChatMessage = { ...base, id: "M2", role: "assistant", content: "Original answer", new_investigation_id: "NEXT", citations: [{ id: "C1", anchor: { source: { type: "document", id: "D1" }, field: "text", source_version: 1, source_hash: "abc", expected: "text", quote: "text", relationship: "supports", encounter_id: null } }] };
 beforeEach(() => vi.spyOn(chatApi, "history").mockResolvedValue({ conversation_id: "CHAT-I", investigation_id: "I", items: [], total: 0, has_more: false }));
@@ -15,7 +16,19 @@ it("loads persisted paginated history, citations, linked runs and honest fallbac
   expect(chatApi.history).toHaveBeenLastCalledWith("I", 1, expect.any(AbortSignal));
   fireEvent.click(screen.getByRole("button", { name: "C1 / D1" })); expect(open).toHaveBeenCalledWith(answer.citations[0].anchor);
   expect(screen.getByRole("link", { name: /Open investigation/ })).toHaveAttribute("href", "/investigations/NEXT");
+  expect(screen.getByText("NEXT")).toBeVisible();
+  expect(screen.getByText("queued")).toBeVisible();
   expect(screen.getByText(/deterministic response/)).toBeVisible();
+});
+
+it("opens two distinct original sources in the existing comparison inspector", async () => {
+  const second = { ...answer.citations[0], id: "C2", anchor: { ...answer.citations[0].anchor, source: { type: "document" as const, id: "D2" } } };
+  const reply = { ...answer, new_investigation_id: null, citations: [...answer.citations, second] };
+  vi.mocked(chatApi.history).mockResolvedValue({ conversation_id: "CHAT-I", investigation_id: "I", items: [reply], total: 1, has_more: false });
+  const compare = vi.fn();
+  render(<Conversation id="I" onOpen={vi.fn()} onCompare={compare} findings={[]}>{null}</Conversation>);
+  fireEvent.click(await screen.findByRole("button", { name: "Compare cited records" }));
+  expect(compare).toHaveBeenCalledWith([answer.citations[0].anchor, second.anchor]);
 });
 it("submits real messages once, supports modes and preserves edits during pending requests", async () => {
   let finish!: (value: Awaited<ReturnType<typeof chatApi.send>>) => void;

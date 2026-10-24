@@ -1,14 +1,14 @@
 "use client";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { useConversation } from "../hooks/use-conversation";
+import { LinkedInvestigation } from "./linked-investigation";
 import { Button } from "@/components/ui/button";
 import { Time, humanize } from "@/components/shared/presentation";
 import type { Anchor, Finding } from "@/types/investigation";
 import type { ChatFocus, ChatRequest } from "@/types/chat";
 const suggestions = ["Tell me about this case.", "What are the most important findings?", "Investigate the symptom timeline.", "Review medication changes.", "What evidence is still missing?"];
-export function Conversation({ id, onOpen, findings, children }: {
-  id: string; onOpen: (anchor: Anchor) => void; findings: Finding[]; children: React.ReactNode | ((ask: (message: string) => void) => React.ReactNode);
+export function Conversation({ id, onOpen, onCompare, findings, children }: {
+  id: string; onOpen: (anchor: Anchor) => void; onCompare?: (anchors: Anchor[]) => void; findings: Finding[]; children: React.ReactNode | ((ask: (message: string) => void) => React.ReactNode);
 }) {
   const { messages, loading, pending, error, send, retry } = useConversation(id);
   const [draft, setDraft] = useState("");
@@ -36,10 +36,11 @@ export function Conversation({ id, onOpen, findings, children }: {
           <div className="message-content">{message.content}</div>
           {message.role === "assistant" && <>
             <div className="flex flex-wrap gap-2 mt-3">{message.citations.map(citation => <button className="source-link" key={citation.id} onClick={() => onOpen(citation.anchor)}>{citation.id} / {citation.anchor.source.id}</button>)}</div>
+            {onCompare && new Set(message.citations.map(c => `${c.anchor.source.type}:${c.anchor.source.id}`)).size > 1 && <button className="source-link mt-2" onClick={() => onCompare([...new Map(message.citations.map(c => [`${c.anchor.source.type}:${c.anchor.source.id}`, c.anchor])).values()].slice(0, 2))}>Compare cited records</button>}
             {message.finding_ids.map(findingId => { const finding = findings.find(item => item.id === findingId); return <a className="source-link mt-2 mr-2" key={findingId} href="#investigation-findings" onClick={() => { const target = document.getElementById("investigation-findings"); if (target instanceof HTMLDetailsElement) target.open = true; }}>{finding?.title ?? findingId}{finding && ` / ${finding.status}`}</a>; })}
             {!!message.limitations.length && <details className="text-xs text-muted-foreground mt-3"><summary>Answer limitations ({message.limitations.length})</summary><ul className="list-disc pl-5 mt-2">{message.limitations.map((text, i) => <li key={i}>{text}</li>)}</ul></details>}
             <p className="text-xs text-muted-foreground mt-3">{message.execution_mode === "deterministic_rules" ? "Stored evidence / deterministic response" : message.execution_mode === "scheduled" ? "Investigation scheduled" : humanize(message.execution_mode)}</p>
-            {message.new_investigation_id && <div className="linked-investigation"><strong>New investigation started</strong><p>A separate investigation is linked to this conversation.</p><Link className="source-link" href={`/investigations/${encodeURIComponent(message.new_investigation_id)}`}>Open investigation / follow progress &rarr;</Link></div>}
+            {message.new_investigation_id && <LinkedInvestigation key={message.new_investigation_id} id={message.new_investigation_id} />}
           </>}
         </article>)}
         {pending && <p role="status" className="reviewing-evidence">CASETRACE is reviewing the available evidence...</p>}

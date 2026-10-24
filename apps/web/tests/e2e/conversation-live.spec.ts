@@ -27,5 +27,8 @@ test("real CASE-001 conversation persists and schedules a linked investigation",
   await page.getByRole("button", { name: "Send message" }).click();
   const scheduledResponse = await scheduled; expect(scheduledResponse.ok()).toBe(true); const linked = (await scheduledResponse.json()).assistant_message.new_investigation_id; expect(linked).toBeTruthy();
   await expect(page.locator(`a[href="/investigations/${linked}"]`)).toBeVisible();
+  await expect(page.getByText(linked, { exact: true }).last()).toBeVisible();
+  await expect.poll(async () => (await (await request.get(`http://127.0.0.1:8000/api/investigations/${linked}`)).json()).status, { timeout: 90000 }).toMatch(/^completed/);
+  await expect.poll(async () => (await request.get(`http://127.0.0.1:8000/api/investigations/${linked}/report`)).status(), { timeout: 10000 }).toBe(200);
   await page.screenshot({ path: info.outputPath("real-conversation.png"), fullPage: true });
 });
