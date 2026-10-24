@@ -7,6 +7,7 @@ from sqlalchemy import func, select
 from app.hospital.errors import HospitalError
 from app.models import investigation as db
 from app.models.hospital import CaseDataset, Patient
+from app.orchestration.narration import project
 from app.orchestration.persistence import InvestigationPersistence
 from app.schemas.audit import ToolAudit, ToolAuditPage
 from app.schemas.investigation import (
@@ -210,6 +211,8 @@ class InvestigationQueries:
                     type=row.event_type,
                     timestamp=row.occurred_at,
                     payload=row.payload,
+                    message=project(row.event_type, row.payload)[0],
+                    execution_status=project(row.event_type, row.payload)[1],
                 )
                 for row in rows
             ]

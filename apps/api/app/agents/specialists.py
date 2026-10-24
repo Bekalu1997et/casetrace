@@ -4,12 +4,19 @@ from uuid import UUID
 
 from app.agents import analysis
 from app.clinical.diagnostic_challenger import diagnostic_comparisons
-from app.clinical.longitudinal import DOCUMENT_LIMIT, SEARCH_LIMIT, candidate, schedule
+from app.clinical.longitudinal import (
+    DOCUMENT_LIMIT,
+    SEARCH_LIMIT,
+    schedule,
+)
+from app.clinical.longitudinal import (
+    candidate as series_candidate,
+)
 from app.clinical.medications import medication_relationships
 from app.clinical.reasoning import reasoning_limitations
 from app.clinical.result_followup import actionable, result_relationships, search_scope
 from app.clinical.series import record_series
-from app.hospital.errors import HospitalError
+from app.core.error_types import HospitalError
 from app.schemas.investigation import AgentResult, Candidate, SourceRecord, ToolResult
 from app.tools.ports import ToolExecutor
 
@@ -84,7 +91,9 @@ class LaboratoryAgent(Specialist):
         records = await self.collect("get_lab_results")
         selected, limits = schedule(records)
         if not selected:
-            return AgentResult(candidates=analysis.lab_changes(records)[:20], limitations=limits), records
+            return AgentResult(
+                candidates=analysis.lab_changes(records)[:20], limitations=limits
+            ), records
         sources = list(records)
         complete = True
         try:
@@ -100,32 +109,49 @@ class LaboratoryAgent(Specialist):
                     f"({len(hits) - DOCUMENT_LIMIT} originals not retrieved)."
                 )
             for hit in hits[:DOCUMENT_LIMIT]:
-                sources.extend((await self.call(
-                    "get_document", record_id=hit.source.id,
-                    source_version=hit.source_version, source_hash=hit.source_hash,
-                )).records)
+                sources.extend(
+                    (
+                        await self.call(
+                            "get_document",
+                            record_id=hit.source.id,
+                            source_version=hit.source_version,
+                            source_hash=hit.source_hash,
+                        )
+                    ).records
+                )
         except HospitalError as exc:
             if "BUDGET" not in exc.code and "TIMEOUT" not in exc.code:
                 raise
             complete = False
-            limits.append(f"Laboratory follow-up stopped: {exc.code}; retained measurements reassessed.")
+            limits.append(
+                f"Laboratory follow-up stopped: {exc.code}; retained measurements reassessed."
+            )
         if len(sources) > SEARCH_LIMIT:
-            return AgentResult(limitations=limits + [
-                "Deferred laboratory follow-up: SEARCH_MANIFEST_BUDGET_EXHAUSTED; "
-                "no absence conclusion proposed."
-            ]), sources
-        reassessed = [candidate(key, values, sources, complete) for key, values in selected]
+            return AgentResult(
+                limitations=limits
+                + [
+                    "Deferred laboratory follow-up: SEARCH_MANIFEST_BUDGET_EXHAUSTED; "
+                    "no absence conclusion proposed."
+                ]
+            ), sources
+        reassessed = [series_candidate(key, values, sources, complete) for key, values in selected]
         for finding in reassessed:
             evidence = finding.longitudinal
             assert evidence is not None
-            if evidence.followup_state != "documented" or evidence.stop_reason == "budget_exhausted":
+            if (
+                evidence.followup_state != "documented"
+                or evidence.stop_reason == "budget_exhausted"
+            ):
                 limits.append(
                     f"Unresolved laboratory question [{evidence.group[:12]}]: "
                     f"{evidence.question} Stop: {evidence.stop_reason}."
                 )
         covered = {r.source.id for _, values in selected for r in values}
-        other = [c for c in analysis.lab_changes(records)
-                 if not {a.source.id for a in c.anchors} & covered]
+        other = [
+            c
+            for c in analysis.lab_changes(records)
+            if not {a.source.id for a in c.anchors} & covered
+        ]
         if len(reassessed + other) > 20:
             limits.append("Laboratory candidate budget exhausted; additional changes deferred.")
         return AgentResult(candidates=(reassessed + other)[:20], limitations=limits), sources

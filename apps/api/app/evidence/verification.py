@@ -5,8 +5,8 @@ from app.clinical.ports import SourceResolver
 from app.clinical.reasoning import structured_contradictions
 from app.clinical.rules import contradictions, instant, onset_pair
 from app.clinical.series import record_series
-from app.evidence.provenance import anchor_matches
 from app.evidence.longitudinal import verify_longitudinal
+from app.evidence.provenance import anchor_matches
 from app.evidence.relationships import verify_relationship
 from app.hospital.errors import HospitalError
 from app.schemas.investigation import Candidate, Check, SourceRecord, Verification

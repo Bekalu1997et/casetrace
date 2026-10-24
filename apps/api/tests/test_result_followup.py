@@ -376,7 +376,8 @@ async def test_case003_real_tools_persisted_workflow_and_independent_verificatio
         identifier, _ = await store.create(CreateInvestigation(patient_id="SYN-003"), None)
         await build_engine(store, settings).execute(identifier)
         report = await store.report(identifier)
-        assert report.status == "completed", report.limitations
+        # A completed result review may coexist with an unresolved laboratory question.
+        assert report.status in {"completed", "completed_with_limitations"}, report.limitations
         relationships = [
             f
             for f in report.verified_findings

@@ -15,7 +15,7 @@ from app.agents.specialists import (
 )
 from app.clinical.longitudinal import consolidate
 from app.core.config import Settings
-from app.core.provenance import digest
+from app.core.provenance import digest, now
 from app.hospital.errors import HospitalError
 from app.orchestration.planner import approve, initial_plan, task
 from app.orchestration.ports import InvestigationRuntime
@@ -26,7 +26,9 @@ from app.schemas.planning import (
     SourceIdentity,
     TaskResult,
 )
+from app.tools.inputs import INPUT_MODELS
 from app.tools.ports import ScopedToolExecutor, ToolExecutor
+from app.tools.registry import PERMISSIONS
 
 SPECIALISTS = {
     "retrieval": RetrievalAgent,
@@ -114,6 +116,46 @@ class InvestigationSupervisor:
             agent: str, execution_id: UUID, name: str, arguments: dict[str, Any]
         ) -> ToolResult:
             nonlocal used_calls
+            source_type = {
+                "get_document": "document",
+                "get_encounter": "encounter",
+                "get_lab_result": "observation",
+            }.get(name)
+            if (
+                item.task_type == "followup"
+                and source_type
+                and name in PERMISSIONS.get(agent, set())
+            ):
+                args = INPUT_MODELS[name].model_validate(arguments)
+                cached = self.records.get((source_type, str(getattr(args, "record_id", ""))))
+                if (
+                    args.patient_id == item.patient_id
+                    and cached is not None
+                    and cached.representation == "source"
+                    and getattr(args, "source_version", cached.source_version)
+                    in {None, cached.source_version}
+                    and getattr(args, "source_hash", cached.source_hash)
+                    in {None, cached.source_hash}
+                ):
+                    await self.event(
+                        "evidence.reused",
+                        {
+                            "task_id": item.id,
+                            "agent": agent,
+                            "agent_run_id": str(execution_id),
+                            "source_refs": [cached.source.model_dump()],
+                            "source_version": cached.source_version,
+                            "source_hash": cached.source_hash,
+                        },
+                    )
+                    return ToolResult(
+                        status="success",
+                        records=[cached.model_copy(deep=True)],
+                        source_refs=[cached.source],
+                        total=1,
+                        has_more=False,
+                        retrieved_at=now(),
+                    )
             if used_calls >= item.max_tool_calls:
                 raise HospitalError("TASK_TOOL_BUDGET_EXCEEDED", 409)
             used_calls += 1

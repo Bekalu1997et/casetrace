@@ -170,6 +170,9 @@ class InvestigationCommands:
             "investigation.completed",
             {
                 "status": report.status,
+                "verified_count": len(report.verified_findings),
+                "unresolved_count": len(report.unresolved_findings),
+                "limitation_count": len(report.limitations),
             },
         ) as (session, run):
             if run.status != "running" or report.status not in {

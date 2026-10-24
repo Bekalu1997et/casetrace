@@ -78,7 +78,7 @@ def policy_fixture():
         ),
         ("laboratory_investigation", ["document"], set()),
         ("laboratory_investigation", ["observation"], {"laboratory"}),
-        ("medication_investigation", ["medication", "observation"], {"medication"}),
+        ("medication_investigation", ["medication", "observation"], {"medication", "laboratory"}),
         ("timeline_investigation", ["document", "observation"], {"timeline"}),
         ("contradiction_investigation", ["document"], {"timeline", "referrals"}),
     ],
@@ -125,7 +125,7 @@ def test_approval_rejects_invalid_and_unbounded_handoffs(change, expected):
     if change == "unknown_agent":
         lead.assigned_agent = "unknown"
     if change == "unauthorized_tool":
-        lead.actions[0].tool = "get_referrals"
+        lead.actions[0].tool = "get_medication_history"
     if change == "wrong_patient":
         lead.actions[0].arguments["patient_id"] = "OTHER"
     if change == "stale_hash":
@@ -211,7 +211,8 @@ async def test_adaptive_canonical_runs_three_distinct_followups_and_verifies(tmp
             if t["task_type"] == "followup"
             for a in t["actions"]
         }
-        assert {"get_document", "get_encounter", "search_documents"} <= actions
+        # Laboratory review now retrieves originals itself; don't demand redundant handoffs.
+        assert {"get_encounter", "search_documents"} <= actions
         assert all(t["status"] == "completed" for t in planning["tasks"])
         assert any(lead["status"] == "unresolved" for lead in planning["leads"])
         state = await store.snapshot(identifier)
@@ -221,6 +222,7 @@ async def test_adaptive_canonical_runs_three_distinct_followups_and_verifies(tmp
         assigned = {e.payload["agent_run_id"] for e in events if e.type == "task.assigned"}
         assert assigned <= {e.payload["agent_run_id"] for e in events if e.type == "agent.started"}
         assert not [e for e in events if e.type == "tool.failed"]
+        assert any(e.type == "evidence.reused" for e in events)
         async with database.session() as session:
             calls = list(await session.scalars(select(db.ToolCall)))
             assert any(

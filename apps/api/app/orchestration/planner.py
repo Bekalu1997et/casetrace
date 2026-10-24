@@ -36,18 +36,22 @@ def task(
 
 def initial_plan(context: InvestigationContext, discovery: str) -> list[InvestigationTask]:
     available = {r.type for r in context.manifest}
-    full = context.objective == "full_record_investigation"
+    full = context.objective in {"full_record_investigation", "hypothesis_investigation"}
     choices = []
     if full or context.objective in {"timeline_investigation", "contradiction_investigation"}:
         if available & {"encounter", "document"}:
             choices.append("timeline")
-    if "observation" in available and (full or context.objective == "laboratory_investigation"):
+    if "observation" in available and (
+        full
+        or context.objective
+        in {"laboratory_investigation", "medication_investigation", "followup_investigation"}
+    ):
         choices.append("laboratory")
     if "medication" in available and (full or context.objective == "medication_investigation"):
         choices.append("medication")
     # Referrals aren't in the historical discovery manifest; the authorized check
     # discovers whether this modality exists, rather than assuming that it does.
-    if full or context.objective == "contradiction_investigation":
+    if full or context.objective in {"contradiction_investigation", "followup_investigation"}:
         choices.append("referrals")
     return [
         task(context, kind, f"Review available {kind} evidence for the objective.", [discovery])

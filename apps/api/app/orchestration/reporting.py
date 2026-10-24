@@ -16,6 +16,7 @@ def build_report(
     provider: LLMProvider | None,
 ) -> Report:
     verified = [f for f in findings if f.status == "verified"]
+    verified.sort(key=lambda f: f.type != "timeline_contradiction")
     conflicts = [f for f in verified if f.type == "timeline_contradiction"]
     mode = provider.mode if provider else "deterministic_rules"
     return Report(
@@ -26,6 +27,23 @@ def build_report(
             f"{len(verified)} supported observations.",
             "description": "Findings describe synthetic source records. "
             "Available records do not establish a final diagnosis or causal conclusion.",
+            "investigation_summary": "The investigation connected longitudinal records, "
+            "reviewed candidate discrepancies and independently checked cited evidence.",
+            "key_discoveries": " ".join(f.claim for f in verified[:5])
+            or "No candidate finding was verified from the accessible evidence.",
+            "supporting_evidence": "; ".join(
+                f"{f.id}: " + ", ".join(dict.fromkeys(a.source.id for a in f.anchors))
+                for f in verified[:5]
+            ),
+            "competing_interpretations": " ".join(h.explanation for h in hypotheses[:3])
+            or "No supported competing interpretation was established.",
+            "unresolved_questions": " ".join(f.claim for f in findings if f.status == "unresolved")[
+                :6000
+            ]
+            or "No additional unresolved candidate was recorded.",
+            "conclusion": f"The available records support {len(verified)} verified findings; "
+            f"{sum(f.status == 'unresolved' for f in findings)} candidates remain unresolved. "
+            "Verification describes record evidence, not a final diagnosis or causal conclusion.",
         },
         timeline=timeline,
         verified_findings=verified,
@@ -43,7 +61,7 @@ def build_report(
         execution_mode=mode,
         execution_config={
             "strategy": settings.investigation_strategy,
-            "model": settings.llm_model if provider else "none",
+            "model": (settings.llm_model or settings.openai_model) if provider else "none",
             "max_tool_calls": settings.investigation_max_tool_calls,
             "max_model_requests": 1 if provider else 0,
             "max_model_retries": settings.llm_max_retries,

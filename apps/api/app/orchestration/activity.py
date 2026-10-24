@@ -93,18 +93,17 @@ class InvestigationActivity:
         agent_id: UUID,
         error: str | None = None,
     ) -> None:
+        payload = {"agent_run_id": str(agent_id), "error_code": error}
         async with self.persistence.mutation(
             public_id,
             "agent.failed" if error else "agent.completed",
-            {
-                "agent_run_id": str(agent_id),
-                "error_code": error,
-            },
+            payload,
         ) as (session, run):
             row = await session.get(db.AgentExecution, agent_id)
             if row is None or row.investigation_id != run.id or row.status != "running":
                 raise RunConflict()
             row.status, row.ended_at = "failed" if error else "completed", now()
+            payload["agent"] = row.agent_key
             row.task_summary = {"error_code": error} if error else {}
 
     async def tool_start(
@@ -121,6 +120,7 @@ class InvestigationActivity:
             "tool.started",
             {
                 "agent_run_id": str(agent_id),
+                "agent": agent_name,
                 "tool": name,
                 "tool_execution_id": str(call_id),
             },
@@ -154,19 +154,22 @@ class InvestigationActivity:
         refs: list[dict[str, Any]],
         error: str | None = None,
     ) -> None:
+        payload = {
+            "tool_execution_id": str(call_id),
+            "source_refs": refs,
+            "record_count": len(refs),
+            "error_code": error,
+        }
         async with self.persistence.mutation(
             public_id,
             "tool.failed" if error else "tool.completed",
-            {
-                "tool_execution_id": str(call_id),
-                "source_refs": refs,
-                "record_count": len(refs),
-                "error_code": error,
-            },
+            payload,
         ) as (session, run):
             row = await session.get(db.ToolCall, call_id)
             if row is None or row.investigation_id != run.id:
                 raise RunConflict()
             row.status = "failed" if error else "succeeded"
+            payload["tool"] = row.tool_name
+            payload["agent_run_id"] = str(row.agent_execution_id)
             row.completed_at, row.error_code, row.result_refs = now(), error, refs
             row.duration_ms = int((row.completed_at - row.started_at).total_seconds() * 1000)

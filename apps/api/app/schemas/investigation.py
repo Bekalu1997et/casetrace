@@ -32,6 +32,8 @@ class CreateInvestigation(ClinicalModel):
         "contradiction_investigation",
         "medication_investigation",
         "laboratory_investigation",
+        "followup_investigation",
+        "hypothesis_investigation",
     ] = "full_record_investigation"
 
 
@@ -177,6 +179,8 @@ class ActivityEvent(ClinicalModel):
     type: str
     timestamp: datetime
     payload: dict[str, Any]
+    message: str = ""
+    execution_status: str = ""
 
 
 class Report(ClinicalModel):
