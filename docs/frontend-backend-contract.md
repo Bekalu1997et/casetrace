@@ -2842,3 +2842,8 @@ It verifies recorded longitudinal observations only. Clients already treat
 rule as a string. The activity stream additionally permits `tool.page` and
 candidate source_refs/rule/candidate_type fields on finding.proposed; unknown
 events remain tolerated. No route, state enum, or database schema changes.
+# Conversational backend extension
+
+The additive chat routes, focus objectives, event presentation fields and report
+summary fields are specified in [conversational backend](conversational-backend.md).
+Existing REST/SSE fields, sequences and reconnect semantics are preserved.

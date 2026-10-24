@@ -70,7 +70,9 @@ executor and task-specific references/actions. The supervisor retains a bounded
 source accumulator; it never passes the full chart to each specialist. Existing
 typed timeline/hypotheses/findings remain in investigation context/persistence.
 
-`orchestration/planner.py` chooses work from the five existing objectives and
+`orchestration/planner.py` chooses work from supported objectives (including the
+focused follow-up and hypothesis extensions in
+[conversational backend](conversational-backend.md)) and
 discovered categories. Absent laboratory/medication modalities do not schedule
 analysis. Referral review is an explicit discovery/check task because historical
 discovery excludes referrals. Timeline precedes independent laboratory/medication/

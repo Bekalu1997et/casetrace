@@ -2402,3 +2402,8 @@ It should be:
 > **A simulated clinical information environment + real retrieval tools + specialized investigators + evidence verification.**
 
 That architecture is what makes the hackathon demo credible and, more importantly, gives you a foundation that can later connect the same investigation engine to authorized real-world clinical systems.
+# OpenAI and conversation extension
+
+See [conversational backend](conversational-backend.md) for the Responses provider,
+conversation service/repository, short transaction policy and citation validation.
+These extend the existing engine and clinical service boundary.
