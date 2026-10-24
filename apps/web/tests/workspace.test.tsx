@@ -9,6 +9,9 @@ import { InvestigationWorkspace } from "@/features/investigations/components/wor
 import { InvestigationReportView } from "@/features/investigations/components/report";
 import { AgentActivity } from "@/features/investigations/components/agent-activity";
 import { Hypotheses } from "@/features/investigations/components/hypotheses";
+import { chatApi } from "@/lib/api/chat";
+import { beforeEach } from "vitest";
+beforeEach(() => { vi.spyOn(chatApi, "history").mockResolvedValue({ conversation_id: "CHAT-INV-CONTROL", investigation_id: "INV-CONTROL", items: [], total: 0, has_more: false }); });
 import { investigationsApi } from "@/lib/api/investigations";
 import { hospitalApi, resolveImagingAsset } from "@/lib/api/hospital";
 import { catalogApi } from "@/lib/api/catalog";

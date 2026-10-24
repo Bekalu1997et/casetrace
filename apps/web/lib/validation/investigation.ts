@@ -31,7 +31,7 @@ function stringList(value: unknown) {
   if (!array(value).every(item => typeof item === "string"))
     throw new ApiRequestError("Invalid text list.", "INVALID_RESPONSE");
 }
-function anchors(value: unknown) {
+export function anchors(value: unknown) {
   array(value).forEach(anchor => {
     const row = fields(anchor, ["field", "source_hash", "relationship"]);
     fields(row.source, ["type", "id"]);
@@ -100,6 +100,7 @@ export function parseReport(value: unknown): InvestigationReport {
 export function parseEvent(value: unknown, investigationId: string): InvestigationEvent {
   const event = fields(value, ["id", "investigation_id", "type", "timestamp"]);
   object(event.payload); validateTime(event.timestamp);
+  for (const key of ["message", "execution_status"]) if (event[key] != null && typeof event[key] !== "string") throw new ApiRequestError("Invalid activity text.", "INVALID_RESPONSE");
   if (!Number.isInteger(event.sequence) || (event.sequence as number) < 1 || event.investigation_id !== investigationId)
     throw new ApiRequestError("Invalid event identity or cursor.", "INVALID_RESPONSE");
   return event as unknown as InvestigationEvent;

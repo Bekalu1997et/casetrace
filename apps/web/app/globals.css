@@ -113,3 +113,52 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 @media(min-width:1280px) {.workspace-grid {grid-template-columns:190px minmax(0,1fr) minmax(280px,.8fr);} .evidence-explorer {grid-template-columns:280px minmax(0,1fr);} }
 @media(max-width:1279px) {.workbench-context,.workbench-evidence {border:1px solid var(--border); background:white; border-radius:10px; padding:12px;} }
 @media print {@page {size:A4; margin:15mm;} .report-view {font-size:10pt;} .report-view h1 {font-size:20pt;} .report-view h2 {break-after:avoid;} .report-view .audit-card {break-inside:avoid;} .report-view .finding-card {break-inside:auto;} .report-view .panel-heading {break-after:avoid;} .report-view a {color:#17243a;} .report-view .clinical-timeline {margin-top:12px;} .report-view .clinical-table-scroll {overflow:visible;} .report-view .clinical-table :is(th,td) {min-width:0; max-width:none; padding:6px; overflow-wrap:anywhere;} }
+
+/* Conversation workspace: a single reading surface and an always available composer. */
+main:has(.chat-workspace) { padding: 0; max-width: none; }
+.chat-workspace { height:calc(100dvh - 83px); min-height:540px; display:flex; flex-direction:column; background:white; }
+.chat-workspace-header { padding:16px 24px; display:flex; gap:14px; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+.chat-workspace-header h1 {font-size:17px; letter-spacing:.04em;}
+.chat-workspace-header .eyebrow {margin-bottom:4px;}
+.chat-workspace-body {display:flex; min-height:0; flex:1; position:relative;}
+.conversation {display:flex; flex-direction:column; min-width:0; flex:1;}
+.conversation-thread {flex:1; overflow-y:auto; overscroll-behavior:contain; min-height:0;}
+.conversation-reading {width:100%; max-width:900px; margin:auto; padding:0 32px; overflow-wrap:anywhere;}
+.conversation-welcome {padding:64px 0 36px; max-width:720px; margin:auto;}
+.conversation-mark {display:grid; place-items:center; width:42px; height:42px; border-radius:12px; background:var(--teal); color:white; font-weight:700; margin-bottom:24px;}
+.conversation-welcome h1 {font-size:30px; margin-bottom:16px;}
+.conversation-welcome p {color:var(--muted-foreground); line-height:1.8;}
+.suggested-prompts {display:flex; flex-wrap:wrap; gap:10px; margin-top:28px;}
+.suggested-prompts button {text-align:left; border:1px solid var(--border); border-radius:10px; padding:12px 14px; font-size:13px; background:#fafcfc;}
+.suggested-prompts button:hover {border-color:var(--teal); background:var(--accent);}
+.conversation-message {padding:28px 0; line-height:1.8; font-size:15px;}
+.message-user {margin:20px 0 0 auto; padding:16px 20px; width:fit-content; max-width:88%; background:#edf5f5; border-radius:18px 18px 4px 18px;}
+.message-byline {display:flex; gap:12px; align-items:center; font-size:12px; margin-bottom:10px; color:var(--muted-foreground);}
+.message-byline strong {color:var(--foreground);}
+.message-content {white-space:pre-wrap;}
+.conversation-bottom {padding:12px 0 10px; background:white; border-top:1px solid #edf1f4;}
+.chat-composer {border:1px solid #c7d7d9; border-radius:18px; padding:14px; box-shadow:0 4px 18px #17243a08;}
+.chat-composer:focus-within {border-color:var(--teal); box-shadow:0 0 0 2px #168a8318;}
+.chat-composer textarea {width:100%; resize:none; max-height:180px; min-height:60px; padding:4px 6px; background:transparent; outline:none; font-size:14px; line-height:1.6;}
+.chat-composer textarea:focus-visible {outline:2px solid var(--teal); outline-offset:2px; border-radius:4px;}
+.composer-controls {display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-size:12px; color:var(--muted-foreground);}
+.composer-controls select {color:var(--foreground); padding:6px; border-radius:6px; max-width:130px;}
+.composer-controls button {margin-left:auto; border-radius:10px; background:var(--teal);}
+.composer-caption {font-size:10px; text-align:center; color:var(--muted-foreground); margin-top:9px;}
+.investigation-artifacts {margin:20px 0 28px; font-size:13px;}
+.compact-activity {border:1px solid var(--border); background:#f8fbfb; border-radius:10px; padding:14px 16px;}
+.artifact-disclosure {padding:14px 0; border-bottom:1px solid var(--border);}
+.linked-investigation {margin-top:16px; border-left:3px solid var(--teal); padding:12px 16px; background:#f3f9f8;}
+.linked-investigation p {font-size:13px; margin:6px 0;}
+.reviewing-evidence {font-size:13px; color:var(--teal); padding:16px 0;}
+.conversation-evidence {width:40%; min-width:300px; max-width:650px; overflow:auto; padding:20px; border-left:1px solid var(--border); background:#f8fafc; overscroll-behavior:contain;}
+.evidence-inspector-heading {display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;}
+@media(max-width:1100px) {.conversation-evidence {position:absolute; inset:0 0 0 auto; z-index:30; width:min(88%,520px); box-shadow:-10px 0 32px #17243a22;} }
+@media(max-width:1023px) {.chat-workspace {height:calc(100dvh - 240px); min-height:580px;} }
+@media(max-width:640px) {.chat-workspace-header {padding:12px 16px;} .chat-workspace-header .source-link {display:none;} .conversation-reading {padding:0 16px;} .conversation-welcome {padding:30px 0 20px;} .conversation-welcome h1 {font-size:24px;} .conversation-welcome p {font-size:14px;} .suggested-prompts {gap:7px; margin-top:18px;} .suggested-prompts button {padding:9px; font-size:12px;} .conversation-evidence {min-width:0; padding:12px;} .composer-controls {gap:4px;} .composer-controls select {max-width:105px;} .composer-caption {font-size:9px;} }
+
+.app-shell:has(.chat-workspace) {height:100dvh; min-height:0;}
+.app-shell:has(.chat-workspace)>div:last-child {display:flex; flex-direction:column; min-height:0;}
+main:has(.chat-workspace) {flex:1; min-height:0; width:100%;}
+.chat-workspace {height:100%; min-height:0;}
+@media(max-width:1023px) {.app-shell:has(.chat-workspace) {display:flex; flex-direction:column;} .app-shell:has(.chat-workspace)>.shell-sidebar {flex-shrink:0;} .app-shell:has(.chat-workspace)>div:last-child {flex:1;} }

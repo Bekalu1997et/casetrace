@@ -36,7 +36,7 @@ export function AgentActivity({ agents, events, onOpen }: {
       const name = event.payload.tool ?? event.payload.agent ?? start?.payload.tool ?? start?.payload.agent;
       const refs = Array.isArray(event.payload.source_refs) ? event.payload.source_refs : [];
       return <li key={event.id}><details className="rounded-lg border border-border bg-background/50 p-3"><summary className="text-sm"><span className="font-mono text-xs text-muted-foreground mr-2">{event.sequence}</span>{humanize(event.type)}{typeof name === "string" && ` · ${humanize(name)}`}<span className="block mt-1 ml-6"><Time value={event.timestamp} /></span></summary>
-        <dl className="mt-3 grid gap-2 text-xs">{safeFields.map(key => event.payload[key] == null ? null : <div key={key}><dt className="text-muted-foreground">{humanize(key)}</dt><dd className="break-words">{String(event.payload[key])}</dd></div>)}</dl>
+        {event.message && <p className="mt-3 text-sm">{event.message}</p>}{event.execution_status && <p className="text-xs">Execution: {event.execution_status}</p>}<dl className="mt-3 grid gap-2 text-xs">{safeFields.map(key => event.payload[key] == null ? null : <div key={key}><dt className="text-muted-foreground">{humanize(key)}</dt><dd className="break-words">{String(event.payload[key])}</dd></div>)}</dl>
         {refs.map((ref: unknown, index: number) => ref && typeof ref === "object" && "id" in ref && "type" in ref && typeof ref.id === "string" && typeof ref.type === "string" ? <button key={index} className="source-link mt-2 mr-2" onClick={() => onOpen(ref as SourceRef)}>{ref.id}</button> : null)}
         {start && start.id !== event.id && <p className="mt-2 text-xs">Started: <Time value={start.timestamp} /></p>}
       </details></li>;

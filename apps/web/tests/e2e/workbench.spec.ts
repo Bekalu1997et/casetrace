@@ -16,17 +16,16 @@ test("investigation directory, new run, tool audit and dedicated evidence surviv
     await page.screenshot({ path: testInfo.outputPath(`workbench-${width}.png`), fullPage: true });
   }
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.getByRole("button", { name: "Activity", exact: true }).click();
+  await page.locator("details.compact-activity > summary").click();
   await expect(page.getByRole("heading", { name: "Tool execution inspector" })).toBeVisible();
   const tool = page.locator("details.audit-card").filter({ hasText: "attempt" }).first();
   await tool.locator("summary").focus();
   await page.keyboard.press("Enter");
   await expect(tool.getByText(/Full result payload unavailable/)).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("tool-inspector.png"), fullPage: true });
-  await page.getByRole("button", { name: "Tasks & leads", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Investigative leads" })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("tasks-leads.png"), fullPage: true });
-  await page.getByRole("button", { name: "Findings", exact: true }).click();
+  await page.locator("#investigation-findings > summary").click();
   await page.getByRole("link", { name: "Inspect finding evidence", exact: true }).first().click();
   await expect(page.getByRole("heading", { name: "Evidence explorer", exact: true })).toBeVisible();
   await page.getByRole("button", { name: /Compare source records/ }).first().click();

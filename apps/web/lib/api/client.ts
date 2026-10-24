@@ -22,9 +22,9 @@ export function apiUrl(path: string): string {
   return `${baseUrl.replace(/\/$/, "")}${path}`;
 }
 
-export async function fetchApi(path: string, signal?: AbortSignal, options?: RequestInit, streaming = false): Promise<Response> {
+export async function fetchApi(path: string, signal?: AbortSignal, options?: RequestInit, streaming = false, timeoutMs = 8000): Promise<Response> {
   const url = apiUrl(path);
-  const timeout = streaming ? undefined : AbortSignal.timeout(8000);
+  const timeout = streaming ? undefined : AbortSignal.timeout(timeoutMs);
   try {
     return await fetch(url, { ...options, cache: "no-store",
       signal: signal && timeout ? AbortSignal.any([signal, timeout]) : signal ?? timeout });
@@ -36,9 +36,9 @@ export async function fetchApi(path: string, signal?: AbortSignal, options?: Req
 }
 
 export async function request<T>(path: string, parse: (value: unknown) => T,
-  signal?: AbortSignal, options?: Pick<RequestInit, "method" | "body" | "headers">): Promise<T> {
+  signal?: AbortSignal, options?: Pick<RequestInit, "method" | "body" | "headers">, timeoutMs = 8000): Promise<T> {
   const response = await fetchApi(path, signal, { ...options,
-    headers: { Accept: "application/json", ...options?.headers } });
+    headers: { Accept: "application/json", ...options?.headers } }, false, timeoutMs);
   let body: unknown;
   try { body = await response.json(); }
   catch { throw new ApiRequestError("The API returned invalid JSON.", "INVALID_RESPONSE", response.status); }

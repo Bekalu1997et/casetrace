@@ -125,3 +125,26 @@ POST retries are not idempotent; clients should prevent duplicate submission.
 No authentication platform is added. Isolation is patient/run scoping within the
 existing local application, not user-level access control. No canonical case or
 evaluation answer key is modified by this feature.
+
+## Conversation workspace
+
+`/investigations/{id}` now opens a conversation with a persistent bottom composer.
+The frontend loads all saved history pages and appends only persisted POST results,
+deduplicated by message ID. Ask is the default; Investigate sends the exact focus
+and links to the separate run returned by the API. Parent events stay scoped to the
+parent investigation. Responses remain safe plain text, preserving paragraph and
+list formatting without executing HTML. Deterministic responses are labeled.
+
+Investigation activity, findings, timeline and hypotheses are separate, collapsed
+artifacts below the thread, never fabricated chat messages. The existing REST/SSE
+owner retains cursor, reconnect and deduplication behavior. Event messages and
+execution statuses are visible in execution details. Citation chips open the
+existing patient-scoped SourcePanel with the original anchor, version/hash and
+field highlighting; closing restores conversation width. Smaller screens use an
+overlaid inspector with Escape dismissal and focus return.
+
+Chat submissions have a 180-second client timeout; ordinary reads retain their
+existing timeout. No POST is retried automatically. Pending submissions are
+locked; input clears only on success and edits made while waiting are preserved.
+On an uncertain failure, refresh history before deciding to resend because POST
+is not idempotent. The composer supports Enter, Shift+Enter and IME composition.
